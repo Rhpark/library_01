@@ -55,7 +55,7 @@ afterEvaluate{
             create<MavenPublication>("release") {
                 groupId = "com.github.Rhpark"
                 artifactId = ""
-                version = "0.0.5"
+                version = "0.0.7"
             }
 //            create<MavenPublication>("debug") {
 //                groupId = "com.github.Rhpark"
