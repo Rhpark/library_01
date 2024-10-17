@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "kr.open.rhpark.library"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 28
@@ -48,16 +48,17 @@ dependencies {
 
 afterEvaluate{
     publishing {
-
-        publications.create<MavenPublication>("release") {
-            groupId = "com.github.Rhpark"
-            artifactId = ""
-            version = "0.0.2"
-        }
-        publications.create<MavenPublication>("debug") {
-            groupId = "com.github.Rhpark"
-            artifactId = "-debug"
-            version = "0.0.2"
+        publications {
+            create<MavenPublication>("release") {
+                groupId = "com.github.Rhpark"
+                artifactId = ""
+                version = "0.0.2"
+            }
+            create<MavenPublication>("debug") {
+                groupId = "com.github.Rhpark"
+                artifactId = "-debug"
+                version = "0.0.2"
+            }
         }
     }
 }

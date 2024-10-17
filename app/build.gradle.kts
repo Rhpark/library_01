@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "kr.open.rhpark.app"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "kr.open.rhpark.app"
