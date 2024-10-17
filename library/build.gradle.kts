@@ -33,6 +33,9 @@ android {
         jvmTarget = "1.8"
         freeCompilerArgs += "-Xexplicit-api=strict"
     }
+    buildFeatures {
+        buildConfig = false
+    }
     resourcePrefix = "rhpark_"
 }
 
@@ -52,13 +55,13 @@ afterEvaluate{
             create<MavenPublication>("release") {
                 groupId = "com.github.Rhpark"
                 artifactId = ""
-                version = "0.0.4"
+                version = "0.0.5"
             }
-            create<MavenPublication>("debug") {
-                groupId = "com.github.Rhpark"
-                artifactId = "-debug"
-                version = "0.0.4"
-            }
+//            create<MavenPublication>("debug") {
+//                groupId = "com.github.Rhpark"
+//                artifactId = "-debug"
+//                version = "0.0.4"
+//            }
         }
     }
 }
