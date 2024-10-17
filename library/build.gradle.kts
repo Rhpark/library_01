@@ -54,10 +54,11 @@ afterEvaluate{
         publications {
             create<MavenPublication>("maven") {
                 from (components["release"])
-                groupId = "com.github.mint"
-                artifactId = "mint-android-app"
-                version = "0.0.8"
+                groupId = "com.github.Rhpark"
+                artifactId = ""
+                version = "0.0.9"
             }
         }
     }
+
 }
