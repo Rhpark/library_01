@@ -52,12 +52,12 @@ afterEvaluate{
             create<MavenPublication>("release") {
                 groupId = "com.github.Rhpark"
                 artifactId = ""
-                version = "0.0.2"
+                version = "0.0.3"
             }
             create<MavenPublication>("debug") {
                 groupId = "com.github.Rhpark"
                 artifactId = "-debug"
-                version = "0.0.2"
+                version = "0.0.3"
             }
         }
     }
