@@ -4,6 +4,18 @@ plugins {
     id ("maven-publish")
 }
 
+afterEvaluate{
+    publishing {
+        publications {
+            create<MavenPublication>("maven") {
+                from (components["release"])
+                groupId = "com.github.Rhpark"
+                artifactId = ""
+                version = "0.0.9"
+            }
+        }
+    }
+}
 
 android {
     namespace = "kr.open.rhpark.library"
@@ -47,18 +59,4 @@ dependencies {
 //    testImplementation(libs.junit)
 //    androidTestImplementation(libs.androidx.junit)
 //    androidTestImplementation(libs.androidx.espresso.core)
-}
-
-afterEvaluate{
-    publishing {
-        publications {
-            create<MavenPublication>("maven") {
-                from (components["release"])
-                groupId = "com.github.Rhpark"
-                artifactId = ""
-                version = "0.0.9"
-            }
-        }
-    }
-
 }
