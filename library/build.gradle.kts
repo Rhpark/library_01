@@ -52,16 +52,12 @@ dependencies {
 afterEvaluate{
     publishing {
         publications {
-            create<MavenPublication>("release") {
-                groupId = "com.github.Rhpark"
-                artifactId = ""
-                version = "0.0.7"
+            create<MavenPublication>("maven") {
+                from (components["release"])
+                groupId = "com.github.mint"
+                artifactId = "mint-android-app"
+                version = "0.0.8"
             }
-//            create<MavenPublication>("debug") {
-//                groupId = "com.github.Rhpark"
-//                artifactId = "-debug"
-//                version = "0.0.4"
-//            }
         }
     }
 }
