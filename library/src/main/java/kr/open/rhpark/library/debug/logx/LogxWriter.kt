@@ -92,10 +92,10 @@ internal class LogxWriter {
         return Pair("${Logx.appName} [$tag]$typeRes", it.getMsgFrontNormal())
     }
 
-    private fun jsonTag(tag: String): String = logxStackTrace.getParentStackTrace().getMsgFrontJson()
+    private fun jsonTag(): String = logxStackTrace.getParentStackTrace().getMsgFrontJson()
 
     private fun jsonMsgSort(tag:String, msg: String) {
-        val jsonTag = jsonTag(tag)
+        val jsonTag = jsonTag()
         val space = "   "
         var cnt = 0
         var logMsg = "";
