@@ -4,31 +4,56 @@ plugins {
     id ("maven-publish")
 }
 
-afterEvaluate{
-    publishing {
-        publications {
-            create<MavenPublication>("maven") {
-                from (components["release"])
-                groupId = "com.github.Rhpark"
-                artifactId = "library_01"
-                version = "0.1.0"
+publishing {
+    publications {
+        register<MavenPublication>("release") {
+            groupId = "com.github.Rhpark"
+            artifactId = "library_01"
+            version = "0.1.1"
+
+            afterEvaluate {
+                from(components["release"])
+            }
+        }
+
+        register<MavenPublication>("debug") {
+            groupId = "com.github.Rhpark"
+            artifactId = "library_01-d"
+            version = "0.1.1"
+
+            afterEvaluate {
+                from(components["debug"])
             }
         }
     }
 }
 
+//afterEvaluate{
+//    publishing {
+//        publications {
+//            create<MavenPublication>("maven") {
+//                from (components["release"])
+//                groupId = "com.github.Rhpark"
+//                artifactId = "library_01"
+//                version = "0.1.0"
+//            }
+//        }
+//    }
+//}
+
 android {
     namespace = "kr.open.rhpark.library"
     compileSdk = 34
 
-    sourceSets {
-        getByName("main") {
-            java.srcDirs("src/main/java")
-        }
-        getByName("debug") {
-            java.srcDirs("src/debug/java")
-        }
-    }
+//    sourceSets {
+//        getByName("main") {
+//            java.srcDirs("src/main/java")
+//        }
+//        getByName("debug") {
+//            java.srcDirs("src/debug/java")
+//        }
+//    }
+
     defaultConfig {
         minSdk = 28
 
@@ -38,6 +63,13 @@ android {
 
     buildTypes {
         release {
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+        debug {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
