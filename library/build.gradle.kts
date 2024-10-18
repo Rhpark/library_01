@@ -10,8 +10,8 @@ afterEvaluate{
             create<MavenPublication>("maven") {
                 from (components["release"])
                 groupId = "com.github.Rhpark"
-                artifactId = ""
-                version = "0.0.12"
+                artifactId = " "
+                version = "0.0.13"
             }
         }
     }
@@ -37,6 +37,12 @@ android {
             )
         }
     }
+//    kotlin {
+//        jvmToolchain {
+//            languageVersion.set(JavaLanguageVersion.of(17))
+//        }
+//        jvmToolchain(17)
+//    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
