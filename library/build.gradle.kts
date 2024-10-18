@@ -10,8 +10,8 @@ afterEvaluate{
             create<MavenPublication>("maven") {
                 from (components["release"])
                 groupId = "com.github.Rhpark"
-                artifactId = " "
-                version = "0.0.13"
+                artifactId = "library_01"
+                version = "0.0.14"
             }
         }
     }
@@ -19,7 +19,7 @@ afterEvaluate{
 
 android {
     namespace = "kr.open.rhpark.library"
-    compileSdk = 35
+    compileSdk = 34
 
     defaultConfig {
         minSdk = 28
