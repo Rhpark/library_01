@@ -22,9 +22,38 @@ public object Logx {
     private const val DEFAULT_TAG = ""
     private const val DEFAULT_MSG = ""
 
-    public var isDebug: Boolean = true // true -> show logcat, else is gone
-    public var isDebugFilter: Boolean = false // do verification debugTagCheckList
+
+    /**
+     * true is logcat message show, else is gone
+     *
+     * default value is true
+     */
+    public var isDebug: Boolean = true
+
+
+    /**
+     * Logcat show only added tag values.
+     * The isDebugFilter value must be true for operation.
+     * false is all logcat show
+     *
+     * default value is false
+     */
+    public var isDebugFilter: Boolean = false
+
+
+    /**
+     * true is logcat save file , else is gone
+     * required permission WRITE_EXTERNAL_STORAGE
+     *
+     * default value is false
+     */
     public var isDebugSave: Boolean = false // Log write currentTime.txt file (required storage read/write permission)
+
+
+    /**
+     * Logcat save file path
+     * default value is Environment.getExternalStorageDirectory().path
+     */
     public var saveFilePath: String = Environment.getExternalStorageDirectory().path  /* "/sdcard/" */
 
     internal var appName = "RhPark"
@@ -45,24 +74,28 @@ public object Logx {
     )
 
     /**
-     * setting LogxType(DebugType) list
-     * default is All LogTypeList
-     * Only added LogxType list are printed
+     * Logcat show only added LogType values.
+     * default typelist is All LogTypeList
+     * Logat printed, Only added LogxType list
      *
-     * logTypeList 리스트 설정
-     * 기본값 모두 추가됨
-     * 추가 된 것들만 출력됨
+     * default is All LogTypeList
+     *
      * @param logTypeList : LogxType List
      */
     public fun setDebugLogTypeList(logTypeList:List<LogxType>) { debugLogTypeList = logTypeList.toList() }
 
     /**
-     * setting Debug Tag list
-     * isDebugFilter true is Check only tagList
+     * Logcat show only added tagList.
+     * The isDebugFilter value must be true for operation
+     *
      * @param tagList : LogxType List
      */
     public fun setDebugTagCheckList(tagList:List<String>) { debugTagCheckList = tagList.toList() }
 
+    /**
+     * AppName include the Logcat Tag
+     * default value is RhPark
+     */
     public fun setAppName(appName:String) {    this.appName = appName  }
 
     /** ex) Log.v AppName [] : (FileName:LineNumber).Method - **/

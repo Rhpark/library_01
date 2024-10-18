@@ -11,7 +11,7 @@ afterEvaluate{
                 from (components["release"])
                 groupId = "com.github.Rhpark"
                 artifactId = "library_01"
-                version = "0.0.15"
+                version = "0.1.0"
             }
         }
     }
@@ -24,6 +24,9 @@ android {
     sourceSets {
         getByName("main") {
             java.srcDirs("src/main/java")
+        }
+        getByName("debug") {
+            java.srcDirs("src/debug/java")
         }
     }
     defaultConfig {

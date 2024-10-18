@@ -18,8 +18,14 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 //        Logx.isDebugSave = true
+        test()
+    }
+
+    fun test() {
         Logx.d()
-        Logx.d("123")
-        Logx.d("2314","sdaf")
+        Logx.d("msg")
+        Logx.d("Tag","mmssgg")
+        Logx.p()
+        Logx.t()
     }
 }
