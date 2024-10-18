@@ -1,8 +1,8 @@
-package kr.open.rhpark.library.debug.logx
+package kr.open.rhpark.library.debug.logcat
 
 import android.util.Log
-import kr.open.rhpark.library.debug.logx.data.LogxStackTrace
-import kr.open.rhpark.library.debug.logx.vo.LogxType
+import kr.open.rhpark.library.debug.logcat.data.LogxStackTrace
+import kr.open.rhpark.library.debug.logcat.vo.LogxType
 
 
 internal class LogxWriter {
@@ -25,7 +25,7 @@ internal class LogxWriter {
 
     private fun threadIdType(pair: Pair<String, String?>?): Pair<String, String?>? =
         if (pair == null)  null
-        else Pair("${pair.first}","[${Thread.currentThread().id}]${pair.second}")
+        else Pair(pair.first,"[${Thread.currentThread().id}]${pair.second}")
 
     fun writeParent(tag: String, msg: Any?) {
         val type = LogxType.PARENT
@@ -36,8 +36,8 @@ internal class LogxWriter {
 
     private fun parentType(pair: Pair<String, String?>?): Pair<String, String?>? = logxStackTrace.getParentStackTrace().let {
         if (pair == null) return null
-        log(Pair("${pair.first}","┎(${it.getMsgFrontParent()}"), "", LogxType.PARENT)
-        return Pair("${pair.first}", "┖${pair.second}")
+        log(Pair(pair.first,"┎(${it.getMsgFrontParent()}"), "", LogxType.PARENT)
+        return Pair(pair.first, "┖${pair.second}")
     }
 
     fun writeJson(tag: String, msg: String) {
@@ -53,7 +53,7 @@ internal class LogxWriter {
     }
 
     private fun jsonType(pair: Pair<String, String?>): Pair<String, String?> =
-        Pair("${pair.first}", "${pair.second}")
+        Pair(pair.first, "${pair.second}")
 
     private fun log(pair: Pair<String, String?>?, msg: Any?, logType: LogxType) {
 
@@ -61,14 +61,14 @@ internal class LogxWriter {
         val logTag = pair.first
         val logMsg = "${pair.second}$msg"
         when (logType) {
-            LogxType.JSON ->        Log.v("$logTag", "$logMsg")
-            LogxType.VERBOSE ->     Log.v("$logTag", "$logMsg")
-            LogxType.THREAD_ID ->   Log.d("$logTag", "$logMsg")
-            LogxType.DEBUG ->       Log.d("$logTag", "$logMsg")
-            LogxType.PARENT ->      Log.i("$logTag", "$logMsg")
-            LogxType.INFO ->        Log.i("$logTag", "$logMsg")
-            LogxType.WARN ->        Log.w("$logTag", "$logMsg")
-            LogxType.ERROR ->       Log.e("$logTag", "$logMsg")
+            LogxType.JSON ->        Log.v(logTag, logMsg)
+            LogxType.VERBOSE ->     Log.v(logTag, logMsg)
+            LogxType.THREAD_ID ->   Log.d(logTag, logMsg)
+            LogxType.DEBUG ->       Log.d(logTag, logMsg)
+            LogxType.PARENT ->      Log.i(logTag, logMsg)
+            LogxType.INFO ->        Log.i(logTag, logMsg)
+            LogxType.WARN ->        Log.w(logTag, logMsg)
+            LogxType.ERROR ->       Log.e(logTag, logMsg)
         }
 
         if (Logx.isDebugSave) { logSaver.addWriteLog(logType, logTag, logMsg) }
@@ -98,7 +98,7 @@ internal class LogxWriter {
         val jsonTag = jsonTag()
         val space = "   "
         var cnt = 0
-        var logMsg = "";
+        var logMsg = ""
         val jsonMsgList = msg.replace("\\s+".toRegex(), "")
 
         for (sp in jsonMsgList) {

@@ -11,7 +11,7 @@ afterEvaluate{
                 from (components["release"])
                 groupId = "com.github.Rhpark"
                 artifactId = "library_01"
-                version = "0.0.14"
+                version = "0.0.15"
             }
         }
     }
@@ -21,6 +21,11 @@ android {
     namespace = "kr.open.rhpark.library"
     compileSdk = 34
 
+    sourceSets {
+        getByName("main") {
+            java.srcDirs("src/main/java")
+        }
+    }
     defaultConfig {
         minSdk = 28
 
@@ -37,12 +42,6 @@ android {
             )
         }
     }
-//    kotlin {
-//        jvmToolchain {
-//            languageVersion.set(JavaLanguageVersion.of(17))
-//        }
-//        jvmToolchain(17)
-//    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8

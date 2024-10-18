@@ -1,6 +1,7 @@
-package kr.open.rhpark.library.debug.logx
+package kr.open.rhpark.library.debug.logcat
 
-import kr.open.rhpark.library.debug.logx.vo.LogxType
+import android.os.Environment
+import kr.open.rhpark.library.debug.logcat.vo.LogxType
 
 
 /**
@@ -10,7 +11,7 @@ import kr.open.rhpark.library.debug.logx.vo.LogxType
  * Logx.d(),Logx.d(msg),Logx.d(tag, msg)
  *
  * Logcat output ex)
- * D/AppName [tag] : (FileName:NumberLine).Method - msg
+ * D/AppName ["tag"] : (FileName:NumberLine).Method - msg
  *
  * Logx.p()...  Log.i + Parent method call name check
  * Logx.j(msg),Logx.j(tag,msg) Log.v + JSON code parsing
@@ -24,7 +25,7 @@ public object Logx {
     public var isDebug: Boolean = true // true -> show logcat, else is gone
     public var isDebugFilter: Boolean = false // do verification debugTagCheckList
     public var isDebugSave: Boolean = false // Log write currentTime.txt file (required storage read/write permission)
-    public var saveFilePath: String = "/sdcard/"
+    public var saveFilePath: String = Environment.getExternalStorageDirectory().path  /* "/sdcard/" */
 
     internal var appName = "RhPark"
 
@@ -72,7 +73,7 @@ public object Logx {
     @JvmStatic
     public fun v(msg: Any?) { logWriter.write(DEFAULT_TAG, msg , LogxType.VERBOSE) }
 
-    /** ex) Log.v AppName [tag] : (FileName:LineNumber).Method - @param msg **/
+    /** ex) Log.v AppName ["tag"] : (FileName:LineNumber).Method - @param msg **/
     @JvmStatic
     public fun v(tag: String, msg: Any?) { logWriter.write(tag, msg, LogxType.VERBOSE) }
 
@@ -85,7 +86,7 @@ public object Logx {
     @JvmStatic
     public fun d(msg: Any?) { logWriter.write(DEFAULT_TAG, msg, LogxType.DEBUG) }
 
-    /** ex) Log.d AppName [tag] : (FileName:LineNumber).Method - msg **/
+    /** ex) Log.d AppName ["tag"] : (FileName:LineNumber).Method - msg **/
     @JvmStatic
     public fun d(tag: String, msg: Any?) { logWriter.write(tag, msg, LogxType.DEBUG) }
 
@@ -98,7 +99,7 @@ public object Logx {
     @JvmStatic
     public fun i(msg: Any?) { logWriter.write(DEFAULT_TAG, msg, LogxType.INFO)}
 
-    /** ex) Log.i AppName [tag] : (FileName:LineNumber).Method - msg **/
+    /** ex) Log.i AppName ["tag"] : (FileName:LineNumber).Method - msg **/
     @JvmStatic
     public fun i(tag: String, msg: Any?) { logWriter.write(tag, msg, LogxType.INFO) }
 
@@ -111,7 +112,7 @@ public object Logx {
     @JvmStatic
     public fun w(msg: Any?) { logWriter.write(DEFAULT_TAG, msg, LogxType.WARN) }
 
-    /** ex) Log.w AppName [tag] : (FileName:LineNumber).Method - msg **/
+    /** ex) Log.w AppName ["tag"] : (FileName:LineNumber).Method - msg **/
     @JvmStatic
     public fun w(tag: String, msg: Any?) { logWriter.write(tag, msg, LogxType.WARN) }
 
@@ -124,31 +125,31 @@ public object Logx {
     @JvmStatic
     public fun e(msg: Any?) { logWriter.write(DEFAULT_TAG, msg, LogxType.ERROR) }
 
-    /** ex) Log.d AppName [tag] : (FileName:LineNumber).Method - msg **/
+    /** ex) Log.d AppName ["tag"] : (FileName:LineNumber).Method - msg **/
     @JvmStatic
     public fun e(tag: String, msg: Any?) { logWriter.write(tag, msg, LogxType.ERROR) }
 
 
     /**
      * Log.i + Parent call method name
-     * ex) Log.i AppName [] [PARENT] : ┎(ParentFileName:ParentLineNumber) -[ClassPath.Method]
-     *     Log.i AppName [] [PARENT] : ┖(FileName:LineNumber).Method -
+     * ex) Log.i AppName [] ["PARENT"] : ┎(ParentFileName:ParentLineNumber) -["ClassPath.Method"]
+     *     Log.i AppName [] ["PARENT"] : ┖(FileName:LineNumber).Method -"
      */
     @JvmStatic
     public fun p() { logWriter.writeParent(DEFAULT_TAG, DEFAULT_MSG) }
 
     /**
      * Log.i + Parent call method name
-     * ex) Log.i AppName [] [PARENT] : ┎(ParentFileName:ParentLineNumber) -[ClassPath.Method]
-     *     Log.i AppName [] [PARENT] : ┖(FileName:LineNumber).Method - msg
+     * ex) Log.i AppName [] ["PARENT"] : ┎(ParentFileName:ParentLineNumber) -["ClassPath.Method"]
+     *     Log.i AppName [] ["PARENT"] : ┖(FileName:LineNumber).Method - msg
      */
     @JvmStatic
     public fun p(msg: Any?) { logWriter.writeParent(DEFAULT_TAG, msg) }
 
     /**
      * Log.i + Parent call method name
-     * ex) Log.i AppName [tag] [PARENT] : ┎(ParentFileName:ParentLineNumber) -[ClassPath.Method]
-     *     Log.i AppName [tag] [PARENT] : ┖(FileName:LineNumber).Method - msg
+     * ex) Log.i AppName ["tag"] ["PARENT"] : ┎(ParentFileName:ParentLineNumber) -["ClassPath.Method"]
+     *     Log.i AppName ["tag"] ["PARENT"] : ┖(FileName:LineNumber).Method - msg
      */
     @JvmStatic
     public fun p(tag: String, msg: Any?) { logWriter.writeParent(tag, msg) }
@@ -156,21 +157,21 @@ public object Logx {
 
     /**
      * Log.d + Current Thread Id
-     * ex) Log.d AppName [] [T_ID] : [CurrentThread.id](FileName:LineNumber).Method -
+     * ex) Log.d AppName [] ["T_ID"] : [CurrentThread.id](FileName:LineNumber).Method -
      */
     @JvmStatic
     public fun t() { logWriter.writeThreadId(DEFAULT_TAG, DEFAULT_MSG) }
 
     /**
      * Log.d + Current Thread Id
-     * ex) Log.d AppName [] [T_ID] : [CurrentThread.id](FileName:LineNumber).Method - msg
+     * ex) Log.d AppName [] ["T_ID"] : [CurrentThread.id](FileName:LineNumber).Method - msg
      */
     @JvmStatic
     public fun t(msg: Any?) { logWriter.writeThreadId(DEFAULT_TAG, msg) }
 
     /**
      * Log.d + Current Thread Id
-     * ex) Log.d AppName [tag] [T_ID] : [CurrentThread.id](FileName:LineNumber).Method - msg
+     * ex) Log.d AppName ["tag"] ["T_ID"] : [CurrentThread.id](FileName:LineNumber).Method - msg
      */
     @JvmStatic
     public fun t(tag: String, msg: Any?) { logWriter.writeThreadId(tag, msg) }
@@ -178,20 +179,20 @@ public object Logx {
 
     /**
      * Log.v + Json Parse
-     * ex) Log.d AppName [] [JSON] : (FileName:LineNumber).Method - ====Json Start====
-     *     Log.d AppName [] [JSON] : (FileName:LineNumber). Json Format msg ...
-     *     Log.d AppName [] [JSON] : (FileName:LineNumber). Json Format msg ...
-     *     Log.d AppName [] [JSON] : (FileName:LineNumber).Method - ====JsonEnd====
+     * ex) Log.d AppName [] ["JSON"] : (FileName:LineNumber).Method - ====Json Start====
+     *     Log.d AppName [] ["JSON"] : (FileName:LineNumber). Json Format msg ...
+     *     Log.d AppName [] ["JSON"] : (FileName:LineNumber). Json Format msg ...
+     *     Log.d AppName [] ["JSON"] : (FileName:LineNumber).Method - ====JsonEnd====
      */
     @JvmStatic
     public fun j(msg: String) { logWriter.writeJson(DEFAULT_TAG, msg) }
 
     /**
      * Log.v + Json Parse
-     * ex) Log.d AppName [tag] [JSON] : (FileName:LineNumber).Method - ====Json Start====
-     *     Log.d AppName [tag] [JSON] : (FileName:LineNumber). Json Format msg ...
-     *     Log.d AppName [tag] [JSON] : (FileName:LineNumber). Json Format msg ...
-     *     Log.d AppName [tag] [JSON] : (FileName:LineNumber).Method - ====JsonEnd====
+     * ex) Log.d AppName ["tag"] ["JSON"] : (FileName:LineNumber).Method - ====Json Start====
+     *     Log.d AppName ["tag"] ["JSON"] : (FileName:LineNumber). Json Format msg ...
+     *     Log.d AppName ["tag"] ["JSON"] : (FileName:LineNumber). Json Format msg ...
+     *     Log.d AppName ["tag"] ["JSON"] : (FileName:LineNumber).Method - ====JsonEnd====
      */
     @JvmStatic
     public fun j(tag: String, msg: String) { logWriter.writeJson(tag, msg) }

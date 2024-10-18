@@ -1,7 +1,7 @@
-package kr.open.rhpark.library.debug.logx.data
+package kr.open.rhpark.library.debug.logcat.data
 
 import android.util.Log
-import kr.open.rhpark.library.debug.logx.Logx
+import kr.open.rhpark.library.debug.logcat.Logx
 
 internal class LogxStackTrace {
 

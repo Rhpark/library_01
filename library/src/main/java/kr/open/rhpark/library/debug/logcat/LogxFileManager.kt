@@ -1,12 +1,13 @@
-package kr.open.rhpark.library.debug.logx
+package kr.open.rhpark.library.debug.logcat
 
 import android.util.Log
-import kr.open.rhpark.library.debug.logx.vo.LogxType
+import kr.open.rhpark.library.debug.logcat.vo.LogxType
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 
 /**
  * Required Permission file read / write
@@ -21,7 +22,7 @@ internal class LogxFileManager(path:String) {
     }
 
     private fun currentTimeFormatted():String =
-        SimpleDateFormat("yy_MM_dd-HH_mm_ss").format(Date(System.currentTimeMillis()))
+        SimpleDateFormat("yy-MM-dd, HH:mm:ss.SSS",Locale.US).format(Date(System.currentTimeMillis()))
 
 
     private class FileManager(path: String) {

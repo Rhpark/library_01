@@ -1,4 +1,4 @@
-package kr.open.rhpark.library.debug.logx.vo
+package kr.open.rhpark.library.debug.logcat.vo
 
 public enum class LogxType(public val logTypeString: String) {
     VERBOSE("V"),  //Log.v
