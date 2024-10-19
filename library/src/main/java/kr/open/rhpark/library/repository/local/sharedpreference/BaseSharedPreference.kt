@@ -21,28 +21,26 @@ public abstract class BaseSharedPreference(context: Context, groupKey: String, s
      * Save Data
      * must be called after apply() or commit()
      */
-    private fun save(key: String, value: Any?) :SharedPreferences.Editor {
-        val editor = sp.edit()
-        return when (value) {
-            is String -> editor.putString(key, value)
-            is Boolean -> editor.putBoolean(key, value)
-            is Float -> editor.putFloat(key, value)
-            is Int -> editor.putInt(key, value)
-            is Long -> editor.putLong(key, value)
-            is Set<*> -> {
-                try {
-                    editor.putStringSet(key, value as Set<String>?)
-                } catch (e: ClassCastException) {
-                    Logx.e("ClassCastException: Set<*> is not Set<String>. Key: $key, Value: $value")
-                    throw ClassCastException("ClassCastException: Set<*> is not Set<String>. Key: $key, Value: $value")
-                }
+    private fun save(key: String, value: Any?): SharedPreferences.Editor = when (value) {
+        is String -> sp.edit().putString(key, value)
+        is Boolean -> sp.edit().putBoolean(key, value)
+        is Float -> sp.edit().putFloat(key, value)
+        is Int -> sp.edit().putInt(key, value)
+        is Long -> sp.edit().putLong(key, value)
+        is Set<*> -> {
+            try {
+                sp.edit().putStringSet(key, value as Set<String?>)
+            } catch (e: ClassCastException) {
+                Logx.e("ClassCastException: Set<*> is not Set<String>. Key: $key, Value: $value")
+                throw ClassCastException("ClassCastException: Set<*> is not Set<String>. Key: $key, Value: $value")
             }
-            else -> {
-                if (value != null) {
-                    Logx.e("Unsupported value type: ${value.javaClass}")
-                }
-                editor.remove(key)
+        }
+
+        else -> {
+            if (value != null) {
+                Logx.e("Unsupported value type: ${value.javaClass}")
             }
+            sp.edit().remove(key)
         }
     }
 
@@ -50,9 +48,8 @@ public abstract class BaseSharedPreference(context: Context, groupKey: String, s
 
     protected fun saveCommit(key: String, value: Any?) { save(key, value).commit() }
 
-    /******** remove data ********/
-
     /**
+     * remove data
      * after editor.commit() or editor.apply() using sp.edit()
      */
     private fun removeAt(key: String): SharedPreferences.Editor = sp.edit().remove(key)
@@ -62,6 +59,7 @@ public abstract class BaseSharedPreference(context: Context, groupKey: String, s
     protected fun removeAtCommit(key: String) { removeAt(key).commit() }
 
     /**
+     * remove all
      * after editor.commit() or editor.apply() using sp.edit()
      */
     private fun removeAll(): SharedPreferences.Editor = sp.edit().clear()
