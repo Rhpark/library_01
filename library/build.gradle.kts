@@ -10,7 +10,7 @@ publishing {
         register<MavenPublication>("release") {
             groupId = "com.github.Rhpark"
             artifactId = "library_01"
-            version = "0.1.1"
+            version = "0.1.2"
 
             afterEvaluate {
                 from(components["release"])
@@ -20,7 +20,7 @@ publishing {
         register<MavenPublication>("debug") {
             groupId = "com.github.Rhpark"
             artifactId = "library_01-d"
-            version = "0.1.1"
+            version = "0.1.2"
 
             afterEvaluate {
                 from(components["debug"])
@@ -91,7 +91,7 @@ dependencies {
     /**
      * Using for LifeCycle(ViewModelScope, CoroutineScope..)
      */
-    val lifecycle_version = "2.8.5"
+    val lifecycle_version = "2.8.6"
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version")
 
