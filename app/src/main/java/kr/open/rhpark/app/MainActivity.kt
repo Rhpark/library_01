@@ -1,25 +1,47 @@
 package kr.open.rhpark.app
 
-import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import kr.open.rhpark.library.debug.logcat.Logx
 
-class MainActivity : AppCompatActivity() {
+import android.os.Bundle
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.launch
+import kr.open.rhpark.app.databinding.ActivityMainBinding
+import kr.open.rhpark.library.debug.logcat.Logx
+import kr.open.rhpark.library.ui.activity.BaseBindingActivity
+
+class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_main) {
+
+    private val vm: MainActivityVm by lazy { getViewModel<MainActivityVm>() }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
-//        Logx.isDebugSave = true
+        binding.vm = vm
         test()
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                vm.eventVm.collect {
+                    when (it) {
+                        is MainActivityVmEvent.OnPermissionCheck -> {
+                            requestPermissions(it.permissionList, {
+                                Logx.d("onAllPermissionsGranted")
+                            }, { deniedPermissions ->
+                                Logx.d("onPermissionsDenied $deniedPermissions")
+                            })
+                        }
+                        is MainActivityVmEvent.OnShowSnackBar -> {
+                            snackBar.showShort(binding.btnTestToastShow, it.msg)
+                        }
+                        is MainActivityVmEvent.OnShowToast -> {
+                            toast.showShort(it.msg)
+                        }
+                    }
+                }
+            }
+        }
     }
+
 
     fun test() {
         Logx.d()
