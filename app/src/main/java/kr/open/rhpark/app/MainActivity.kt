@@ -1,6 +1,7 @@
 package kr.open.rhpark.app
 
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -35,6 +36,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
                         }
                         is MainActivityVmEvent.OnShowToast -> {
                             toast.showShort(it.msg)
+                            startActivity(SecondActivity::class.java, Intent.FLAG_ACTIVITY_NEW_TASK)
                         }
                     }
                 }
