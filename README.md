@@ -117,7 +117,7 @@ class MainActivity : AppCompatActivity() {
 <br>
 </br>
 
-### 2. Activity (Custom Activity)
+### 2. Activity (Custom Activity, CustomViewModel)
 
 
 ####  2 - 1 XML
