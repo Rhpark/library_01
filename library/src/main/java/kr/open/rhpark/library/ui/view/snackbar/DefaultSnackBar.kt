@@ -6,7 +6,7 @@ import android.view.View
 import com.google.android.material.snackbar.Snackbar
 
 
-public class DefaultSnackBar(private val view: View) {
+public class DefaultSnackBar(private val windowView: View) {
 
     private var animation: Int? = null
 
@@ -74,19 +74,25 @@ public class DefaultSnackBar(private val view: View) {
 
     public fun setTextMaxLines(textMaxLines: Int?) { this.textMaxLines = textMaxLines }
 
-    public fun showShort(msg: String) {   make(msg, Snackbar.LENGTH_SHORT).show()    }
-    public fun showShort(resId: Int)  {    make(resId, Snackbar.LENGTH_SHORT).show()  }
+    public fun showShortWindowView(msg: String) {   make(windowView, msg, Snackbar.LENGTH_SHORT).show()    }
+    public fun showShortWindowView(resId: Int)  {    make(windowView, resId, Snackbar.LENGTH_SHORT).show()  }
+    public fun showShort(view: View, msg: String) {   make(view, msg, Snackbar.LENGTH_SHORT).show()    }
+    public fun showShort(view: View, resId: Int)  {    make(view, resId, Snackbar.LENGTH_SHORT).show()  }
 
-    public fun showLong(msg: String)  {   make(msg, Snackbar.LENGTH_LONG).show() }
-    public fun showLong(resId: Int)   {   make(resId, Snackbar.LENGTH_LONG).show()   }
+    public fun showLongWindowView(msg: String)  {   make(windowView, msg, Snackbar.LENGTH_LONG).show() }
+    public fun showLongWindowView(resId: Int)   {   make(windowView, resId, Snackbar.LENGTH_LONG).show()   }
+    public fun showLong(view: View, msg: String)  {   make(view, msg, Snackbar.LENGTH_LONG).show() }
+    public fun showLong(view: View, resId: Int)   {   make(view, resId, Snackbar.LENGTH_LONG).show()   }
 
-    public fun showIndefinite(msg: String)  {  make(msg, Snackbar.LENGTH_INDEFINITE)    }
-    public fun showIndefinite(resId: Int)   {   make(resId, Snackbar.LENGTH_INDEFINITE) }
+    public fun showIndefiniteWindowView(msg: String)  {  make(windowView, msg, Snackbar.LENGTH_INDEFINITE)    }
+    public fun showIndefiniteWindowView(resId: Int)   {   make(windowView, resId, Snackbar.LENGTH_INDEFINITE) }
+    public fun showIndefinite(view: View, msg: String)  {  make(view, msg, Snackbar.LENGTH_INDEFINITE)    }
+    public fun showIndefinite(view: View, resId: Int)   {   make(view, resId, Snackbar.LENGTH_INDEFINITE) }
 
-    private fun make(msg: String, lengthType: Int) =
+    private fun make(view:View, msg: String, lengthType: Int) =
         Snackbar.make(view, msg, lengthType).apply { defaultSet(this) }
 
-    private fun make(resId: Int, lengthType: Int) =
+    private fun make(view:View, resId: Int, lengthType: Int) =
         Snackbar.make(view, resId, lengthType).apply { defaultSet(this) }
 
     @SuppressLint("RestrictedApi")
@@ -100,7 +106,7 @@ public class DefaultSnackBar(private val view: View) {
             backgroundTint?.let { setBackgroundTint(it) }
             backgroundTintStateList?.let { setBackgroundTintList(it) }
 
-            customView?.let { (this@DefaultSnackBar.view as Snackbar.SnackbarLayout).addView(it) }
+            customView?.let { (this@DefaultSnackBar.windowView as Snackbar.SnackbarLayout).addView(it) }
 
             isGestureInsetBottomIgnored = this@DefaultSnackBar.isGestureInsetBottomIgnored
 
