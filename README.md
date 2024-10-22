@@ -171,7 +171,7 @@ android {
 
 dependencies {
 	...
-	implementation("com.github.rhpark:library_01:0.1.4")
+	implementation("com.github.rhpark:library_01:0.2.0")
 	...
 }
 ```
