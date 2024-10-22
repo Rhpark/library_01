@@ -15,7 +15,6 @@ public abstract class BaseBindingActivity<T : ViewDataBinding>(@LayoutRes privat
 
     protected lateinit var binding: T
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

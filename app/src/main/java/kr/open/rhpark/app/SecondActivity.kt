@@ -8,6 +8,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.launch
 import kr.open.rhpark.app.databinding.ActivityMainBinding
 import kr.open.rhpark.app.databinding.ActivitySecondBinding
+import kr.open.rhpark.app.fragment.FirstFragment
 import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.ui.activity.BaseBindingActivity
 
@@ -18,5 +19,12 @@ class SecondActivity : BaseBindingActivity<ActivitySecondBinding>(R.layout.activ
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding.vm = vm
+
+        val fragmentManager = supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+
+        val myFragment = FirstFragment()
+        fragmentTransaction.add(R.id.fgFirst, myFragment, "FirstFragment")
+        fragmentTransaction.commit()
     }
 }
