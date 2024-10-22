@@ -1,4 +1,4 @@
-# Android Base Library_01 (v0.1.4)
+# Android Base Library_01 (v0.2.0)
 
 ![image](https://jitpack.io/v/rhpark/library_01.svg)
 <br>
@@ -121,22 +121,27 @@ class MainActivity : AppCompatActivity() {
 
 
 ####  2 - 1 XML
-![image](https://github.com/Rhpark/library_01/blob/master/Sample_Base_Activity_Binding_XML.png)]
+![image](https://github.com/Rhpark/library_01/blob/master/Sample_Base_Activity_Binding_XML.png)
 <br>
 </br>
 
 ####  2 - 2 ViewModel
-![image](https://github.com/Rhpark/library_01/blob/master/Sample_Base_Activity_Binding_ViewModel.png)]
+![image](https://github.com/Rhpark/library_01/blob/master/Sample_Base_Activity_Binding_ViewModel.png)
 <br>
 </br>
 
 ####  2 - 3 ViewModelEvent
-![image](https://github.com/Rhpark/library_01/blob/master/Sample_Base_Activity_Binding_ViewModel_Event.png)]
+![image](https://github.com/Rhpark/library_01/blob/master/Sample_Base_Activity_Binding_ViewModel_Event.png)
 <br>
 </br>
 
-####  2 - 4 Activity(Binding)
-![image](https://github.com/Rhpark/library_01/blob/master/Sample_Base_Activity_Binding_MainActivity.png)]
+####  2 - 4 Activity (Binding)
+![image](https://github.com/Rhpark/library_01/blob/master/Sample_Base_Activity_Binding_MainActivity.png)
+<br>
+</br>
+
+####  2 - 5 Fragment (Binding)
+![image](https://github.com/Rhpark/library_01/blob/master/Sample_Base_Fragment_Binding.png)
 
 <br>
 </br>
