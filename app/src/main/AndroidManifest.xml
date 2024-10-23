@@ -26,7 +26,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SecondActivity" />
+        <activity android:name=".activity.second.SecondActivity" />
+        <activity android:name=".activity.recyclerview.RecyclerViewActivity" />
     </application>
 
 </manifest>

@@ -7,6 +7,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.launch
+import kr.open.rhpark.app.activity.recyclerview.RecyclerViewActivity
+import kr.open.rhpark.app.activity.second.SecondActivity
 import kr.open.rhpark.app.databinding.ActivityMainBinding
 import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.ui.activity.BaseBindingActivity
@@ -37,6 +39,11 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
                         is MainActivityVmEvent.OnShowToast -> {
                             toast.showShort(it.msg)
                             startActivity(SecondActivity::class.java, Intent.FLAG_ACTIVITY_NEW_TASK)
+                        }
+
+                        is MainActivityVmEvent.OnShowRecyclerviewActivity -> {
+                            toast.showShort(it.msg)
+                            startActivity(RecyclerViewActivity::class.java, Intent.FLAG_ACTIVITY_NEW_TASK)
                         }
                     }
                 }

@@ -33,4 +33,8 @@ class MainActivityVm : BaseViewModelEventFlow<MainActivityVmEvent>() {
     fun onClickToast(v: View) {
         sendEvent(MainActivityVmEvent.OnShowToast("Hello Toast"))
     }
+
+    fun onClickShowRecyclerviewActivity(v: View) {
+        sendEvent(MainActivityVmEvent.OnShowRecyclerviewActivity("Show RecyclerView Activity"))
+    }
 }

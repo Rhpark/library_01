@@ -1,15 +1,10 @@
-package kr.open.rhpark.app
+package kr.open.rhpark.app.activity.second
 
 
 import android.os.Bundle
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import kotlinx.coroutines.launch
-import kr.open.rhpark.app.databinding.ActivityMainBinding
+import kr.open.rhpark.app.R
 import kr.open.rhpark.app.databinding.ActivitySecondBinding
 import kr.open.rhpark.app.fragment.FirstFragment
-import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.ui.activity.BaseBindingActivity
 
 class SecondActivity : BaseBindingActivity<ActivitySecondBinding>(R.layout.activity_second) {
