@@ -52,6 +52,11 @@ class RecyclerViewActivity : BaseBindingActivity<ActivityRecyclerviewBinding>(R.
             setOnItemClickListener { pos, view ->
                 toast.showShort("ItemClick position = $pos")
             }
+            setOnItemLongClickListener { pos, view ->
+                toast.showShort("ItemLongClick position = $pos")
+            }
         }
+
+        systemServiceManagerInfo.softKeyboardInfoView.show(binding.edtKey,200L)
     }
 }

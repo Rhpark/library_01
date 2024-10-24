@@ -1,4 +1,4 @@
-package kr.open.rhpark.library.ui.adapter
+package kr.open.rhpark.library.ui.recyclerview.adapter
 
 import android.view.View
 import androidx.recyclerview.widget.DiffUtil
@@ -45,22 +45,22 @@ public abstract class BaseRcvAdapter<TYPE, VH : RecyclerView.ViewHolder>() : Rec
     public open fun addAllItem(items: List<TYPE>) {
 
         val fromSize = itemList.size
-        val mutableList = itemList.toMutableList()
+        val mutableList = getMutableItemList()
         mutableList.addAll(items)
         itemList = mutableList
         notifyItemRangeInserted(fromSize, items.size)
     }
 
+    private fun getMutableItemList() = getItems().toMutableList()
+
     public open fun addItem(item: TYPE) {
         itemList = itemList + item
         Logx.d(item)
-
-//        itemList.add(item)
         notifyItemInserted(itemList.size - 1)
     }
 
     public open fun addItemAt(position: Int, item: TYPE) {
-        val mutableList = itemList.toMutableList()
+        val mutableList = getMutableItemList()
         mutableList.add(position, item)
         itemList = mutableList
         notifyItemInserted(position)
@@ -78,7 +78,7 @@ public abstract class BaseRcvAdapter<TYPE, VH : RecyclerView.ViewHolder>() : Rec
             return
         }
 
-        val mutableList = itemList.toMutableList()
+        val mutableList = getMutableItemList()
         mutableList.removeAt(position)
         itemList = mutableList
         notifyItemRemoved(position)
@@ -88,7 +88,7 @@ public abstract class BaseRcvAdapter<TYPE, VH : RecyclerView.ViewHolder>() : Rec
         holder.itemView.setOnClickListener { onItemClickListener?.invoke(position, it) }
         holder.itemView.setOnLongClickListener {
             onItemLongClickListener?.invoke(position, it)
-            false
+            true
         }
     }
 
