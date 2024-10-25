@@ -18,6 +18,7 @@
         android:layout_height="match_parent">
 
         <EditText
+            android:hint="Input Size or Remove Position"
             android:id="@+id/edtKey"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -28,22 +29,33 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/rcvAdd"
+            android:id="@+id/btbRcvAdd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="@{(v) -> vm.onClickAdd(v)}"
-            android:text="Add Item"
+            android:text="Set Item"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/edtKey" />
 
         <Button
-            android:id="@+id/rcvRemove"
+            android:id="@+id/btnRcvRemove"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="@{(v) -> vm.onClickRemove(v)}"
-            android:text="Remove Item"
-            app:layout_constraintRight_toRightOf="parent"
+            android:text="Remove Position"
+            app:layout_constraintLeft_toRightOf="@id/btbRcvAdd"
             app:layout_constraintTop_toBottomOf="@id/edtKey" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/scRcvAdapterType"
+            android:layout_width="wrap_content"
+            android:onCheckedChanged="@{(btn,checked)->vm.change(checked)}"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toRightOf="@+id/btnRcvRemove"
+            app:layout_constraintTop_toTopOf="@+id/btnRcvRemove"
+            app:layout_constraintRight_toRightOf="parent"
+            android:text="@{vm.fAdapterStr}"
+            />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rcvList"
@@ -53,7 +65,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/rcvAdd" />
+            app:layout_constraintTop_toBottomOf="@id/btbRcvAdd" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -12,15 +12,15 @@ import kr.open.rhpark.library.debug.logcat.Logx
  *  <VH> is ViewHolder Generic Type
  *  xmlRes is Item Layout Resource
  */
-public abstract class BaseRcvAdapter<TYPE, VH : RecyclerView.ViewHolder>() : RecyclerView.Adapter<VH>() {
+public abstract class BaseRcvAdapter<ITEM, VH : RecyclerView.ViewHolder>() : RecyclerView.Adapter<VH>() {
 
     /**
      * Adapter Bind ItemList
      */
-    private var itemList = listOf<TYPE>()
+    private var itemList = listOf<ITEM>()
 
-    private var onItemClickListener: ((Int, View) -> Unit)? = null
-    private var onItemLongClickListener: ((Int, View) -> Unit)? = null
+    private var onItemClickListener: ((Int, ITEM, View) -> Unit)? = null
+    private var onItemLongClickListener: ((Int, ITEM, View) -> Unit)? = null
 
     public var detectMoves: Boolean = false
 
@@ -28,21 +28,22 @@ public abstract class BaseRcvAdapter<TYPE, VH : RecyclerView.ViewHolder>() : Rec
      * required for child class
      * update in DiffUtil.Callback.areItemsTheSame
      */
-    protected open fun diffUtilAreItemsTheSame(oldItem: TYPE, newItem: TYPE): Boolean = oldItem === newItem
-    protected open fun diffUtilAreContentsTheSame(oldItem: TYPE, newItem: TYPE): Boolean = oldItem == newItem
+    protected open fun diffUtilAreItemsTheSame(oldItem: ITEM, newItem: ITEM): Boolean = oldItem === newItem
+    protected open fun diffUtilAreContentsTheSame(oldItem: ITEM, newItem: ITEM): Boolean = oldItem == newItem
 
+    protected abstract fun onBindViewHolder(holder: VH, position: Int, item: ITEM)
 
     public override fun getItemCount(): Int = itemList.size
 
-    public fun getItem(position: Int): TYPE = itemList[position]
+    public fun getItem(position: Int): ITEM = itemList[position]
 
-    public fun getItems(): List<TYPE> = itemList
+    public fun getItems(): List<ITEM> = itemList
 
-    public fun setItems(items: List<TYPE>) {
+    public fun setItems(items: List<ITEM>) {
         update(items)
     }
 
-    public open fun addAllItem(items: List<TYPE>) {
+    public open fun addItems(items: List<ITEM>) {
 
         val fromSize = itemList.size
         val mutableList = getMutableItemList()
@@ -53,13 +54,13 @@ public abstract class BaseRcvAdapter<TYPE, VH : RecyclerView.ViewHolder>() : Rec
 
     private fun getMutableItemList() = getItems().toMutableList()
 
-    public open fun addItem(item: TYPE) {
+    public open fun addItem(item: ITEM) {
         itemList = itemList + item
         Logx.d(item)
         notifyItemInserted(itemList.size - 1)
     }
 
-    public open fun addItemAt(position: Int, item: TYPE) {
+    public open fun addItemAt(position: Int, item: ITEM) {
         val mutableList = getMutableItemList()
         mutableList.add(position, item)
         itemList = mutableList
@@ -85,16 +86,19 @@ public abstract class BaseRcvAdapter<TYPE, VH : RecyclerView.ViewHolder>() : Rec
     }
 
     override fun onBindViewHolder(holder: VH, position: Int) {
-        holder.itemView.setOnClickListener { onItemClickListener?.invoke(position, it) }
+        val item = getItem(position)
+        holder.itemView.setOnClickListener { onItemClickListener?.invoke(position, item, it) }
         holder.itemView.setOnLongClickListener {
-            onItemLongClickListener?.invoke(position, it)
+            onItemLongClickListener?.invoke(position, item, it)
             true
         }
+
+        onBindViewHolder(holder, position, item)
     }
 
     protected fun isPositionValid(position: Int): Boolean = (position > RecyclerView.NO_POSITION && position < itemCount)
 
-    public open fun removeAt(key: TYPE) {
+    public open fun removeAt(key: ITEM) {
         val position = itemList.indexOf(key)
         if (!isPositionValid(position)) {
             Logx.e("Can not remove item, position is $position itemcount $itemCount")
@@ -103,15 +107,15 @@ public abstract class BaseRcvAdapter<TYPE, VH : RecyclerView.ViewHolder>() : Rec
         removeAt(position)
     }
 
-    private fun update(newItemList: List<TYPE>) {
+    private fun update(newItemList: List<ITEM>) {
         val difResult = DiffUtil.calculateDiff(RecyclerViewDiffUtil(itemList, newItemList), detectMoves)
         difResult.dispatchUpdatesTo(this)
         itemList = newItemList
     }
 
     private inner class RecyclerViewDiffUtil(
-        private val oldList: List<TYPE>,
-        private val newList: List<TYPE>
+        private val oldList: List<ITEM>,
+        private val newList: List<ITEM>
     ) : DiffUtil.Callback() {
 
         override fun getOldListSize() = oldList.size
@@ -125,11 +129,11 @@ public abstract class BaseRcvAdapter<TYPE, VH : RecyclerView.ViewHolder>() : Rec
             diffUtilAreContentsTheSame(oldList[oldItemPosition], newList[newItemPosition])
     }
 
-    public fun setOnItemClickListener(listener: (Int, View) -> Unit) {
+    public fun setOnItemClickListener(listener: (Int, ITEM, View) -> Unit) {
         onItemClickListener = listener
     }
 
-    public fun setOnItemLongClickListener(listener: (Int, View) -> Unit) {
+    public fun setOnItemLongClickListener(listener: (Int, ITEM, View) -> Unit) {
         onItemLongClickListener = listener
     }
 

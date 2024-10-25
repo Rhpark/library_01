@@ -5,7 +5,7 @@ import kr.open.rhpark.app.R
 import kr.open.rhpark.app.activity.recyclerview.adapter.item.RcvItem
 import kr.open.rhpark.app.databinding.ItemRecyclerviewBinding
 import kr.open.rhpark.library.ui.recyclerview.adapter.BaseRcvAdapter
-import kr.open.rhpark.library.ui.recyclerview.adapter.viewholder.BaseRcvViewHolder
+import kr.open.rhpark.library.ui.recyclerview.viewholder.BaseRcvViewHolder
 
 class RcvAdapter :
     BaseRcvAdapter<RcvItem, BaseRcvViewHolder<RcvItem, ItemRecyclerviewBinding>>() {
@@ -25,8 +25,11 @@ class RcvAdapter :
         return BaseRcvViewHolder(R.layout.item_recyclerview, parent)
     }
 
-    override fun onBindViewHolder(holder: BaseRcvViewHolder<RcvItem, ItemRecyclerviewBinding>, position: Int) {
-        super.onBindViewHolder(holder, position)
+    override fun onBindViewHolder(
+        holder: BaseRcvViewHolder<RcvItem, ItemRecyclerviewBinding>,
+        position: Int,
+        item: RcvItem
+    ) {
         holder.binding.item = getItem(position)
 //        holder.binding.rcvKey.text = getItem(position).key
 //        holder.binding.rcvMsg.text = getItem(position).msg

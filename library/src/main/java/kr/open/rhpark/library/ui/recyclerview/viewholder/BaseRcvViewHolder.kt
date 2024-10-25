@@ -1,4 +1,4 @@
-package kr.open.rhpark.library.ui.recyclerview.adapter.viewholder
+package kr.open.rhpark.library.ui.recyclerview.viewholder
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
