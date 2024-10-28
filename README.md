@@ -1,9 +1,9 @@
-# Android Base Library_01 (v0.2.0)
+# Android Easy Development Library (v0.2.1)
 
 ![image](https://jitpack.io/v/rhpark/library_01.svg)
 <br>
 </br>
-This library drives easier development of Android.
+This library helps you make easy and more simple code for Android developers
 
 <br>
 </br>
@@ -148,6 +148,24 @@ class MainActivity : AppCompatActivity() {
 <br>
 </br>
 
+### 3. Adapter,ListAdapter
+
+
+####  2 - 1 Adapter
+![image](https://github.com/Rhpark/library_01/blob/master/Sample_Base_Binding_Adapter.png)
+<br>
+</br>
+
+####  2 - 2 List Adapter
+![image](https://github.com/Rhpark/library_01/blob/master/Sample_Base_Binding_List_Adapter.png)
+<br>
+</br>
+
+<br>
+</br>
+<br>
+</br>
+
 ## Setting
 
 #### 1. Build.Gradle (Module :App)
@@ -171,7 +189,7 @@ android {
 
 dependencies {
 	...
-	implementation("com.github.rhpark:library_01:0.2.0")
+	implementation("com.github.rhpark:library_01:0.2.1")
 	...
 }
 ```
