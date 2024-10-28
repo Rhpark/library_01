@@ -7,7 +7,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.launch
 import kr.open.rhpark.app.R
 import kr.open.rhpark.app.databinding.ActivityRecyclerviewBinding
+import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.ui.activity.BaseBindingActivity
+import kr.open.rhpark.library.ui.recyclerview.RecyclerScrollStateView
 
 class RecyclerViewActivity : BaseBindingActivity<ActivityRecyclerviewBinding>(R.layout.activity_recyclerview) {
 
@@ -16,6 +18,20 @@ class RecyclerViewActivity : BaseBindingActivity<ActivityRecyclerviewBinding>(R.
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding.vm = vm
+        binding.run {
+            rcvList.setOnReachEdgeListener(object : RecyclerScrollStateView.OnReachEdgeListener {
+                override fun onReachEdge(edge: RecyclerScrollStateView.Edge, isReached: Boolean) {
+                    Logx.d("edge : $edge, isReached : $isReached")
+                }
+            })
+            rcvList.setOnScrollDirectionListener(object :RecyclerScrollStateView.OnScrollDirectionListener{
+                override fun onScrollDirectionChanged(scrollDirection: RecyclerScrollStateView.ScrollDirection) {
+                    Logx.d("scrollDirection : $scrollDirection")
+                }
+            })
+        }
+
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 vm.eventVm.collect {

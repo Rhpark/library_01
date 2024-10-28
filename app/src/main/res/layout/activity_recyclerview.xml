@@ -57,7 +57,7 @@
             android:text="@{vm.fAdapterStr}"
             />
 
-        <androidx.recyclerview.widget.RecyclerView
+        <kr.open.rhpark.library.ui.recyclerview.RecyclerScrollStateView
             android:id="@+id/rcvList"
             android:layout_width="match_parent"
             android:layout_height="0dp"
