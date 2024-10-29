@@ -19,14 +19,16 @@ class RecyclerViewActivity : BaseBindingActivity<ActivityRecyclerviewBinding>(R.
         super.onCreate(savedInstanceState)
         binding.vm = vm
         binding.run {
-            rcvList.setOnReachEdgeListener(object : RecyclerScrollStateView.OnReachEdgeListener {
-                override fun onReachEdge(edge: RecyclerScrollStateView.Edge, isReached: Boolean) {
+            rcvList.setOnReachEdgeListener(object : RecyclerScrollStateView.OnEdgeReachedListener {
+                override fun onEdgeReached(edge: RecyclerScrollStateView.Edge, isReached: Boolean) {
                     Logx.d("edge : $edge, isReached : $isReached")
+                    toast.showShort("edge : $edge, isReached : $isReached")
                 }
             })
-            rcvList.setOnScrollDirectionListener(object :RecyclerScrollStateView.OnScrollDirectionListener{
+            rcvList.setOnScrollDirectionListener(object :RecyclerScrollStateView.OnScrollDirectionChangedListener{
                 override fun onScrollDirectionChanged(scrollDirection: RecyclerScrollStateView.ScrollDirection) {
                     Logx.d("scrollDirection : $scrollDirection")
+                    toast.showShort("scrollDirection : $scrollDirection")
                 }
             })
         }

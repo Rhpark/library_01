@@ -60,6 +60,8 @@
         <kr.open.rhpark.library.ui.recyclerview.RecyclerScrollStateView
             android:id="@+id/rcvList"
             android:layout_width="match_parent"
+            app:rhpark_edgeReachThreshold="10"
+            app:rhpark_scrollDirectionThreshold="30"
             android:layout_height="0dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
