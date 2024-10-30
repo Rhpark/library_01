@@ -1,4 +1,4 @@
-# Android Easy Development Library (v0.2.1)
+# Android Easy Development Library (v0.3.0)
 
 ![image](https://jitpack.io/v/rhpark/library_01.svg)
 <br>
@@ -151,15 +151,30 @@ class MainActivity : AppCompatActivity() {
 ### 3. Adapter,ListAdapter
 
 
-####  2 - 1 Adapter
+####  3 - 1 Adapter
 ![image](https://github.com/Rhpark/library_01/blob/master/Sample_Base_Binding_Adapter.png)
 <br>
 </br>
 
-####  2 - 2 List Adapter
+####  3 - 2 List Adapter
 ![image](https://github.com/Rhpark/library_01/blob/master/Sample_Base_Binding_List_Adapter.png)
+
 <br>
 </br>
+<br>
+</br>
+
+
+### 4. RecyclerScrollStateView(Custom RecyclerView)
+
+#### 4 - 1 RecyclerStateViewConfig (Activity)
+![image](https://github.com/Rhpark/library_01/blob/master/Sample_Base_Binding_RecyclerScrollStateView.png)
+<br>
+</br>
+
+####  4 - 2 RecyclerStateViewConfig (XML)
+![image](https://github.com/Rhpark/library_01/blob/master/Sample_Base_Binding_RecyclerStateView_XML.png)
+
 
 <br>
 </br>
@@ -189,7 +204,7 @@ android {
 
 dependencies {
 	...
-	implementation("com.github.rhpark:library_01:0.2.1")
+	implementation("com.github.rhpark:library_01:0.3.0")
 	...
 }
 ```
