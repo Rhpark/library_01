@@ -38,12 +38,12 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
                         }
                         is MainActivityVmEvent.OnShowToast -> {
                             toast.showShort(it.msg)
-                            startActivity(SecondActivity::class.java, Intent.FLAG_ACTIVITY_NEW_TASK)
+                            startActivity(SecondActivity::class.java, null, Intent.FLAG_ACTIVITY_NEW_TASK)
                         }
 
                         is MainActivityVmEvent.OnShowRecyclerviewActivity -> {
                             toast.showShort(it.msg)
-                            startActivity(RecyclerViewActivity::class.java, Intent.FLAG_ACTIVITY_NEW_TASK)
+                            startActivity(RecyclerViewActivity::class.java)
                         }
                     }
                 }

@@ -17,6 +17,7 @@ class RcvAdapter : BaseRcvAdapter<RcvItem, BaseRcvViewHolder<RcvItem, ItemRecycl
         return oldItem.key === newItem.key
     }
 
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int)
             : BaseRcvViewHolder<RcvItem, ItemRecyclerviewBinding> =
         BaseRcvViewHolder(R.layout.item_recyclerview, parent)

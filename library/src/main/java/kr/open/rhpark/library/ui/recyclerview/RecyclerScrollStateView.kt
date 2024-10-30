@@ -197,6 +197,14 @@ public class RecyclerScrollStateView : RecyclerView {
         this.onScrollDirectionChangedListener = listener
     }
 
+    public fun setOnScrollDirectionListener(scrollDirectionChangedListener: (scrollDirection: ScrollDirection) -> Unit) {
+        this.onScrollDirectionChangedListener = object : OnScrollDirectionChangedListener {
+            override fun onScrollDirectionChanged(scrollDirection: ScrollDirection) {
+                scrollDirectionChangedListener(scrollDirection)
+            }
+        }
+    }
+
     /**
      * Sets a listener to be notified when the RecyclerView reaches an edge.
      * RecyclerView가 가장자리에 도달했을 때 알림을 받을 리스너를 설정합니다.
@@ -212,6 +220,14 @@ public class RecyclerScrollStateView : RecyclerView {
      */
     public fun setOnReachEdgeListener(listener: OnEdgeReachedListener?) {
         this.onEdgeReachedListener = listener
+    }
+
+    public fun setOnReachEdgeListener(edgeReachedListener: (edge: Edge, isReached: Boolean) -> Unit) {
+        this.onEdgeReachedListener = object : OnEdgeReachedListener {
+            override fun onEdgeReached(edge: Edge, isReached: Boolean) {
+                edgeReachedListener(edge, isReached)
+            }
+        }
     }
 
     /**
