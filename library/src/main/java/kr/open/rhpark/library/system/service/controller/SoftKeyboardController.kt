@@ -1,5 +1,6 @@
-package kr.open.rhpark.library.system.service
+package kr.open.rhpark.library.system.service.controller
 
+import android.content.Context
 import android.os.Build
 import android.view.View
 import android.view.Window
@@ -7,13 +8,15 @@ import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.RequiresApi
 import kr.open.rhpark.library.debug.logcat.Logx
+import kr.open.rhpark.library.system.service.base.BaseSystemService
 
 /**
  * Using InputMethodManager
  * Screen Soft Keyboard control class
  * search windowSoftInputMode in https://blog.naver.com/il7942li/222671675950
  */
-public class SoftKeyboardInfoStateView(private val imm: InputMethodManager) {
+public class SoftKeyboardController(context: Context, private val imm: InputMethodManager)
+    : BaseSystemService(context,null) {
 
 
     /**
@@ -77,4 +80,5 @@ public class SoftKeyboardInfoStateView(private val imm: InputMethodManager) {
     public fun startStylusHandwriting(v: View, delay:Long): Boolean = v.postDelayed(Runnable {
         startStylusHandwriting(v)
     },delay)
+
 }

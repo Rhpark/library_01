@@ -37,4 +37,12 @@ class MainActivityVm : BaseViewModelEventFlow<MainActivityVmEvent>() {
     fun onClickShowRecyclerviewActivity(v: View) {
         sendEvent(MainActivityVmEvent.OnShowRecyclerviewActivity("Show RecyclerView Activity"))
     }
+
+    fun onClickShowVibratorActivity(v:View) {
+        sendEvent(MainActivityVmEvent.OnShowVibratorActivity("Show Vibrator Activity"))
+    }
+
+    fun onClickShowUiUtilsActivity(v:View) {
+        sendEvent(MainActivityVmEvent.OnShowUiUtilsActivity("Show UiUtils Activity"))
+    }
 }

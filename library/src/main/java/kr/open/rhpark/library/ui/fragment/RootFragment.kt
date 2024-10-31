@@ -8,7 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.system.permission.PermissionListener
-import kr.open.rhpark.library.system.service.SystemServiceManagerInfo
+import kr.open.rhpark.library.system.service.SystemServiceManager
 import kr.open.rhpark.library.ui.view.snackbar.DefaultSnackBar
 import kr.open.rhpark.library.ui.view.toast.DefaultToast
 
@@ -45,7 +45,7 @@ public abstract class RootFragment : Fragment() {
      * A system service manager info object for accessing system services.
      * 시스템 서비스에 액세스하기 위한 시스템 서비스 관리자 정보 객체입.
      */
-    protected val systemServiceManagerInfo: SystemServiceManagerInfo by lazy { SystemServiceManagerInfo(requireContext()) }
+    protected val systemServiceManagerInfo: SystemServiceManager by lazy { SystemServiceManager(requireContext()) }
 
     /**
      * The permission listener for handling permission request results.

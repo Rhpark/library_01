@@ -47,6 +47,6 @@ class RecyclerViewActivity : BaseBindingActivity<ActivityRecyclerviewBinding>(R.
                 }
             }
         }
-        systemServiceManagerInfo.softKeyboardInfoView.show(binding.edtKey, 200L)
+        systemServiceManagerInfo.softKeyboardController.show(binding.edtKey, 200L)
     }
 }

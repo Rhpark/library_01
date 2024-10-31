@@ -9,6 +9,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.launch
 import kr.open.rhpark.app.activity.recyclerview.RecyclerViewActivity
 import kr.open.rhpark.app.activity.second.SecondActivity
+import kr.open.rhpark.app.activity.vibrator.VibratorActivity
 import kr.open.rhpark.app.databinding.ActivityMainBinding
 import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.ui.activity.BaseBindingActivity
@@ -44,6 +45,16 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
                         is MainActivityVmEvent.OnShowRecyclerviewActivity -> {
                             toast.showShort(it.msg)
                             startActivity(RecyclerViewActivity::class.java)
+                        }
+
+                        is MainActivityVmEvent.OnShowVibratorActivity -> {
+                            toast.showShort(it.msg)
+                            startActivity(VibratorActivity::class.java)
+                        }
+
+                        is MainActivityVmEvent.OnShowUiUtilsActivity -> {
+//                            toast.showShort(it.msg)
+//                            startActivity(WindowActivity::class.java)
                         }
                     }
                 }

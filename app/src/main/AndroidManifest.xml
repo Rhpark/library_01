@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
@@ -28,6 +29,8 @@
         </activity>
         <activity android:name=".activity.second.SecondActivity" />
         <activity android:name=".activity.recyclerview.RecyclerViewActivity" />
+        <activity android:name=".activity.vibrator.VibratorActivity" />
+        <activity android:name=".activity.util.WindowActivity" />
     </application>
 
 </manifest>

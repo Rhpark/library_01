@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activity.recyclerview.RecyclerViewActivity">
+
+
+    <LinearLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/edtNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Input Number"
+            android:inputType="number" />
+
+        <TextView
+            android:id="@+id/tvResult"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:textSize="26sp" />
+
+        <Button
+            android:id="@+id/btnDpToPx"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="DP to PX" />
+
+        <Button
+            android:id="@+id/btnPxToDp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PX to DP" />
+
+        <Button
+            android:id="@+id/btbSpToPx"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SP to PX" />
+
+        <Button
+            android:id="@+id/btbPxToSp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PX to SP" />
+
+        <Button
+            android:id="@+id/btbScreenInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Screen Info" />
+    </LinearLayout>
+</layout>
