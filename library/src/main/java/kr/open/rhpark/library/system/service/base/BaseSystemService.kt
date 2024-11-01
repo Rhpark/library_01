@@ -8,7 +8,7 @@ import kr.open.rhpark.library.debug.logcat.Logx
 public abstract class BaseSystemService(context: Context, permissionList: Array<String>? = null) {
 
     private var isPermissionGranted: Boolean = false
-
+    private var deniedPermissionList: List<String> = emptyList()
     init {
         checkPermission(context, permissionList)
     }
@@ -19,18 +19,23 @@ public abstract class BaseSystemService(context: Context, permissionList: Array<
             isPermissionGranted = true
             return
         }
-        val deniedPermissionList =  permissionList.filter { permission ->
+        deniedPermissionList =  permissionList.filter { permission ->
             ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED
         }
-        if (deniedPermissionList.isEmpty()) {
-            isPermissionGranted = true
-            return
-        }
-        isPermissionGranted = false
-        Logx.e("BaseSystemServiceInfo", "Permission is DENIED ${deniedPermissionList.toList()}")
+
+        isPermissionGranted = deniedPermissionList.isEmpty()
+
+        Logx.w("BaseSystemServiceInfo", "Permission is DENIED ${deniedPermissionList.toList()}")
     }
 
-    public fun isPermissionGranted(): Boolean = isPermissionGranted
+    public fun isPermissionGranted(): Boolean {
+        if(!isPermissionGranted) {
+            Logx.e("BaseSystemServiceInfo", "Permission is DENIED, $deniedPermissionList")
+        }
+        return isPermissionGranted
+    }
+
+    public fun getDeniedPermissionList(): List<String> = deniedPermissionList
 
     public open fun onDestroy() {}
 }

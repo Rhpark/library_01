@@ -50,6 +50,8 @@ public class VibratorController(context: Context) :
      */
     public fun createOneShot(timer: Long, effect: Int = VibrationEffect.DEFAULT_AMPLITUDE) {
 
+        if(!isPermissionGranted()) { return }
+
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             vibrator.vibrate(timer)
             return
@@ -69,6 +71,8 @@ public class VibratorController(context: Context) :
      */
     @RequiresApi(Build.VERSION_CODES.Q)
     public fun createPredefined(vibrationEffectClick: Int) {
+
+        if(!isPermissionGranted()) { return }
 
         val effect = VibrationEffect.createPredefined(vibrationEffectClick)
 
@@ -108,6 +112,8 @@ public class VibratorController(context: Context) :
     @RequiresApi(Build.VERSION_CODES.S)
     public fun createWaveform(times: LongArray, amplitudes: IntArray, repeat: Int = -1) {
 
+        if(!isPermissionGranted()) { return }
+
         val effectWave = VibrationEffect.createWaveform(times, amplitudes, repeat)
 
         vibratorManger.vibrate(CombinedVibration.createParallel(effectWave))
@@ -115,6 +121,9 @@ public class VibratorController(context: Context) :
 
 
     public fun cancel() {
+
+        if(!isPermissionGranted()) { return }
+
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S) {
             vibrator.cancel()
         } else {
