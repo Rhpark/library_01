@@ -82,27 +82,37 @@ public class VibratorController(context: Context) :
 
     /**
      * repeat : -1 is oneTime
-     * amplitudes : available Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
+     *
+     * if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) -> can waveform vibration
+     *
+     * else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+     * -> just amplitude is maintained in array[0] repeat vibration,
+     *
+     * else -> just repeat vibration
+     *
+     *
+     * @param times – The timing values, in milliseconds, of the timing /
+     * amplitude pairs. Timing values of 0 will cause the pair to be ignored.
+     *
+     *
+     * @param amplitudes – The amplitude values of the timing /
+     * amplitude pairs. Amplitude values must be between 0 and 255,
+     * or equal to DEFAULT_AMPLITUDE. An amplitude value of 0 implies the motor is off.
+     *
+     *
+     * @param repeat – The index into the timings array at which to repeat, or -1 if
+     * you don't want to repeat indefinitely.
+     *
+     * 즉 배열의 어디부터 시작해서 반복할 건지 설정, ex repeat 값이 1이면 배열 1번부터 무한히 반복
      */
-    public fun createWaveform(times: LongArray, repeat: Int, amplitudes: IntArray? = null) {
+    @RequiresApi(Build.VERSION_CODES.S)
+    public fun createWaveform(times: LongArray, amplitudes: IntArray, repeat: Int = -1) {
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-            vibrator.vibrate(times, repeat)
-            return
-        }
+        val effectWave = VibrationEffect.createWaveform(times, amplitudes, repeat)
 
-        val effectWave = if (amplitudes != null) {
-            VibrationEffect.createWaveform(times, amplitudes, repeat)
-        } else {
-            VibrationEffect.createWaveform(times, repeat)
-        }
-
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
-            vibrator.vibrate(effectWave)
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            vibratorManger.vibrate(CombinedVibration.createParallel(effectWave))
-        }
+        vibratorManger.vibrate(CombinedVibration.createParallel(effectWave))
     }
+
 
     public fun cancel() {
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S) {

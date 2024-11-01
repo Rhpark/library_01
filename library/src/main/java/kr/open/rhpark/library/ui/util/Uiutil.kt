@@ -11,32 +11,48 @@ import android.view.WindowInsets
 import kr.open.rhpark.library.debug.logcat.Logx
 
 
-public fun Int.dpToPx(context: Context): Float = (this * context.resources.displayMetrics.density)
+/****************
+ * DP To PX, SP *
+ ****************/
+public fun Int.dpToPx(context: Context): Float = this.toFloat().dpToPx(context)
+public fun Float.dpToPx(context: Context): Float =
+    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this, context.resources.displayMetrics)
 
+public fun Int.dpToSp(context:Context): Float = this.toFloat().dpToSp(context)
+public fun Float.dpToSp(context:Context): Float {
+    return TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP, this, context.resources.displayMetrics
+    ) * context.resources.configuration.fontScale
+}
+
+
+/****************
+ * PX To DP, SP *
+ ****************/
+public fun Int.pxToDp(context: Context): Float = this.toFloat().pxToDp(context)
 public fun Float.pxToDp(context: Context): Float =
     (this / (context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT))
 
-public fun Float.spToPx(context: Context): Float {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, this, context.resources.displayMetrics)
-    } else {
-        this * context.resources.displayMetrics.scaledDensity // 지원 중단됨
-    }
-}
-
-public fun Int.spToPx(context: Context): Float = this.toFloat().spToPx(context)
-
-public fun Float.pxToSp(context: Context): Float {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_PX, this, context.resources.displayMetrics
-        ) / TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 1f, context.resources.displayMetrics) // SP 변환에 TypedValue 사용
-    } else {
-        this / context.resources.displayMetrics.scaledDensity // 지원 중단됨; 이전 버전용
-    }
-}
-
 public fun Int.pxToSp(context: Context): Float = this.toFloat().pxToSp(context)
+public fun Float.pxToSp(context: Context): Float = this / context.resources.configuration.fontScale
+
+
+/****************
+ * SP To DP, PX *
+ ****************/
+public fun Int.spToPx(context: Context): Float = this.toFloat().spToPx(context)
+public fun Float.spToPx(context: Context): Float {
+    return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, this, context.resources.displayMetrics)
+}
+
+public fun Int.spToDp(context: Context): Float = this.toFloat().spToDp(context)
+public fun Float.spToDp(context: Context): Float {
+    return TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_SP, this, context.resources.displayMetrics
+    ) / context.resources.displayMetrics.density
+}
+
+
 
 public fun Activity.getStatusBarHeight(): Int =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
