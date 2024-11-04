@@ -6,6 +6,7 @@ import android.os.VibrationEffect
 import android.view.View
 import kr.open.rhpark.app.R
 import kr.open.rhpark.app.databinding.ActivityVibratorBinding
+import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.ui.activity.BaseBindingActivity
 
 class VibratorActivity : BaseBindingActivity<ActivityVibratorBinding>(R.layout.activity_vibrator) {
@@ -14,11 +15,9 @@ class VibratorActivity : BaseBindingActivity<ActivityVibratorBinding>(R.layout.a
         super.onCreate(savedInstanceState)
 
         initListener()
-        requestPermissions(listOf(android.Manifest.permission.VIBRATE), {
-            toast.showShort("Permission Granted")
-        }, { deniedPermissions->
-            toast.showShort("Permission Denied, deniedPermissions $deniedPermissions")
-        })
+        requestPermissions(listOf(android.Manifest.permission.VIBRATE)) { grantedPermissions, deniedPermissions ->
+            Logx.d("grantedPermissions $grantedPermissions, \n deniedPermissions $deniedPermissions")
+        }
     }
 
     private fun initListener() {

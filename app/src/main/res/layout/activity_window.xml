@@ -30,30 +30,31 @@
             android:id="@+id/btnDpToPx"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="DP to PX" />
+            android:text="DP to .." />
 
         <Button
             android:id="@+id/btnPxToDp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="PX to DP" />
+            android:text="PX to .." />
 
         <Button
             android:id="@+id/btbSpToPx"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="SP to PX" />
+            android:text="SP to .." />
 
-        <Button
-            android:id="@+id/btbPxToSp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="PX to SP" />
 
         <Button
             android:id="@+id/btbScreenInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Screen Info" />
+
+        <Button
+            android:id="@+id/btnAddView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add View" />
     </LinearLayout>
 </layout>

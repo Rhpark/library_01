@@ -21,7 +21,8 @@ class FirstFragmentVm : BaseViewModelEventFlow<FirstFragmentVmEvent>() {
                 listOf(
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     Manifest.permission.READ_PHONE_STATE,
-                    Manifest.permission.READ_PHONE_NUMBERS
+                    Manifest.permission.READ_PHONE_NUMBERS,
+                    Manifest.permission.SYSTEM_ALERT_WINDOW
                 )
             )
         )

@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import kr.open.rhpark.library.system.service.access.BatteryStateInfo
 import kr.open.rhpark.library.system.service.controller.SoftKeyboardController
 import kr.open.rhpark.library.system.service.controller.VibratorController
-import kr.open.rhpark.library.system.service.controller.WindowManagerController
+import kr.open.rhpark.library.system.service.controller.windowmanager.WindowManagerController
 
 public class SystemServiceManager(context: Context) {
 

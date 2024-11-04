@@ -4,9 +4,11 @@
 
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
         android:allowBackup="true"
@@ -30,7 +32,7 @@
         <activity android:name=".activity.second.SecondActivity" />
         <activity android:name=".activity.recyclerview.RecyclerViewActivity" />
         <activity android:name=".activity.vibrator.VibratorActivity" />
-        <activity android:name=".activity.util.WindowActivity" />
+        <activity android:name=".activity.window.WindowActivity" />
     </application>
 
 </manifest>

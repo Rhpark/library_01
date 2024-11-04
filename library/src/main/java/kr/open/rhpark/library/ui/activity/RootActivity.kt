@@ -5,10 +5,12 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.WindowCompat
-import kr.open.rhpark.library.system.permission.PermissionListener
+import kr.open.rhpark.library.debug.logcat.Logx
+import kr.open.rhpark.library.system.permission.PermissionCheck
 import kr.open.rhpark.library.system.service.SystemServiceManager
 import kr.open.rhpark.library.ui.view.snackbar.DefaultSnackBar
 import kr.open.rhpark.library.ui.view.toast.DefaultToast
@@ -54,37 +56,43 @@ public abstract class RootActivity : AppCompatActivity() {
 
     /**
      * The permission listener for handling permission request results.
-     * 권한 요청 결과를 처리하기 위한 권한 리스너.
+     * 권한 요청과 결과를 처리하기 위한 permissionCheck
      */
-    private var permissionListener: PermissionListener? = null
+    private var permission: PermissionCheck? = null
+
+    private val requestPermissionAlertWindowLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                Logx.d("RESULT_OK SYSTEM_ALERT_WINDOW")
+            }
+        }
 
     /**
      * Requests the specified permissions from the user.
      * 사용자에게 지정된 권한을요청.
      *
      * @param permissions The list of permissions to request.
-     * @param onAllPermissionGranted The callback to be invoked when all permissions are granted.
-     * @param onPermissionsDenied The callback to be invoked when one or more permissions are denied.
+     * @param onPermissionResult The callback to be invoked when permissions result.
      *
      * @param permissions 요청할 권한 목록.
-     * @param onAllPermissionGranted 모든 권한이 부여되었을 때 호출될 콜백.
-     * @param onPermissionsDenied 하나 이상의 권한이 거부되었을 때 호출될 콜백.
+     * @param onPermissionResult 권한 결과 콜백
      */
     protected fun requestPermissions(
         permissions: List<String>,
-        onAllPermissionGranted: () -> Unit,
-        onPermissionsDenied: (deniedPermissions: List<String>) -> Unit
+        onPermissionResult:(grantedPermissions: List<String>, deniedPermissions: List<String>) ->Unit,
     ) {
-        permissionListener = PermissionListener(onAllPermissionGranted,onPermissionsDenied)
+        permission =
+            PermissionCheck(this, permissions, onPermissionResult)
 
-        val permissionsToRequest = permissions.filter {
-            ActivityCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED
-        }.toTypedArray()
+        permission?.let {
+            if(it.isAllGranted()) return
 
-        if(permissionsToRequest.isEmpty()) {
-            permissionListener?.let { it.onAllPermissionGranted() }
-        } else {
-            ActivityCompat.requestPermissions(this, permissionsToRequest, PermissionListener.PERMISSION_REQUEST_CODE)
+            if(it.isRequestPermissionSystemAlertWindow()) {
+                requestPermissionAlertWindowLauncher.launch(it.requestPermissionAlertWindow(packageName))
+            }
+            if(it.getRemainRequestPermissionList().isNotEmpty()) {
+                ActivityCompat.requestPermissions(this, it.getRemainRequestPermissionList(), PermissionCheck.PERMISSION_REQUEST_CODE)
+            }
         }
     }
 
@@ -102,17 +110,17 @@ public abstract class RootActivity : AppCompatActivity() {
      */
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == PermissionListener.PERMISSION_REQUEST_CODE) {
-            val allPermissionsGranted = grantResults.all { it == PackageManager.PERMISSION_GRANTED }
-            if (allPermissionsGranted) {
-                permissionListener?.let { it.onAllPermissionGranted() }
-            } else {
-                val resDeniedPermission = permissions.filterIndexed { index, _ ->
-                    grantResults[index] != PackageManager.PERMISSION_GRANTED
+        if (requestCode == PermissionCheck.PERMISSION_REQUEST_CODE) {
+            permission?.let {
+                val grantedList = mutableListOf<String>()
+                val deniedList = mutableListOf<String>()
+                permissions.forEachIndexed { index, s ->
+                    if(grantResults[index] == PackageManager.PERMISSION_GRANTED) grantedList.add(s)
+                    else deniedList.add(s)
                 }
-                permissionListener?.let { it.onPermissionsDenied(resDeniedPermission)   }
+                it.result(grantedList, deniedList)
             }
-            permissionListener = null
+            permission = null
         }
     }
 

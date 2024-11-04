@@ -9,6 +9,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.launch
 import kr.open.rhpark.app.activity.recyclerview.RecyclerViewActivity
 import kr.open.rhpark.app.activity.second.SecondActivity
+import kr.open.rhpark.app.activity.window.WindowActivity
 import kr.open.rhpark.app.activity.vibrator.VibratorActivity
 import kr.open.rhpark.app.databinding.ActivityMainBinding
 import kr.open.rhpark.library.debug.logcat.Logx
@@ -28,11 +29,9 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
                 vm.eventVm.collect {
                     when (it) {
                         is MainActivityVmEvent.OnPermissionCheck -> {
-                            requestPermissions(it.permissionList, {
-                                Logx.d("onAllPermissionsGranted")
-                            }, { deniedPermissions ->
-                                Logx.d("onPermissionsDenied $deniedPermissions")
-                            })
+                            requestPermissions(it.permissionList) { grantedPermissions, deniedPermissions ->
+                                Logx.d("grantedPermissions $grantedPermissions, \n deniedPermissions $deniedPermissions")
+                            }
                         }
                         is MainActivityVmEvent.OnShowSnackBar -> {
                             snackBar.showShort(binding.btnTestToastShow, it.msg)
@@ -53,8 +52,8 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
                         }
 
                         is MainActivityVmEvent.OnShowUiUtilsActivity -> {
-//                            toast.showShort(it.msg)
-//                            startActivity(WindowActivity::class.java)
+                            toast.showShort(it.msg)
+                            startActivity(WindowActivity::class.java)
                         }
                     }
                 }

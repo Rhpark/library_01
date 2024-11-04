@@ -21,11 +21,9 @@ class FirstFragment:BaseBindingFragment<FragmentFirstBinding>(R.layout.fragment_
             vm.eventVm.collect{
                 when (it) {
                     is FirstFragmentVmEvent.OnPermissionCheck -> {
-                        requestPermissions(it.permissionList, {
-                            Logx.d("onAllPermissionsGranted")
-                        }, { deniedPermissions ->
-                            Logx.d("onPermissionsDenied $deniedPermissions")
-                        })
+                        requestPermissions(it.permissionList) { grantedPermissions, deniedPermissions ->
+                            Logx.d("grantedPermissions $grantedPermissions, \n deniedPermissions $deniedPermissions")
+                        }
                     }
                     is FirstFragmentVmEvent.OnShowSnackBar -> {
                         snackBar.showShort(binding.btnTestToastShow, it.msg)
