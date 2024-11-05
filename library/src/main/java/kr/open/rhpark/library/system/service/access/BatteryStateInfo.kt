@@ -21,7 +21,7 @@ import kr.open.rhpark.library.system.service.access.power.PowerProfileVO
 public class BatteryStateInfo(
     context: Context,
     private val batteryManager: BatteryManager,
-) : BaseSystemService(context, arrayOf(android.Manifest.permission.BATTERY_STATS)) {
+) : BaseSystemService(context, listOf(android.Manifest.permission.BATTERY_STATS)) {
 
     private val batteryStatus: Intent? = context.registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
     private val powerProfile: PowerProfile = PowerProfile(context)

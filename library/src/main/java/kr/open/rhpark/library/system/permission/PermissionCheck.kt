@@ -11,7 +11,7 @@ import androidx.core.content.ContextCompat
 public class PermissionCheck(
     private val context: Context,
     private val permissions: List<String>,
-    public val onPermissionResult:(grantedPermissions: List<String>, deniedPermissions: List<String>) ->Unit,
+    public val onPermissionResult: ((grantedPermissions: List<String>, deniedPermissions: List<String>) -> Unit)? = null,
 ) {
 
     /**
@@ -30,7 +30,8 @@ public class PermissionCheck(
 
     init {
         if (remainRequestPermissionList.isEmpty()) {
-            onPermissionResult(permissions, emptyList())
+            onPermissionResult?.let { it(permissions, emptyList()) }
+
             isAllGranted = true
         } else {
             isAllGranted = false
@@ -76,6 +77,6 @@ public class PermissionCheck(
                 deniedPermissions.add(Manifest.permission.SYSTEM_ALERT_WINDOW)
             }
         }
-        onPermissionResult(grantedPermissions,deniedPermissions)
+        onPermissionResult?.let { it(grantedPermissions,deniedPermissions) }
     }
 }

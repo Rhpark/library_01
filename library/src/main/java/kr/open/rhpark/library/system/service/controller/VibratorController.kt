@@ -19,7 +19,7 @@ import kr.open.rhpark.library.system.service.base.BaseSystemService
  *
  */
 public class VibratorController(context: Context) :
-    BaseSystemService(context, arrayOf(android.Manifest.permission.VIBRATE)) {
+    BaseSystemService(context, listOf(android.Manifest.permission.VIBRATE)) {
 
     /**
      * be used Build.VERSION.SDK_INT < Build.VERSION_CODES.S(31)
@@ -50,7 +50,7 @@ public class VibratorController(context: Context) :
      */
     public fun createOneShot(timer: Long, effect: Int = VibrationEffect.DEFAULT_AMPLITUDE) {
 
-        if(!isPermissionGranted()) { return }
+        if(!isPermissionAllGranted()) { return }
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             vibrator.vibrate(timer)
@@ -72,7 +72,7 @@ public class VibratorController(context: Context) :
     @RequiresApi(Build.VERSION_CODES.Q)
     public fun createPredefined(vibrationEffectClick: Int) {
 
-        if(!isPermissionGranted()) { return }
+        if(!isPermissionAllGranted()) { return }
 
         val effect = VibrationEffect.createPredefined(vibrationEffectClick)
 
@@ -112,7 +112,7 @@ public class VibratorController(context: Context) :
     @RequiresApi(Build.VERSION_CODES.S)
     public fun createWaveform(times: LongArray, amplitudes: IntArray, repeat: Int = -1) {
 
-        if(!isPermissionGranted()) { return }
+        if(!isPermissionAllGranted()) { return }
 
         val effectWave = VibrationEffect.createWaveform(times, amplitudes, repeat)
 
@@ -122,7 +122,7 @@ public class VibratorController(context: Context) :
 
     public fun cancel() {
 
-        if(!isPermissionGranted()) { return }
+        if(!isPermissionAllGranted()) { return }
 
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S) {
             vibrator.cancel()

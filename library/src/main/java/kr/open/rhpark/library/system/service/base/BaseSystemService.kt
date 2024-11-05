@@ -1,41 +1,48 @@
 package kr.open.rhpark.library.system.service.base
 
 import android.content.Context
-import android.content.pm.PackageManager
-import androidx.core.content.ContextCompat
 import kr.open.rhpark.library.debug.logcat.Logx
+import kr.open.rhpark.library.system.permission.PermissionCheck
 
-public abstract class BaseSystemService(context: Context, permissionList: Array<String>? = null) {
+public abstract class BaseSystemService(context: Context, permissionList: List<String>? = null) {
 
-    private var isPermissionGranted: Boolean = false
-    private var deniedPermissionList: List<String> = emptyList()
+    private var isPermissionAllGranted = false
+
+
     init {
         checkPermission(context, permissionList)
     }
 
-    private fun checkPermission(context: Context, permissionList: Array<String>?){
+    protected fun checkPermission(context: Context,permissionList: List<String>?){
 
-        if (permissionList.isNullOrEmpty()) {
-            isPermissionGranted = true
-            return
+        if(permissionList == null) {
+            allGranted()
+        } else {
+            PermissionCheck(context, permissionList).also {
+                val deniedPermissionList = it.remainingPermission()
+                if(deniedPermissionList.isEmpty()) {
+                    allGranted()
+                } else {
+                    deniedPermissionList(deniedPermissionList)
+                }
+            }
         }
-        deniedPermissionList =  permissionList.filter { permission ->
-            ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED
-        }
-
-        isPermissionGranted = deniedPermissionList.isEmpty()
-
-        Logx.w("BaseSystemServiceInfo", "Permission is DENIED ${deniedPermissionList.toList()}")
     }
 
-    public fun isPermissionGranted(): Boolean {
-        if(!isPermissionGranted) {
-            Logx.e("BaseSystemServiceInfo", "Permission is DENIED, $deniedPermissionList")
-        }
-        return isPermissionGranted
+    private fun allGranted() {
+        isPermissionAllGranted = true
     }
 
-    public fun getDeniedPermissionList(): List<String> = deniedPermissionList
+    protected fun deniedPermissionList(deniedPermissions: Array<String>) {
+        Logx.d("deniedPermissions ${deniedPermissions.toList()}")
+    }
+
+    protected fun isPermissionAllGranted() :Boolean{
+        if(!isPermissionAllGranted) {
+            Logx.d("Is not permission granted")
+        }
+        return isPermissionAllGranted
+    }
 
     public open fun onDestroy() {}
 }
