@@ -39,7 +39,7 @@ class MainActivityVm : BaseViewModelEventFlow<MainActivityVmEvent>() {
     }
 
     fun onClickShowUiUtilsActivity(v:View) {
-        sendEvent(MainActivityVmEvent.OnShowUiUtilsActivity("Show UiUtils Activity"))
+        sendEvent(MainActivityVmEvent.OnShowWindowActivity("Show UiUtils Activity"))
     }
 
     fun onClickShowFragment(v:View) {

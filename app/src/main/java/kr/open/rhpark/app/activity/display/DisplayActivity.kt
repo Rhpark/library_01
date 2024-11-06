@@ -13,12 +13,10 @@ import kr.open.rhpark.library.ui.util.pxToSp
 import kr.open.rhpark.library.ui.util.spToDp
 import kr.open.rhpark.library.ui.util.spToPx
 
-public class DisplayActivity : BaseBindingActivity<ActivityDisplayBinding>(R.layout.activity_display) {
+class DisplayActivity : BaseBindingActivity<ActivityDisplayBinding>(R.layout.activity_display) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
         initListener()
     }
 
@@ -27,8 +25,7 @@ public class DisplayActivity : BaseBindingActivity<ActivityDisplayBinding>(R.lay
             btnDpToPx.setOnClickListener {
                 if(!editNumberIsEmpty()) {
                     val number = binding.edtNumber.text.toString().toInt()
-                    val dpToPx = "DP to SP ${number.dpToSp(this@DisplayActivity)},\n " +
-                            "DP to PX ${number.dpToPx(this@DisplayActivity)}\n"
+                    val dpToPx = "DP to SP ${number.dpToSp(this@DisplayActivity)},\nDP to PX ${number.dpToPx(this@DisplayActivity)}\n"
                     tvResult.text = dpToPx
                 }
             }
@@ -36,8 +33,7 @@ public class DisplayActivity : BaseBindingActivity<ActivityDisplayBinding>(R.lay
             btnPxToDp.setOnClickListener {
                 if(!editNumberIsEmpty()) {
                     val number = binding.edtNumber.text.toString().toInt()
-                    val dpToPx = "PX to DP ${number.pxToDp(this@DisplayActivity)},\n " +
-                            "PX to SP ${number.pxToSp(this@DisplayActivity)}\n"
+                    val dpToPx = "PX to DP ${number.pxToDp(this@DisplayActivity)},\nPX to SP ${number.pxToSp(this@DisplayActivity)}\n"
                     tvResult.text = dpToPx
                 }
             }
@@ -45,14 +41,12 @@ public class DisplayActivity : BaseBindingActivity<ActivityDisplayBinding>(R.lay
             btbSpToPx.setOnClickListener {
                 if(!editNumberIsEmpty()) {
                     val number = binding.edtNumber.text.toString().toInt()
-                    val dpToPx = "SP to DP ${number.spToDp(this@DisplayActivity)},\n " +
-                            "SP to PX ${number.spToPx(this@DisplayActivity)}\n"
+                    val dpToPx = "SP to DP ${number.spToDp(this@DisplayActivity)},\nSP to PX ${number.spToPx(this@DisplayActivity)}\n"
                     tvResult.text = dpToPx
                 }
             }
 
             btbScreenInfo.setOnClickListener {
-
                 val getFullScreen =
                     "FullScreen = ${getDisplayInfo().getFullScreen()}\n" +
                             "ScreenWithStatusBar = ${getDisplayInfo().getScreenWithStatusBar()}\n" +
@@ -67,12 +61,10 @@ public class DisplayActivity : BaseBindingActivity<ActivityDisplayBinding>(R.lay
         }
     }
 
+    private fun getDisplayInfo() = systemServiceManagerInfo.displayInfo
+
     private fun editNumberIsEmpty(): Boolean = if (binding.edtNumber.text.isEmpty()) {
         toast.showShort("Input Number")
         true
-    } else {
-        false
-    }
-
-    private fun getDisplayInfo() = systemServiceManagerInfo.displayInfo
+    } else { false }
 }

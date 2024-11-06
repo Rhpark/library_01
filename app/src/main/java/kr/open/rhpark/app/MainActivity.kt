@@ -10,7 +10,6 @@ import kr.open.rhpark.app.activity.display.DisplayActivity
 import kr.open.rhpark.app.activity.recyclerview.RecyclerViewActivity
 import kr.open.rhpark.app.activity.second.FragmentShowActivity
 import kr.open.rhpark.app.activity.toast_snackbar.ToastSnackBarActivity
-import kr.open.rhpark.app.activity.window.WindowActivity
 import kr.open.rhpark.app.activity.vibrator.VibratorActivity
 import kr.open.rhpark.app.databinding.ActivityMainBinding
 import kr.open.rhpark.library.debug.logcat.Logx
@@ -45,7 +44,9 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
 
         is MainActivityVmEvent.OnShowVibratorActivity -> startActivity(VibratorActivity::class.java)
 
-        is MainActivityVmEvent.OnShowUiUtilsActivity -> startActivity(WindowActivity::class.java)
+        is MainActivityVmEvent.OnShowWindowActivity -> {
+//            startActivity(WindowActivity::class.java)
+        }
 
         is MainActivityVmEvent.OnShowToastSnackBar -> startActivity(ToastSnackBarActivity::class.java)
 
