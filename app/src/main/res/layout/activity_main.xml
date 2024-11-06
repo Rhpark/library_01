@@ -12,74 +12,81 @@
 
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <FrameLayout
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <ScrollView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Hello World!"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:orientation="vertical">
 
-        <Button
-            android:id="@+id/btnTestPermission"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="@{(v)->vm.onClickPermission(v)}"
-            android:text="permission"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-        <Button
-            android:id="@+id/btnTestSnackbar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="@{(v)->vm.onClickSnackBar(v)}"
-            android:text="SnackBar"
-            app:layout_constraintTop_toBottomOf="@+id/btnTestPermission"
-            app:layout_constraintLeft_toLeftOf="parent" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hello World!" />
 
-        <Button
-            android:id="@+id/btnTestToastShow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="@{(v)->vm.onClickToast(v)}"
-            android:text="Toast"
-            app:layout_constraintTop_toBottomOf="@+id/btnTestSnackbar"
-            app:layout_constraintLeft_toLeftOf="parent" />
+                <Button
+                    android:id="@+id/btnTestPermission"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{(v)->vm.onClickPermission(v)}"
+                    android:text="permission" />
 
-        <Button
-            android:id="@+id/btnShowRecyclerview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="@{(v)->vm.onClickShowRecyclerviewActivity(v)}"
-            android:text="Show RecyclerView Activity"
-            app:layout_constraintTop_toBottomOf="@+id/btnTestToastShow"
-            app:layout_constraintLeft_toLeftOf="parent" />
+                <Button
+                    android:id="@+id/btnToastSnackbar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{(v)->vm.onClickToastSnackBar(v)}"
+                    android:text="Toast and SnackBar"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/btnTestPermission" />
 
-        <Button
-            android:id="@+id/btnShowVibrator"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="@{(v)->vm.onClickShowVibratorActivity(v)}"
-            android:text="Show Vibrator Activity"
-            app:layout_constraintTop_toBottomOf="@+id/btnShowRecyclerview"
-            app:layout_constraintLeft_toLeftOf="parent" />
+                <Button
+                    android:id="@+id/btnShowRecyclerview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{(v)->vm.onClickShowRecyclerviewActivity(v)}"
+                    android:text="Show RecyclerView Activity" />
 
-        <Button
-            android:id="@+id/btnShowWindow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="@{(v)->vm.onClickShowUiUtilsActivity(v)}"
-            android:text="Show Window Activity"
-            app:layout_constraintTop_toBottomOf="@+id/btnShowVibrator"
-            app:layout_constraintLeft_toLeftOf="parent" />
+                <Button
+                    android:id="@+id/btnShowVibrator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{(v)->vm.onClickShowVibratorActivity(v)}"
+                    android:text="Show Vibrator Activity" />
 
+                <Button
+                    android:id="@+id/btnShowFragment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{(v)->vm.onClickShowFragment(v)}"
+                    android:text="Show Fragment" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                <Button
+                    android:id="@+id/btnShowDisplay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{(v)->vm.onClickShowDisplayActivity(v)}"
+                    android:text="Show Display Activity" />
+
+                <Button
+                    android:id="@+id/btnShowWindow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{(v)->vm.onClickShowUiUtilsActivity(v)}"
+                    android:text="Show Window Activity" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </ScrollView>
+    </FrameLayout>
 </layout>

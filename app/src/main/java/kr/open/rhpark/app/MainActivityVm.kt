@@ -26,12 +26,8 @@ class MainActivityVm : BaseViewModelEventFlow<MainActivityVmEvent>() {
     }
 
 
-    fun onClickSnackBar(v: View) {
-        sendEvent(MainActivityVmEvent.OnShowSnackBar("Hello SnackBar"))
-    }
-
-    fun onClickToast(v: View) {
-        sendEvent(MainActivityVmEvent.OnShowToast("Hello Toast"))
+    fun onClickToastSnackBar(v: View) {
+        sendEvent(MainActivityVmEvent.OnShowToastSnackBar("Hello Toast and SnackBar"))
     }
 
     fun onClickShowRecyclerviewActivity(v: View) {
@@ -44,5 +40,13 @@ class MainActivityVm : BaseViewModelEventFlow<MainActivityVmEvent>() {
 
     fun onClickShowUiUtilsActivity(v:View) {
         sendEvent(MainActivityVmEvent.OnShowUiUtilsActivity("Show UiUtils Activity"))
+    }
+
+    fun onClickShowFragment(v:View) {
+        sendEvent(MainActivityVmEvent.OnShowFragmentActivity("Show Fragment Activity"))
+    }
+
+    fun onClickShowDisplayActivity(v:View) {
+        sendEvent(MainActivityVmEvent.OnDisplayActivity("Show UiUtils Activity"))
     }
 }

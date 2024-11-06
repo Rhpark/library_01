@@ -20,13 +20,18 @@ public class DefaultSnackBar(private val windowView: View) {
     private var backgroundTint: Int? = null
     private var backgroundTintStateList: ColorStateList? = null
 
-    /** Action Text Color **/
+    /** Action **/
     private var actionTextColor :Int ?= null
     private var actionTextColorStateList : ColorStateList?= null
 
     private var isGestureInsetBottomIgnored = true
 
     private var customView: View? = null
+
+    private var actionText: String? = null
+    private var actionTextInt: Int? = null
+    private var actionOnClickListener:View.OnClickListener?=null
+
 
     /**
      * ex) Snackbar.ANIMATION_MODE_FADE or Snackbar.ANIMATION_MODE_SLIDE
@@ -72,6 +77,17 @@ public class DefaultSnackBar(private val windowView: View) {
         this.textColorStateList = null
     }
 
+    public fun setAction(actionText: String, actionOnClickListener:View.OnClickListener) {
+        this.actionText = actionText
+        this.actionOnClickListener = actionOnClickListener
+        this.actionTextInt = null
+    }
+    public fun setAction(actionText:Int, actionOnClickListener:View.OnClickListener) {
+        this.actionText = null
+        this.actionTextInt = actionText
+        this.actionOnClickListener = actionOnClickListener
+    }
+
     public fun setTextMaxLines(textMaxLines: Int?) { this.textMaxLines = textMaxLines }
 
     public fun showShortWindowView(msg: String) {   make(windowView, msg, Snackbar.LENGTH_SHORT).show()    }
@@ -100,6 +116,8 @@ public class DefaultSnackBar(private val windowView: View) {
         snackBar.apply {
             actionTextColor?.let { setActionTextColor(it) }
             actionTextColorStateList?.let { setActionTextColor(it) }
+            actionText?.let { this.setAction(it, actionOnClickListener) }
+            actionTextInt?.let { setAction(it, actionOnClickListener) }
 
             animation?.let { animationMode = it }
 
@@ -114,6 +132,8 @@ public class DefaultSnackBar(private val windowView: View) {
             textColorStateList?.let { setTextColor(it) }
 
             textMaxLines?.let { this@DefaultSnackBar.setTextMaxLines(it) }
+
+
         }
     }
 }

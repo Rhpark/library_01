@@ -37,7 +37,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/btnTestSnackbar"
+            android:id="@+id/btnToastSnackbar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="@{(v)->vm.onClickSnackBar(v)}"
@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:onClick="@{(v)->vm.onClickToast(v)}"
             android:text="Toast"
-            app:layout_constraintTop_toBottomOf="@+id/btnTestSnackbar"
+            app:layout_constraintTop_toBottomOf="@+id/btnToastSnackbar"
             app:layout_constraintLeft_toLeftOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

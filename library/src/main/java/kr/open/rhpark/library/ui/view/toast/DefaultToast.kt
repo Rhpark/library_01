@@ -1,7 +1,9 @@
 package kr.open.rhpark.library.ui.view.toast
 
 import android.content.Context
+import android.os.Build
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 
 public class DefaultToast(private val context: Context) {
 
@@ -23,6 +25,7 @@ public class DefaultToast(private val context: Context) {
      * first is Horizontal
      * second is Vertical
      */
+    @RequiresApi(Build.VERSION_CODES.R)
     public fun setMargin(defaultMargin: Pair<Float, Float>? = null) {
         this.margin = defaultMargin
     }
@@ -32,7 +35,7 @@ public class DefaultToast(private val context: Context) {
     public fun showDuration(msg: String, duration:Int) { make(msg, duration).show() }
 
     private fun make(msg: String, duration: Int) = Toast.makeText(context, msg, duration).apply {
-        this@DefaultToast.gravity?.let { this.setGravity(it.first, it.second, it.third) }
         this@DefaultToast.margin?.let { this.setMargin(it.first, it.second) }
+        this@DefaultToast.gravity?.let { this.setGravity(it.first, it.second, it.third) }
     }
 }

@@ -12,6 +12,7 @@ import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import kr.open.rhpark.library.system.service.access.BatteryStateInfo
+import kr.open.rhpark.library.system.service.access.DisplayInfo
 import kr.open.rhpark.library.system.service.controller.SoftKeyboardController
 import kr.open.rhpark.library.system.service.controller.VibratorController
 import kr.open.rhpark.library.system.service.controller.windowmanager.WindowManagerController
@@ -69,16 +70,17 @@ public class SystemServiceManager(context: Context) {
 
     public val vibratorController: VibratorController by lazy { VibratorController(context) }
 
-    public val windowController: WindowManagerController by lazy {
+    public val windowManagerController: WindowManagerController by lazy {
         WindowManagerController(context, windowManager)
     }
+
 
 
     /*******************
      *  SystemManager  *
      *  Access         *
      *******************/
-    public val batteryInfo: BatteryStateInfo by lazy {
-        BatteryStateInfo(context, batteryManager)
-    }
+    public val batteryInfo: BatteryStateInfo by lazy { BatteryStateInfo(context, batteryManager) }
+
+    public val displayInfo: DisplayInfo by lazy { DisplayInfo(context, windowManager) }
 }

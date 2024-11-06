@@ -1,14 +1,15 @@
 package kr.open.rhpark.app
 
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.launch
+import kr.open.rhpark.app.activity.display.DisplayActivity
 import kr.open.rhpark.app.activity.recyclerview.RecyclerViewActivity
-import kr.open.rhpark.app.activity.second.SecondActivity
+import kr.open.rhpark.app.activity.second.FragmentShowActivity
+import kr.open.rhpark.app.activity.toast_snackbar.ToastSnackBarActivity
 import kr.open.rhpark.app.activity.window.WindowActivity
 import kr.open.rhpark.app.activity.vibrator.VibratorActivity
 import kr.open.rhpark.app.databinding.ActivityMainBinding
@@ -27,38 +28,30 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 vm.eventVm.collect {
-                    when (it) {
-                        is MainActivityVmEvent.OnPermissionCheck -> {
-                            requestPermissions(it.permissionList) { grantedPermissions, deniedPermissions ->
-                                Logx.d("grantedPermissions $grantedPermissions, \n deniedPermissions $deniedPermissions")
-                            }
-                        }
-                        is MainActivityVmEvent.OnShowSnackBar -> {
-                            snackBar.showShort(binding.btnTestToastShow, it.msg)
-                        }
-                        is MainActivityVmEvent.OnShowToast -> {
-                            toast.showShort(it.msg)
-                            startActivity(SecondActivity::class.java, null, Intent.FLAG_ACTIVITY_NEW_TASK)
-                        }
-
-                        is MainActivityVmEvent.OnShowRecyclerviewActivity -> {
-                            toast.showShort(it.msg)
-                            startActivity(RecyclerViewActivity::class.java)
-                        }
-
-                        is MainActivityVmEvent.OnShowVibratorActivity -> {
-                            toast.showShort(it.msg)
-                            startActivity(VibratorActivity::class.java)
-                        }
-
-                        is MainActivityVmEvent.OnShowUiUtilsActivity -> {
-                            toast.showShort(it.msg)
-                            startActivity(WindowActivity::class.java)
-                        }
-                    }
+                    eventVM(it)
                 }
             }
         }
+    }
+
+    private fun eventVM(event: MainActivityVmEvent) = when (event) {
+        is MainActivityVmEvent.OnPermissionCheck -> {
+            requestPermissions(event.permissionList) { grantedPermissions, deniedPermissions ->
+                Logx.d("grantedPermissions $grantedPermissions, \n deniedPermissions $deniedPermissions")
+            }
+        }
+
+        is MainActivityVmEvent.OnShowRecyclerviewActivity -> startActivity(RecyclerViewActivity::class.java)
+
+        is MainActivityVmEvent.OnShowVibratorActivity -> startActivity(VibratorActivity::class.java)
+
+        is MainActivityVmEvent.OnShowUiUtilsActivity -> startActivity(WindowActivity::class.java)
+
+        is MainActivityVmEvent.OnShowToastSnackBar -> startActivity(ToastSnackBarActivity::class.java)
+
+        is MainActivityVmEvent.OnShowFragmentActivity -> startActivity(FragmentShowActivity::class.java)
+
+        is MainActivityVmEvent.OnDisplayActivity -> startActivity(DisplayActivity::class.java)
     }
 
 

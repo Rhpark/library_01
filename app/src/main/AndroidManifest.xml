@@ -29,10 +29,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.second.SecondActivity" />
+        <activity android:name=".activity.toast_snackbar.ToastSnackBarActivity" />
+        <activity android:name=".activity.second.FragmentShowActivity" />
         <activity android:name=".activity.recyclerview.RecyclerViewActivity" />
         <activity android:name=".activity.vibrator.VibratorActivity" />
         <activity android:name=".activity.window.WindowActivity" />
+        <activity android:name=".activity.display.DisplayActivity" />
     </application>
 
 </manifest>
