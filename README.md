@@ -1,4 +1,4 @@
-# Android Easy Development Library (v0.3.2)
+# Android Easy Development Library (v0.4.0)
 
 ![image](https://jitpack.io/v/rhpark/library_01.svg)
 <br>
@@ -188,6 +188,21 @@ class MainActivity : AppCompatActivity() {
 
 <br>
 </br>
+
+####  5 - 2 DisplayInfo
+![image](https://github.com/Rhpark/library_01/blob/master/Sample_Base_SystemManager_Display.png)
+
+
+
+### 6. Toast, SnackBar
+![image](https://github.com/Rhpark/library_01/blob/master/Sample_Base_SystemManager_Toast_Snackbar.png)
+
+
+
+<br>
+</br>
+<br>
+</br>
 <br>
 </br>
 
@@ -214,7 +229,7 @@ android {
 
 dependencies {
 	...
-	implementation("com.github.rhpark:library_01:0.3.2")
+	implementation("com.github.rhpark:library_01:0.4.0")
 	...
 }
 ```
