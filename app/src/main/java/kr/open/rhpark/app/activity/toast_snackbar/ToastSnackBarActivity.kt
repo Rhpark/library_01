@@ -1,7 +1,6 @@
 package kr.open.rhpark.app.activity.toast_snackbar
 
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
 import com.google.android.material.snackbar.BaseTransientBottomBar
@@ -21,10 +20,9 @@ class ToastSnackBarActivity :
         }
 
         binding.btnCustomToast.setOnClickListener {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                toast.setMargin(Pair(10f, 20f))
-            }
+
             toast.setGravity(Triple(Gravity.CENTER_VERTICAL, 0, 0))
+
             toast.showShort("Custom Toast")
         }
 

@@ -3,7 +3,6 @@ package kr.open.rhpark.library.ui.view.toast
 import android.content.Context
 import android.os.Build
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 
 public class DefaultToast(private val context: Context) {
 
@@ -12,22 +11,33 @@ public class DefaultToast(private val context: Context) {
     private var margin: Pair<Float, Float>? = null
 
     /**
+     * Starting from Android Build. VERSION_CODES. R,
+     * for apps targeting API level Build. VERSION_CODES. R or higher,
+     * this method is a no-op when called on text toasts.
+     *
      * Gravity set Triple
      * first is gravity
      * second is xOffSet
      * third yOffSet
      */
     public fun setGravity(defaultGravity: Triple<Int, Int, Int>?) {
-        this.gravity = defaultGravity
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+            this.gravity = defaultGravity
+        }
     }
 
     /**
+     * Warning: Starting from Android Build. VERSION_CODES. R,
+     * for apps targeting API level Build. VERSION_CODES. R or higher,
+     * this method is a no-op when called on text toasts.
+     *
      * first is Horizontal
      * second is Vertical
      */
-    @RequiresApi(Build.VERSION_CODES.R)
     public fun setMargin(defaultMargin: Pair<Float, Float>? = null) {
-        this.margin = defaultMargin
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+            this.margin = defaultMargin
+        }
     }
 
     public fun showShort(msg: String) { make(msg, Toast.LENGTH_SHORT).show() }

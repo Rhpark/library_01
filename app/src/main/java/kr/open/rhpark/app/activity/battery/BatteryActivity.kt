@@ -36,7 +36,7 @@ class BatteryActivity : BaseBindingActivity<ActivityBatteryBinding>(R.layout.act
                 "Capacity = ${getCapacity()} %\n" + "ChargePlugStr = ${getChargePlugStr()}\n" + "Charge voltage = ${getVoltage()} v\n" +
                         "Current Ampere = ${getCurrentAmpere()} mA\n" + "Current AverageAmpere = ${getCurrentAverageAmpere()} mA\n" + "Health = ${getHealthStr()}\n" +
                         "IsCharge = ${isCharging()}\n" + "IsFull = ${isFull()}\n" + "Present = ${getPresent()} \n" + "Total capacity = ${getTotalCapacity()} mAh\n" +
-                        "Temperature = ${getTemperature()} C \n" + "Technology = ${getTechnology()}\n" + "test ${test()}\n" + "action $action"
+                        "Temperature = ${getTemperature()} C \n" + "Technology = ${getTechnology()}\n"
             binding.tvBatteryStatus.text = result
         }
     }
