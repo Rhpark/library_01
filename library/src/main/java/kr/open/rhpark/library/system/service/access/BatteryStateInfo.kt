@@ -1,11 +1,14 @@
 package kr.open.rhpark.library.system.service.access
 
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Context.RECEIVER_EXPORTED
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.BatteryManager
 import android.os.Build
 import androidx.annotation.RequiresApi
+import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.system.service.base.BaseSystemService
 import kr.open.rhpark.library.system.service.access.power.PowerProfile
 import kr.open.rhpark.library.system.service.access.power.PowerProfileVO
@@ -19,15 +22,53 @@ import kr.open.rhpark.library.system.service.access.power.PowerProfileVO
  * <permission android:name="android.permission.BATTERY_STATS" />
  */
 public class BatteryStateInfo(
-    context: Context,
+    private val context: Context,
     private val batteryManager: BatteryManager,
 ) : BaseSystemService(context, listOf(android.Manifest.permission.BATTERY_STATS)) {
 
-    private val batteryStatus: Intent? = context.registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+    private val UPDATE_BATTERY = "RHPARK_BATTERY_STATE_UPDATE"
+
+    private var batteryReceiverListener: ((intent: Intent) -> Unit)? = null
+
+    private val batteryBroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            batteryStatus = intent
+            Logx.d("action = ${intent.action}")
+            batteryReceiverListener?.let { it(intent) }
+        }
+    }
+
+    private var batteryStatus: Intent? =
+        context.registerReceiver(batteryBroadcastReceiver, IntentFilter().apply {
+            addAction(Intent.ACTION_BATTERY_CHANGED)
+            addAction(Intent.ACTION_BATTERY_LOW)
+            addAction(Intent.ACTION_BATTERY_OKAY)
+            addAction(Intent.ACTION_POWER_CONNECTED)
+            addAction(Intent.ACTION_POWER_DISCONNECTED)
+            addAction(Intent.ACTION_POWER_USAGE_SUMMARY)
+            addAction(UPDATE_BATTERY)
+        }, RECEIVER_EXPORTED)
+
     private val powerProfile: PowerProfile = PowerProfile(context)
 
     public val ERROR_VALUE: Int = Integer.MIN_VALUE
 
+    public fun setReceiverListener(listener: ((intent: Intent) -> Unit)? = null) {
+        this.batteryReceiverListener = listener
+        batteryStatus?.let {
+            it.action = UPDATE_BATTERY
+//            it.putExtra(UPDATE_BATTERY,UPDATE_BATTERY)
+            context.sendBroadcast(it)
+        }
+    }
+
+    private fun unRegisterReceiver() {
+        try {
+            context.unregisterReceiver(batteryBroadcastReceiver)
+        } catch (e:Exception) {
+            e.printStackTrace()
+        }
+    }
 
     /**
      * Instantaneous battery current in microamperes, as an integer.
@@ -59,17 +100,20 @@ public class BatteryStateInfo(
      *  BATTERY_STATUS_NOT_CHARGING,
      *  BATTERY_STATUS_UNKNOWN)
      */
-    public fun getStatus(): Int =
-        if (batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_STATUS) == ERROR_VALUE) {
+    public fun getChargeStatus(): Int {
+        val res = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_STATUS)
+        return if (res == ERROR_VALUE) {
             batteryStatus?.getIntExtra(BatteryManager.EXTRA_STATUS, ERROR_VALUE) ?: ERROR_VALUE
         } else {
-            batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_STATUS)
+            res
         }
+    }
 
-    public fun isCharging(): Boolean = getStatus() == BatteryManager.BATTERY_STATUS_CHARGING
-    public fun isDischarging(): Boolean = getStatus() == BatteryManager.BATTERY_STATUS_DISCHARGING
-    public fun isNotCharging(): Boolean = getStatus() == BatteryManager.BATTERY_STATUS_NOT_CHARGING
-    public fun isFull(): Boolean = getStatus() == BatteryManager.BATTERY_STATUS_FULL
+
+    public fun isCharging(): Boolean = getChargeStatus() == BatteryManager.BATTERY_STATUS_CHARGING
+    public fun isDischarging(): Boolean = getChargeStatus() == BatteryManager.BATTERY_STATUS_DISCHARGING
+    public fun isNotCharging(): Boolean = getChargeStatus() == BatteryManager.BATTERY_STATUS_NOT_CHARGING
+    public fun isFull(): Boolean = getChargeStatus() == BatteryManager.BATTERY_STATUS_FULL
 
     /**
      * Remaining battery capacity as an integer percentage of total capacity (with no fractional part).
@@ -89,9 +133,17 @@ public class BatteryStateInfo(
      */
     public fun getEnergyCounter(): Long = batteryManager.getLongProperty(BatteryManager.BATTERY_PROPERTY_ENERGY_COUNTER)
 
+
+
+    public val STR_CHARGE_PLUG_USB: String = "USB"
+    public val STR_CHARGE_PLUG_AC: String = "AC"
+    public val STR_CHARGE_PLUG_DOCK: String = "DOCK"
+    public val STR_CHARGE_PLUG_UNKNOWN: String = "UNKNOWN"
+    public val STR_CHARGE_PLUG_WIRELESS : String = "WIRELESS"
+
     /**
      * BatteryChargingPlugType
-     * return BatteryManager(
+     * return BatteryManager
      *  BATTERY_PLUGGED_USB
      *  BATTERY_PLUGGED_AC
      *  BATTERY_PLUGGED_DOCK
@@ -100,14 +152,26 @@ public class BatteryStateInfo(
      * )
      * errorValue(-999)
      */
-    public fun getChargePlug(): Int = batteryStatus?.getIntExtra(BatteryManager.EXTRA_PLUGGED, ERROR_VALUE) ?: ERROR_VALUE
+    public fun getChargePlug(): Int  =  batteryStatus?.getIntExtra(BatteryManager.EXTRA_PLUGGED, ERROR_VALUE) ?: ERROR_VALUE
+
+    public fun test() :String{
+        return ""+ batteryStatus?.getIntExtra(BatteryManager.EXTRA_PLUGGED, ERROR_VALUE) + "," + getChargePlug()
+    }
+
     public fun isChargingUsb(): Boolean = getChargePlug() == BatteryManager.BATTERY_PLUGGED_USB
     public fun isChargingAc(): Boolean = getChargePlug() == BatteryManager.BATTERY_PLUGGED_AC
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     public fun isChargingDock(): Boolean = getChargePlug() == BatteryManager.BATTERY_PLUGGED_DOCK
     public fun isChargingWireless(): Boolean = getChargePlug() == BatteryManager.BATTERY_PLUGGED_WIRELESS
-//    fun isChargingAny() = getChargePlug() == BatteryManager.BATTERY_PLUGGED_ANY
+
+    public fun getChargePlugStr(): String = when (getChargePlug()) {
+        BatteryManager.BATTERY_PLUGGED_USB -> STR_CHARGE_PLUG_USB
+        BatteryManager.BATTERY_PLUGGED_AC -> STR_CHARGE_PLUG_AC
+        BatteryManager.BATTERY_PLUGGED_DOCK -> STR_CHARGE_PLUG_DOCK
+        BatteryManager.BATTERY_PLUGGED_WIRELESS -> STR_CHARGE_PLUG_WIRELESS
+        else -> STR_CHARGE_PLUG_UNKNOWN
+    }
 
     /**
      * Battery Temperature
@@ -121,6 +185,12 @@ public class BatteryStateInfo(
      */
     public fun getPresent(): Boolean? = batteryStatus?.getBooleanExtra(BatteryManager.EXTRA_PRESENT, false)
 
+
+    public val STR_BATTERY_HELTH_GOOD: String = "GOOD"
+    public val STR_BATTERY_HELTH_COLD: String = "COLD"
+    public val STR_BATTERY_HELTH_DEAD: String = "DEAD"
+    public val STR_BATTERY_HELTH_OVER_VOLTAGE: String = "OVER_VOLTAGE"
+    public val STR_BATTERY_HELTH_UNKNOWN: String = "UNKNOWN"
 
     /**
      * Battery Health Status
@@ -136,6 +206,16 @@ public class BatteryStateInfo(
     public fun isHealthGood(): Boolean = getHealth() == BatteryManager.BATTERY_HEALTH_GOOD
     public fun isHealthCool(): Boolean = getHealth() == BatteryManager.BATTERY_HEALTH_COLD
     public fun isHealthDead(): Boolean = getHealth() == BatteryManager.BATTERY_HEALTH_DEAD
+    public fun isHealthOverVoltage(): Boolean = getHealth() == BatteryManager.BATTERY_HEALTH_OVER_VOLTAGE
+    public fun getHealthStr(): String {
+        return when(batteryStatus?.getIntExtra(BatteryManager.EXTRA_HEALTH, ERROR_VALUE) ?: ERROR_VALUE) {
+            BatteryManager.BATTERY_HEALTH_GOOD -> return STR_BATTERY_HELTH_GOOD
+            BatteryManager.BATTERY_HEALTH_COLD -> return STR_BATTERY_HELTH_COLD
+            BatteryManager.BATTERY_HEALTH_DEAD -> return STR_BATTERY_HELTH_DEAD
+            BatteryManager.BATTERY_HEALTH_OVER_VOLTAGE -> return STR_BATTERY_HELTH_OVER_VOLTAGE
+            else -> return STR_BATTERY_HELTH_UNKNOWN
+        }
+    }
 
 
     /**
@@ -160,4 +240,9 @@ public class BatteryStateInfo(
      * error is null
      */
     public fun getTotalCapacity(): Any? = powerProfile.getAveragePower(PowerProfileVO.POWER_BATTERY_CAPACITY)
+
+    public override fun onDestroy() {
+        super.onDestroy()
+        unRegisterReceiver()
+    }
 }

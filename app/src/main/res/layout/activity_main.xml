@@ -84,8 +84,15 @@
                     android:id="@+id/btnShowWindow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:onClick="@{(v)->vm.onClickShowUiUtilsActivity(v)}"
+                    android:onClick="@{(v)->vm.onClickShowWindowActivity(v)}"
                     android:text="Show Window Activity" />
+
+                <Button
+                    android:id="@+id/btnShowBattery"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{(v)->vm.onClickShowBatteryActivity(v)}"
+                    android:text="Show Battery Activity" />
             </androidx.appcompat.widget.LinearLayoutCompat>
         </ScrollView>
     </FrameLayout>

@@ -4,6 +4,13 @@ import android.Manifest
 import android.view.View
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import kr.open.rhpark.app.activity.battery.BatteryActivity
+import kr.open.rhpark.app.activity.display.DisplayActivity
+import kr.open.rhpark.app.activity.recyclerview.RecyclerViewActivity
+import kr.open.rhpark.app.activity.second.FragmentShowActivity
+import kr.open.rhpark.app.activity.toast_snackbar.ToastSnackBarActivity
+import kr.open.rhpark.app.activity.vibrator.VibratorActivity
+import kr.open.rhpark.app.activity.window.WindowActivity
 import kr.open.rhpark.library.viewmodels.BaseViewModelEventFlow
 
 class MainActivityVm : BaseViewModelEventFlow<MainActivityVmEvent>() {
@@ -26,27 +33,37 @@ class MainActivityVm : BaseViewModelEventFlow<MainActivityVmEvent>() {
     }
 
 
+    private fun showActivity(activity: Class<*>) {
+        sendEvent(MainActivityVmEvent.OnShowActivity(activity))
+    }
+
     fun onClickToastSnackBar(v: View) {
-        sendEvent(MainActivityVmEvent.OnShowToastSnackBar("Hello Toast and SnackBar"))
+        showActivity(ToastSnackBarActivity::class.java)
     }
 
     fun onClickShowRecyclerviewActivity(v: View) {
-        sendEvent(MainActivityVmEvent.OnShowRecyclerviewActivity("Show RecyclerView Activity"))
+        showActivity(RecyclerViewActivity::class.java)
     }
 
     fun onClickShowVibratorActivity(v:View) {
-        sendEvent(MainActivityVmEvent.OnShowVibratorActivity("Show Vibrator Activity"))
+        showActivity(VibratorActivity::class.java)
     }
 
-    fun onClickShowUiUtilsActivity(v:View) {
-        sendEvent(MainActivityVmEvent.OnShowWindowActivity("Show UiUtils Activity"))
+    fun onClickShowWindowActivity(v:View) {
+        showActivity(WindowActivity::class.java)
     }
 
     fun onClickShowFragment(v:View) {
-        sendEvent(MainActivityVmEvent.OnShowFragmentActivity("Show Fragment Activity"))
+        showActivity(FragmentShowActivity::class.java)
     }
 
     fun onClickShowDisplayActivity(v:View) {
-        sendEvent(MainActivityVmEvent.OnDisplayActivity("Show UiUtils Activity"))
+        showActivity(DisplayActivity::class.java)
     }
+
+    fun onClickShowBatteryActivity(v:View) {
+        showActivity(BatteryActivity::class.java)
+    }
+
+
 }

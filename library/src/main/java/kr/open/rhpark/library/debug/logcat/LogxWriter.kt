@@ -36,7 +36,7 @@ internal class LogxWriter {
 
     private fun parentType(pair: Pair<String, String?>?): Pair<String, String?>? = logxStackTrace.getParentStackTrace().let {
         if (pair == null) return null
-        log(Pair(pair.first,"┎(${it.getMsgFrontParent()}"), "", LogxType.PARENT)
+        log(Pair(pair.first,"┎${it.getMsgFrontParent()}"), "", LogxType.PARENT)
         return Pair(pair.first, "┖${pair.second}")
     }
 

@@ -6,11 +6,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.launch
-import kr.open.rhpark.app.activity.display.DisplayActivity
-import kr.open.rhpark.app.activity.recyclerview.RecyclerViewActivity
-import kr.open.rhpark.app.activity.second.FragmentShowActivity
-import kr.open.rhpark.app.activity.toast_snackbar.ToastSnackBarActivity
-import kr.open.rhpark.app.activity.vibrator.VibratorActivity
 import kr.open.rhpark.app.databinding.ActivityMainBinding
 import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.ui.activity.BaseBindingActivity
@@ -40,19 +35,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
             }
         }
 
-        is MainActivityVmEvent.OnShowRecyclerviewActivity -> startActivity(RecyclerViewActivity::class.java)
-
-        is MainActivityVmEvent.OnShowVibratorActivity -> startActivity(VibratorActivity::class.java)
-
-        is MainActivityVmEvent.OnShowWindowActivity -> {
-//            startActivity(WindowActivity::class.java)
-        }
-
-        is MainActivityVmEvent.OnShowToastSnackBar -> startActivity(ToastSnackBarActivity::class.java)
-
-        is MainActivityVmEvent.OnShowFragmentActivity -> startActivity(FragmentShowActivity::class.java)
-
-        is MainActivityVmEvent.OnDisplayActivity -> startActivity(DisplayActivity::class.java)
+        is MainActivityVmEvent.OnShowActivity -> startActivity(event.activity)
     }
 
 

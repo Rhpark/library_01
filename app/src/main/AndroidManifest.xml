@@ -9,6 +9,8 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.BATTERY_STATS"
+        tools:ignore="ProtectedPermissions" />
 
     <application
         android:allowBackup="true"
@@ -35,6 +37,7 @@
         <activity android:name=".activity.vibrator.VibratorActivity" />
         <activity android:name=".activity.window.WindowActivity" />
         <activity android:name=".activity.display.DisplayActivity" />
+        <activity android:name=".activity.battery.BatteryActivity" />
     </application>
 
 </manifest>
