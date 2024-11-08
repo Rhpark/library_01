@@ -47,5 +47,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Custom Snackbar" />
+
+        <Button
+            android:id="@+id/btnAddConfigSnackBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Config Snackbar" />
+
+        <Button
+            android:id="@+id/btnShowConfigSnackBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Show Config Snackbar" />
     </LinearLayout>
 </layout>

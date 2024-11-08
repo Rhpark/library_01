@@ -10,7 +10,7 @@ publishing {
         register<MavenPublication>("release") {
             groupId = "com.github.Rhpark"
             artifactId = "library_01"
-            version = "0.5.0"
+            version = "0.5.1"
 
             afterEvaluate {
                 from(components["release"])
@@ -20,7 +20,7 @@ publishing {
         register<MavenPublication>("debug") {
             groupId = "com.github.Rhpark"
             artifactId = "library_01"
-            version = "0.5.0"
+            version = "0.5.1"
 
             afterEvaluate {
                 from(components["debug"])

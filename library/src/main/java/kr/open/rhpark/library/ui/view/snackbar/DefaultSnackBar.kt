@@ -3,6 +3,7 @@ package kr.open.rhpark.library.ui.view.snackbar
 import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.view.View
+import androidx.annotation.StringRes
 import com.google.android.material.snackbar.Snackbar
 
 
@@ -31,6 +32,11 @@ public class DefaultSnackBar(private val windowView: View) {
     private var actionText: String? = null
     private var actionTextInt: Int? = null
     private var actionOnClickListener:View.OnClickListener?=null
+
+    private val snackBarConfigMap = mutableMapOf<String, Snackbar>()
+    private val snackBarConfigTypeShort = "Short"
+    private val snackBarConfigTypeLong = "Long"
+    private val snackBarConfigTypeIndefinite = "Indefinite"
 
 
     /**
@@ -94,7 +100,7 @@ public class DefaultSnackBar(private val windowView: View) {
     private fun make(view:View, msg: String, lengthType: Int) : Snackbar =
         Snackbar.make(view, msg, lengthType).apply { defaultSet(this) }
 
-    private fun make(view:View, resId: Int, lengthType: Int) : Snackbar =
+    private fun make(view:View, @StringRes resId: Int, lengthType: Int) : Snackbar =
         Snackbar.make(view, resId, lengthType).apply { defaultSet(this) }
 
     public fun msgShort(view: View, msg: String): Snackbar = make(view, msg, Snackbar.LENGTH_SHORT)
@@ -121,6 +127,39 @@ public class DefaultSnackBar(private val windowView: View) {
     public fun showMsgIndefinite(view: View, resId: Int): Unit =  msgIndefinite(view, resId).show()
 
 
+    public fun addSnackBarShortConfig(tag: String, snackBarConfig: (Snackbar) -> Snackbar) {
+        addSnackBarShortConfig(windowView, tag, snackBarConfig)
+    }
+
+    public fun addSnackBarShortConfig(view: View, tag: String, snackBarConfig: (Snackbar) -> Snackbar) {
+        val configSnackBar = snackBarConfig(msgShort(view, ""))
+        snackBarConfigMap.set(tag +snackBarConfigTypeShort, configSnackBar)
+    }
+
+    public fun addSnackBarLongConfig(tag: String, snackBarConfig: (Snackbar) -> Snackbar) {
+        addSnackBarShortConfig(windowView, tag, snackBarConfig)
+    }
+
+    public fun addSnackBarLongConfig(view: View, tag: String, snackBarConfig: (Snackbar) -> Snackbar) {
+        val configSnackBar = snackBarConfig(msgLong(view, ""))
+        snackBarConfigMap.set(tag + snackBarConfigTypeLong, configSnackBar)
+    }
+
+    public fun addSnackBarIndefiniteConfig(tag: String, snackBarConfig: (Snackbar) -> Snackbar) {
+        addSnackBarShortConfig(windowView, tag, snackBarConfig)
+    }
+
+    public fun addSnackBarIndefiniteConfig(view: View, tag: String, snackBarConfig: (Snackbar) -> Snackbar) {
+        val configSnackBar = snackBarConfig(msgIndefinite(view, ""))
+        snackBarConfigMap.set(tag + snackBarConfigTypeIndefinite, configSnackBar)
+    }
+
+    public fun getSnackBarLongConfig(tag: String): Snackbar? = snackBarConfigMap.get(tag + snackBarConfigTypeLong)
+
+    public fun getSnackBarShortConfig(tag: String): Snackbar? = snackBarConfigMap.get(tag + snackBarConfigTypeShort)
+
+    public fun getSnackBarIndefiniteConfig(tag: String): Snackbar? = snackBarConfigMap.get(tag + snackBarConfigTypeIndefinite)
+
 
     @SuppressLint("RestrictedApi")
     private fun defaultSet(snackBar: Snackbar) {
@@ -145,4 +184,6 @@ public class DefaultSnackBar(private val windowView: View) {
             textMaxLines?.let { this@DefaultSnackBar.setTextMaxLines(it) }
         }
     }
+
+
 }
