@@ -82,6 +82,7 @@ public class DefaultSnackBar(private val windowView: View) {
         this.actionOnClickListener = actionOnClickListener
         this.actionTextInt = null
     }
+
     public fun setAction(actionText:Int, actionOnClickListener:View.OnClickListener) {
         this.actionText = null
         this.actionTextInt = actionText
@@ -90,26 +91,36 @@ public class DefaultSnackBar(private val windowView: View) {
 
     public fun setTextMaxLines(textMaxLines: Int?) { this.textMaxLines = textMaxLines }
 
-    public fun showShortWindowView(msg: String) {   make(windowView, msg, Snackbar.LENGTH_SHORT).show()    }
-    public fun showShortWindowView(resId: Int)  {    make(windowView, resId, Snackbar.LENGTH_SHORT).show()  }
-    public fun showShort(view: View, msg: String) {   make(view, msg, Snackbar.LENGTH_SHORT).show()    }
-    public fun showShort(view: View, resId: Int)  {    make(view, resId, Snackbar.LENGTH_SHORT).show()  }
-
-    public fun showLongWindowView(msg: String)  {   make(windowView, msg, Snackbar.LENGTH_LONG).show() }
-    public fun showLongWindowView(resId: Int)   {   make(windowView, resId, Snackbar.LENGTH_LONG).show()   }
-    public fun showLong(view: View, msg: String)  {   make(view, msg, Snackbar.LENGTH_LONG).show() }
-    public fun showLong(view: View, resId: Int)   {   make(view, resId, Snackbar.LENGTH_LONG).show()   }
-
-    public fun showIndefiniteWindowView(msg: String)  {  make(windowView, msg, Snackbar.LENGTH_INDEFINITE)    }
-    public fun showIndefiniteWindowView(resId: Int)   {   make(windowView, resId, Snackbar.LENGTH_INDEFINITE) }
-    public fun showIndefinite(view: View, msg: String)  {  make(view, msg, Snackbar.LENGTH_INDEFINITE)    }
-    public fun showIndefinite(view: View, resId: Int)   {   make(view, resId, Snackbar.LENGTH_INDEFINITE) }
-
-    private fun make(view:View, msg: String, lengthType: Int) =
+    private fun make(view:View, msg: String, lengthType: Int) : Snackbar =
         Snackbar.make(view, msg, lengthType).apply { defaultSet(this) }
 
-    private fun make(view:View, resId: Int, lengthType: Int) =
+    private fun make(view:View, resId: Int, lengthType: Int) : Snackbar =
         Snackbar.make(view, resId, lengthType).apply { defaultSet(this) }
+
+    public fun msgShort(view: View, msg: String): Snackbar = make(view, msg, Snackbar.LENGTH_SHORT)
+    public fun msgShort(view: View, resID: Int): Snackbar = make(view, resID, Snackbar.LENGTH_SHORT)
+    public fun showMsgShort(view: View, msg: String): Unit = msgShort(view, msg).show()
+    public fun showMsgShort(view: View, resId: Int): Unit = msgShort(view, resId).show()
+    public fun showMsgShortWindowView(msg: String): Unit = msgShort(windowView, msg).show()
+    public fun showMsgShortWindowView(resId: Int): Unit = msgShort(windowView, resId).show()
+
+
+    public fun msgLong(view: View, msg: String): Snackbar = make(view, msg, Snackbar.LENGTH_LONG)
+    public fun msgLong(view: View, resID: Int): Snackbar = make(view, resID, Snackbar.LENGTH_LONG)
+    public fun showMsgLongWindowView(msg: String): Unit = msgLong(windowView, msg).show()
+    public fun showMsgLongWindowView(resId: Int): Unit = msgLong(windowView, resId).show()
+    public fun showMsgLong(view: View, msg: String): Unit = msgLong(view, msg).show()
+    public fun showMsgLong(view: View, resId: Int): Unit = msgLong(view, resId).show()
+
+
+    public fun msgIndefinite(view:View, msg: String): Snackbar = make(view, msg, Snackbar.LENGTH_INDEFINITE)
+    public fun msgIndefinite(view: View, resId: Int): Snackbar = make(view, resId, Snackbar.LENGTH_INDEFINITE)
+    public fun showMsgIndefiniteWindowView(msg: String): Unit = msgIndefinite(windowView, msg).show()
+    public fun showMsgIndefiniteWindowView(resId: Int): Unit = msgIndefinite(windowView, resId).show()
+    public fun showMsgIndefinite(view: View, msg: String): Unit = msgIndefinite(view, msg).show()
+    public fun showMsgIndefinite(view: View, resId: Int): Unit =  msgIndefinite(view, resId).show()
+
+
 
     @SuppressLint("RestrictedApi")
     private fun defaultSet(snackBar: Snackbar) {
@@ -132,8 +143,6 @@ public class DefaultSnackBar(private val windowView: View) {
             textColorStateList?.let { setTextColor(it) }
 
             textMaxLines?.let { this@DefaultSnackBar.setTextMaxLines(it) }
-
-
         }
     }
 }

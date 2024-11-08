@@ -1,12 +1,13 @@
 package kr.open.rhpark.app.activity.toast_snackbar
 
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
+import android.view.View
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import kr.open.rhpark.app.R
 import kr.open.rhpark.app.databinding.ActivityToastSnackbarBinding
-import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.ui.activity.BaseBindingActivity
 
 class ToastSnackBarActivity :
@@ -15,23 +16,26 @@ class ToastSnackBarActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding.btnDefaultToast.setOnClickListener {
-            toast.showShort("Default Toast")
-        }
+        systemServiceManagerInfo.softKeyboardController.show(binding.editText,200L)
+
+        binding.btnDefaultToast.setOnClickListener { toast.showMsgShort("Default Toast") }
+
+        binding.btnCustomToast.visibility =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) View.GONE
+            else View.VISIBLE
 
         binding.btnCustomToast.setOnClickListener {
-
             toast.setGravity(Triple(Gravity.CENTER_VERTICAL, 0, 0))
-
-            toast.showShort("Custom Toast")
+            toast.setBackground(Color.YELLOW)
+            toast.showMsgShort("Custom Toast")
         }
 
         binding.btnDefaultSnackBar.setOnClickListener { v ->
-            snackBar.showShort(v, "Default SnackBar")
+            snackBar.showMsgShort(v, "Default SnackBar")
         }
 
         binding.btnDefaultWindowViewSnackBar.setOnClickListener {
-            snackBar.showShortWindowView("Default Window View SnackBar")
+            snackBar.showMsgShortWindowView("Default Window View SnackBar")
         }
 
         binding.btnCustomSnackBar.setOnClickListener { v ->
@@ -41,12 +45,9 @@ class ToastSnackBarActivity :
                 setBackgroundTint(Color.WHITE)
                 setActionTextColor(Color.RED)
                 setAction("Action_01") { v ->
-                    toast.showShort("OnClick SnackBar")
-                    Logx.d("OnClick SnackBar")
+                    toast.showMsgShort("OnClick SnackBar Action_01")
                 }
-            }
-            snackBar.showShort(v, "Custom SnackBar")
-
+            }.showMsgShort(v,"Custom SnackBar")
         }
     }
 }

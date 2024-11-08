@@ -8,18 +8,19 @@ import android.content.IntentFilter
 import android.os.BatteryManager
 import android.os.Build
 import androidx.annotation.RequiresApi
-import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.system.service.base.BaseSystemService
 import kr.open.rhpark.library.system.service.access.power.PowerProfile
 import kr.open.rhpark.library.system.service.access.power.PowerProfileVO
 
 /**
+ * Thisclass provides information about the battery state of an Android device.
+ * BatteryStateInfo 클래스는 Android 기기의 배터리 상태 정보를 제공.
  *
- * Using BatteryManager, PowerProfile
- * BatteryManager
-
+ * @param context The application context
+ * @param context 애플리케이션 컨텍스트.
  *
- * <permission android:name="android.permission.BATTERY_STATS" />
+ * @param batteryManager The BatteryManager instance.
+ * @param batteryManager BatteryManager 인스턴스.
  */
 public class BatteryStateInfo(
     private val context: Context,
@@ -33,7 +34,6 @@ public class BatteryStateInfo(
     private val batteryBroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             batteryStatus = intent
-            Logx.d("action = ${intent.action}")
             batteryReceiverListener?.let { it(intent) }
         }
     }
@@ -49,16 +49,26 @@ public class BatteryStateInfo(
             addAction(UPDATE_BATTERY)
         }, RECEIVER_EXPORTED)
 
-    private val powerProfile: PowerProfile = PowerProfile(context)
+    private val powerProfile: PowerProfile by lazy { PowerProfile(context) }
 
     public val ERROR_VALUE: Int = Integer.MIN_VALUE
 
+
+    /**
+     * Sets a listener to receive battery state updates.
+     * 배터리 상태 업데이트를 수신할리스너를 설정.
+     *
+     * @param listener The listener to receive battery state updates.
+     * @param listener 배터리 상태 업데이트를 수신할 리스너.
+     */
     public fun setReceiverListener(listener: ((intent: Intent) -> Unit)? = null) {
         this.batteryReceiverListener = listener
         batteryStatus?.let {
-            it.action = UPDATE_BATTERY
+            if(listener != null) {
+                it.action = UPDATE_BATTERY
 //            it.putExtra(UPDATE_BATTERY,UPDATE_BATTERY)
-            context.sendBroadcast(it)
+                context.sendBroadcast(it)
+            }
         }
     }
 
@@ -74,16 +84,24 @@ public class BatteryStateInfo(
      * Instantaneous battery current in microamperes, as an integer.
      * Positive values indicate net current entering the battery from a charge source,
      * negative values indicate net current discharging from the battery.
-     * Integer + is Charging
-     * Integer - is Discharging
-     * Unit microAmpere
+     *
+     * 순간 배터리 전류를 마이크로암페어 단위로 반환.
+     * 양수 값은 충전 소스에서 배터리로 들어오는 순 전류, 음수 값은 배터리에서 방전되는 순 전류.
+     *
+     * @return The instantaneous battery current in microamperes.
+     * @return 순간 배터리 전류 (마이크로암페어)
      */
     public fun getCurrentAmpere(): Int = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CURRENT_NOW)
 
     /**
      * Average battery current in microamperes, as an integer.
+     * 평균 배터리 전류를 마이크로암페어 단위로 반환.
+     *
      * Positive values indicate net current entering the battery from a charge source,
      * negative values indicate net current discharging from the battery.
+     *
+     * 양수 값은 충전 소스에서 배터리로 들어오는 순 전류, 음수 값은 배터리에서 방전되는 순 전류.
+     *
      * The time period over which the average is computed may depend on the fuel gauge hardware and its configuration.
      * Integer + is Charging
      * Integer - is Discharging
@@ -93,12 +111,15 @@ public class BatteryStateInfo(
 
     /**
      * Battery charge status, from a BATTERY_STATUS_* value.
-     * return BatteryManager(
-     *  BATTERY_STATUS_CHARGING,
-     *  BATTERY_STATUS_FULL,
-     *  BATTERY_STATUS_DISCHARGING,
-     *  BATTERY_STATUS_NOT_CHARGING,
-     *  BATTERY_STATUS_UNKNOWN)
+     * 배터리 충전 상태를 반환.
+     *
+     * @return The battery charge status.
+     * @return 배터리 충전 상태 /
+     * @see BatteryManager.BATTERY_STATUS_CHARGING
+     * @see BatteryManager.BATTERY_STATUS_FULL
+     * @see BatteryManager.BATTERY_STATUS_DISCHARGING
+     * @see BatteryManager.BATTERY_STATUS_NOT_CHARGING
+     * @see BatteryManager.BATTERY_STATUS_UNKNOWN
      */
     public fun getChargeStatus(): Int {
         val res = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_STATUS)
@@ -109,7 +130,6 @@ public class BatteryStateInfo(
         }
     }
 
-
     public fun isCharging(): Boolean = getChargeStatus() == BatteryManager.BATTERY_STATUS_CHARGING
     public fun isDischarging(): Boolean = getChargeStatus() == BatteryManager.BATTERY_STATUS_DISCHARGING
     public fun isNotCharging(): Boolean = getChargeStatus() == BatteryManager.BATTERY_STATUS_NOT_CHARGING
@@ -117,19 +137,34 @@ public class BatteryStateInfo(
 
     /**
      * Remaining battery capacity as an integer percentage of total capacity (with no fractional part).
-     * return percent
+     * 남은 배터리 용량을 총 용량의 백분율로 반환.
+     *
+     * @return The remaining battery capacity as a percentage.
+     * @return 남은 배터리 용량 (백분율)
      */
     public fun getCapacity(): Int = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
 
     /**
      * Battery capacity in microampere-hours, as an integer.
+     * 배터리 용량을 마이크로암페어시 단위로 반환
+     *
+     * @return The battery capacity in microampere-hours..
+     * @return 배터리 용량 (마이크로암페어시).
      */
     public fun getChargeCounter(): Int = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CHARGE_COUNTER)
 
     /**
-     * Battery remaining energy in nanowatt-hours, as a long integer.
-     * Warring!!, Values may not be accurate
-     * Error value may be Long.MIN_VALUE
+     * Returns the battery remaining energy in nanowatt-hours.
+     * 배터리 잔여 에너지를 나노와트시 단위로 반환.
+     *
+     * Warning!!, Values may not be accurate.
+     * 경고!!, 값이 정확하지 않을 수 있음.
+     *
+     * Error value may be Long.MIN_VALUE.
+     * 오류 값은 Long.MIN_VALUE일.
+     *
+     * @return The battery remaining energy in nanowatt-hours.
+     * @return 배터리 잔여 에너지 (나노와트시).
      */
     public fun getEnergyCounter(): Long = batteryManager.getLongProperty(BatteryManager.BATTERY_PROPERTY_ENERGY_COUNTER)
 
@@ -204,7 +239,7 @@ public class BatteryStateInfo(
     public fun isHealthDead(): Boolean = getHealth() == BatteryManager.BATTERY_HEALTH_DEAD
     public fun isHealthOverVoltage(): Boolean = getHealth() == BatteryManager.BATTERY_HEALTH_OVER_VOLTAGE
     public fun getHealthStr(): String {
-        return when(batteryStatus?.getIntExtra(BatteryManager.EXTRA_HEALTH, ERROR_VALUE) ?: ERROR_VALUE) {
+        return when(getHealth()) {
             BatteryManager.BATTERY_HEALTH_GOOD -> return STR_BATTERY_HELTH_GOOD
             BatteryManager.BATTERY_HEALTH_COLD -> return STR_BATTERY_HELTH_COLD
             BatteryManager.BATTERY_HEALTH_DEAD -> return STR_BATTERY_HELTH_DEAD

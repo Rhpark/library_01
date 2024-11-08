@@ -26,10 +26,10 @@ class FirstFragment:BaseBindingFragment<FragmentFirstBinding>(R.layout.fragment_
                         }
                     }
                     is FirstFragmentVmEvent.OnShowSnackBar -> {
-                        snackBar.showShort(binding.btnTestToastShow, it.msg)
+                        snackBar.showMsgShort(binding.btnTestToastShow, it.msg)
                     }
                     is FirstFragmentVmEvent.OnShowToast -> {
-                        toast.showShort(it.msg)
+                        toast.showMsgShort(it.msg)
                     }
                 }
             }

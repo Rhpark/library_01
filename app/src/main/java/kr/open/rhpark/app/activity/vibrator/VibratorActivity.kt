@@ -24,7 +24,7 @@ class VibratorActivity : BaseBindingActivity<ActivityVibratorBinding>(R.layout.a
         binding.run {
             btnOneShort.setOnClickListener {
                 if (edtKey.text.isEmpty()) {
-                    toast.showShort("Input Timer")
+                    toast.showMsgShort("Input Timer")
                 } else {
                     systemServiceManagerInfo.vibratorController.createOneShot(edtKey.text.toString().toLong())
                 }
@@ -39,7 +39,7 @@ class VibratorActivity : BaseBindingActivity<ActivityVibratorBinding>(R.layout.a
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                     systemServiceManagerInfo.vibratorController.createWaveform(times, amplitudes)
                 } else {
-                    toast.showShort("Requires Os Version 31(S), but your Os Version is ${Build.VERSION.SDK_INT}")
+                    toast.showMsgShort("Requires Os Version 31(S), but your Os Version is ${Build.VERSION.SDK_INT}")
                 }
             }
 
@@ -47,7 +47,7 @@ class VibratorActivity : BaseBindingActivity<ActivityVibratorBinding>(R.layout.a
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     systemServiceManagerInfo.vibratorController.createPredefined(VibrationEffect.EFFECT_DOUBLE_CLICK)
                 } else {
-                    toast.showShort("Requires Os Version 26(O), but your Os Version is ${Build.VERSION.SDK_INT}")
+                    toast.showMsgShort("Requires Os Version 26(O), but your Os Version is ${Build.VERSION.SDK_INT}")
                 }
             }
 

@@ -64,7 +64,7 @@ class DisplayActivity : BaseBindingActivity<ActivityDisplayBinding>(R.layout.act
     private fun getDisplayInfo() = systemServiceManagerInfo.displayInfo
 
     private fun editNumberIsEmpty(): Boolean = if (binding.edtNumber.text.isEmpty()) {
-        toast.showShort("Input Number")
+        toast.showMsgShort("Input Number")
         true
     } else { false }
 }

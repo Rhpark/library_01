@@ -20,11 +20,11 @@ class RecyclerViewActivity : BaseBindingActivity<ActivityRecyclerviewBinding>(R.
         binding.rcvList.run {
             setOnReachEdgeListener { edge, isReached ->
                 Logx.d("edge : $edge, isReached : $isReached")
-                toast.showShort("edge : $edge, isReached : $isReached")
+                toast.showMsgShort("edge : $edge, isReached : $isReached")
             }
             setOnScrollDirectionListener { scrollDirection ->
                 Logx.d("scrollDirection : $scrollDirection")
-                toast.showShort("scrollDirection : $scrollDirection")
+                toast.showMsgShort("scrollDirection : $scrollDirection")
             }
         }
 
@@ -41,7 +41,7 @@ class RecyclerViewActivity : BaseBindingActivity<ActivityRecyclerviewBinding>(R.
                         }
 
                         is RecyclerviewActivityVmEvent.OnToastShow -> {
-                            toast.showShort(it.msg)
+                            toast.showMsgShort(it.msg)
                         }
                     }
                 }
