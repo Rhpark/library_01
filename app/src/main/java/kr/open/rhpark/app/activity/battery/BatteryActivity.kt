@@ -1,6 +1,7 @@
 package kr.open.rhpark.app.activity.battery
 
 import android.os.Bundle
+import androidx.lifecycle.lifecycleScope
 import kr.open.rhpark.app.R
 import kr.open.rhpark.app.databinding.ActivityBatteryBinding
 import kr.open.rhpark.library.debug.logcat.Logx
@@ -17,27 +18,27 @@ class BatteryActivity : BaseBindingActivity<ActivityBatteryBinding>(R.layout.act
     }
 
     private fun initListener() {
-
-        binding.run {
-            btnBatteryStatusStart.setOnClickListener {
-                systemServiceManagerInfo.batteryInfo.run {
-                    setReceiverListener { intent-> updateBatteryInfo(intent.action) }
-                }
-            }
-
-            btnBatteryStatusStop.setOnClickListener { systemServiceManagerInfo.batteryInfo.setReceiverListener(null) }
+        binding.btnBatteryStatusStart.setOnClickListener {
+            systemServiceManagerInfo.batteryInfo.registerBatteryReceiver()
+            systemServiceManagerInfo.batteryInfo.startUpdateScope(lifecycleScope)
+            updateInfo()
         }
     }
 
-    private fun updateBatteryInfo(action:String?=null) {
-        Logx.d()
+    private fun updateInfo() {
         systemServiceManagerInfo.batteryInfo.run {
-            val result =
-                "Capacity = ${getCapacity()} %\n" + "ChargePlugStr = ${getChargePlugStr()}\n" + "Charge voltage = ${getVoltage()} v\n" +
-                        "Current Ampere = ${getCurrentAmpere()} mA\n" + "Current AverageAmpere = ${getCurrentAverageAmpere()} mA\n" + "Health = ${getHealthStr()}\n" +
-                        "IsCharge = ${isCharging()}\n" + "IsFull = ${isFull()}\n" + "Present = ${getPresent()} \n" + "Total capacity = ${getTotalCapacity()} mAh\n" +
-                        "Temperature = ${getTemperature()} C \n" + "Technology = ${getTechnology()}\n"
-            binding.tvBatteryStatus.text = result
+            updateCapacityListener { it-> binding.tvCapacity.text = "Capacity = ${it}" }
+            updateCurrentAmpereListener { it-> binding.tvCurrentAmpere.text = "Current Ampere = ${it} mA" }
+            updateCurrentAverageAmpereListener { it-> binding.tvCurrentAverageAmpere.text = "Current AverageAmpere = ${it} mA" }
+            updateChargePlugStrListener { it-> binding.tvChargeChargePlugStr.text = "ChargePlugStr = ${it}" }
+            updateChargeStatusListener { it-> binding.tvChargeStatus.text = "Health = ${it}" }
+            updateEnergyCounterListener {  it-> binding.tvEnergyCounte.text = "EnergyCounte = ${it}" }
+            updateHealthStrListener {  it-> binding.tvHealth.text = "Health = ${it}" }
+            updatePresentListener { it-> binding.tvPresent.text = "Present = ${it}" }
+            updateTemperatureListener { it-> binding.tvTemperature.text = "Temperature = ${it} C" }
+            updateTotalCapacityListener { it-> binding.tvTotalCapacity.text = "TotalCapacity = ${it} " }
+            updateVoltageListener { it-> binding.tvVoltage.text = "Charge voltage = ${it} v" }
+            updateChargeCountListener { it-> binding.tvChargeCounter.text = "ChargeCounter = ${it}" }
         }
     }
 

@@ -1,4 +1,4 @@
-package kr.open.rhpark.library.system.service.access
+package kr.open.rhpark.library.system.service.access.battery
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -8,6 +8,11 @@ import android.content.IntentFilter
 import android.os.BatteryManager
 import android.os.Build
 import androidx.annotation.RequiresApi
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import kr.open.rhpark.library.system.service.base.BaseSystemService
 import kr.open.rhpark.library.system.service.access.power.PowerProfile
 import kr.open.rhpark.library.system.service.access.power.PowerProfileVO
@@ -15,6 +20,19 @@ import kr.open.rhpark.library.system.service.access.power.PowerProfileVO
 /**
  * Thisclass provides information about the battery state of an Android device.
  * BatteryStateInfo 클래스는 Android 기기의 배터리 상태 정보를 제공.
+ *
+ * It is recommended to call destroy() upon complete shutdown.
+ * 완전 종료 시 destroy()를 호출하는 것을 권장.
+ *
+ * to use update..Listener() method , you must update periodically to obtain a more accurate value.
+ * update..Listener()를 사용하기 위해선 반드시 주기적으로 업데이트를 해야 조금 더 정확 한 값을 가져 올 수 있다.
+ *
+ * ex)
+ * 1. startUpdate(coroutineScope: CoroutineScope) 사용
+ * 2. startUpdate()
+ *  . (Call startUpdate() periodically from outside)
+ *  . 외부에서 주기적으로 startUpdate() 호출
+ *
  *
  * @param context The application context
  * @param context 애플리케이션 컨텍스트.
@@ -29,46 +47,126 @@ public class BatteryStateInfo(
 
     private val UPDATE_BATTERY = "RHPARK_BATTERY_STATE_UPDATE"
 
-    private var batteryReceiverListener: ((intent: Intent) -> Unit)? = null
-
     private val batteryBroadcastReceiver = object : BroadcastReceiver() {
+
         override fun onReceive(context: Context, intent: Intent) {
+
             batteryStatus = intent
-            batteryReceiverListener?.let { it(intent) }
+            updateBatteryInfo()
         }
     }
 
-    private var batteryStatus: Intent? =
-        context.registerReceiver(batteryBroadcastReceiver, IntentFilter().apply {
-            addAction(Intent.ACTION_BATTERY_CHANGED)
-            addAction(Intent.ACTION_BATTERY_LOW)
-            addAction(Intent.ACTION_BATTERY_OKAY)
-            addAction(Intent.ACTION_POWER_CONNECTED)
-            addAction(Intent.ACTION_POWER_DISCONNECTED)
-            addAction(Intent.ACTION_POWER_USAGE_SUMMARY)
-            addAction(UPDATE_BATTERY)
-        }, RECEIVER_EXPORTED)
+    private val intentFilter = IntentFilter().apply {
+        addAction(Intent.ACTION_BATTERY_CHANGED)
+        addAction(Intent.ACTION_BATTERY_LOW)
+        addAction(Intent.ACTION_BATTERY_OKAY)
+        addAction(Intent.ACTION_POWER_CONNECTED)
+        addAction(Intent.ACTION_POWER_DISCONNECTED)
+        addAction(Intent.ACTION_POWER_USAGE_SUMMARY)
+        addAction(UPDATE_BATTERY)
+    }
+
+    private var batteryStatus: Intent? = null
 
     private val powerProfile: PowerProfile by lazy { PowerProfile(context) }
 
     public val ERROR_VALUE: Int = Integer.MIN_VALUE
 
+    private val capacity = BatteryUpdate<Int>(getCapacity())
+    public fun updateCapacityListener(updateListener: (res: Int) -> Unit) { capacity.updateListener(updateListener) }
 
-    /**
-     * Sets a listener to receive battery state updates.
-     * 배터리 상태 업데이트를 수신할리스너를 설정.
-     *
-     * @param listener The listener to receive battery state updates.
-     * @param listener 배터리 상태 업데이트를 수신할 리스너.
-     */
-    public fun setReceiverListener(listener: ((intent: Intent) -> Unit)? = null) {
-        this.batteryReceiverListener = listener
-        batteryStatus?.let {
-            if(listener != null) {
-                it.action = UPDATE_BATTERY
-//            it.putExtra(UPDATE_BATTERY,UPDATE_BATTERY)
-                context.sendBroadcast(it)
+    private val currentAmpere = BatteryUpdate<Int>(getCurrentAmpere())
+    public fun updateCurrentAmpereListener(updateListener: (res: Int) -> Unit) { currentAmpere.updateListener(updateListener) }
+
+    private val currentAverageAmpere = BatteryUpdate<Int>(getCurrentAverageAmpere())
+    public fun updateCurrentAverageAmpereListener(updateListener: (res: Int) -> Unit) { currentAverageAmpere.updateListener(updateListener) }
+
+    private val chargePlug = BatteryUpdate<Int>(getChargePlug())
+    public fun updateChargePlugListener(updateListener: (res: Int) -> Unit) { chargePlug.updateListener(updateListener) }
+
+    private val chargePlugStr = BatteryUpdate<String>(getChargePlugStr())
+    public fun updateChargePlugStrListener(updateListener: (res: String?) -> Unit) { chargePlugStr.updateListener(updateListener) }
+
+    private val chargeStatus = BatteryUpdate<Int>(getChargeStatus())
+    public fun updateChargeStatusListener(updateListener: (res: Int) -> Unit) { chargeStatus.updateListener(updateListener) }
+
+    private val chargeCount = BatteryUpdate<Int>(getChargeCounter())
+    public fun updateChargeCountListener(updateListener: (res: Int) -> Unit) { chargeCount.updateListener(updateListener) }
+
+    private val energyCounter = BatteryUpdate<Long>(getEnergyCounter())
+    public fun updateEnergyCounterListener(updateListener: (res: Long) -> Unit) { energyCounter.updateListener(updateListener) }
+
+    private val health = BatteryUpdate<Int>(getHealth())
+    public fun updateHealthListener(updateListener: (res: Int) -> Unit) { health.updateListener(updateListener) }
+
+    private val healthStr = BatteryUpdate<String>(getHealthStr())
+    public fun updateHealthStrListener(updateListener: (res: String?) -> Unit) { healthStr.updateListener(updateListener) }
+
+    private val present = BatteryUpdate<Boolean>(getPresent())
+    public fun updatePresentListener(updateListener: (res: Boolean) -> Unit) { present.updateListener(updateListener) }
+
+    private val totalCapacity = BatteryUpdate<Double>(getTotalCapacity())
+    public fun updateTotalCapacityListener(updateListener: (res: Double) -> Unit) { totalCapacity.updateListener(updateListener) }
+
+    private val temperature = BatteryUpdate<Double>(getTemperature())
+    public fun updateTemperatureListener(updateListener: (res: Double) -> Unit) { temperature.updateListener(updateListener) }
+
+    private val voltage = BatteryUpdate<Double>(getVoltage())
+    public fun updateVoltageListener(updateListener: (res: Double) -> Unit) { voltage.updateListener(updateListener) }
+
+    public fun registerBatteryReceiver() {
+        unRegisterReceiver()
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            batteryStatus = context.registerReceiver(batteryBroadcastReceiver, intentFilter, RECEIVER_EXPORTED)
+        } else {
+            batteryStatus = context.registerReceiver(batteryBroadcastReceiver, intentFilter)
+        }
+    }
+
+
+    public var scope: Job? = null
+    public fun startUpdateScope(coroutineScope: CoroutineScope) {
+        scope = coroutineScope.launch {
+
+            while(isActive) {
+                sendBroadcast()
+                delay(1000)
             }
+            stopUpdateScope()
+        }
+    }
+
+    public fun startUpdate() {
+        sendBroadcast()
+    }
+
+    public fun stopUpdateScope() {
+        scope?.cancel()
+        scope = null
+    }
+
+    private fun updateBatteryInfo() {
+
+        capacity.update(getCapacity())
+        chargeCount.update(getChargeCounter())
+        chargePlug.update(getChargePlug())
+        chargePlugStr.update(getChargePlugStr())
+        chargeStatus.update(getChargeStatus())
+        currentAmpere.update(getCurrentAmpere())
+        currentAverageAmpere.update(getCurrentAverageAmpere())
+        energyCounter.update(getEnergyCounter())
+        health.update(getHealth())
+        healthStr.update(getHealthStr())
+        present.update(getPresent())
+        temperature.update(getTemperature())
+        totalCapacity.update(getTotalCapacity())
+        voltage.update(getVoltage())
+    }
+
+    private fun sendBroadcast() {
+        batteryStatus?.let {
+            it.action = UPDATE_BATTERY
+            context.sendBroadcast(it)
         }
     }
 
@@ -78,6 +176,7 @@ public class BatteryStateInfo(
         } catch (e:Exception) {
             e.printStackTrace()
         }
+        batteryStatus = null
     }
 
     /**
@@ -148,7 +247,7 @@ public class BatteryStateInfo(
      * Battery capacity in microampere-hours, as an integer.
      * 배터리 용량을 마이크로암페어시 단위로 반환
      *
-     * @return The battery capacity in microampere-hours..
+     * @return The battery capacity in microampere-hours.
      * @return 배터리 용량 (마이크로암페어시).
      */
     public fun getChargeCounter(): Int = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CHARGE_COUNTER)
@@ -179,11 +278,10 @@ public class BatteryStateInfo(
     /**
      * BatteryChargingPlugType
      * return BatteryManager
-     *  BATTERY_PLUGGED_USB
-     *  BATTERY_PLUGGED_AC
-     *  BATTERY_PLUGGED_DOCK
-     *  BATTERY_PLUGGED_WIRELESS
-     *  BATTERY_PLUGGED_ANY
+     * @see BatteryManager.BATTERY_PLUGGED_USB
+     * @see BatteryManager.BATTERY_PLUGGED_AC
+     * @see BatteryManager.BATTERY_PLUGGED_DOCK
+     * @see BatteryManager.BATTERY_PLUGGED_WIRELESS
      * )
      * errorValue(-999)
      */
@@ -214,7 +312,7 @@ public class BatteryStateInfo(
     /**
      * boolean indicating whether a battery is present.
      */
-    public fun getPresent(): Boolean? = batteryStatus?.getBooleanExtra(BatteryManager.EXTRA_PRESENT, false)
+    public fun getPresent(): Boolean = batteryStatus?.getBooleanExtra(BatteryManager.EXTRA_PRESENT, false)?: false
 
 
     public val STR_BATTERY_HELTH_GOOD: String = "GOOD"
@@ -270,10 +368,12 @@ public class BatteryStateInfo(
      * return (ex 4000.0)
      * error is null
      */
-    public fun getTotalCapacity(): Any? = powerProfile.getAveragePower(PowerProfileVO.POWER_BATTERY_CAPACITY)
+    public fun getTotalCapacity(): Double =
+        powerProfile.getAveragePower(PowerProfileVO.POWER_BATTERY_CAPACITY) as Double
 
     public override fun onDestroy() {
         super.onDestroy()
+        stopUpdateScope()
         unRegisterReceiver()
     }
 }

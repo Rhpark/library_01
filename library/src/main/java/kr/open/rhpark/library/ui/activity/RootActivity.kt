@@ -90,8 +90,9 @@ public abstract class RootActivity : AppCompatActivity() {
             if(it.isRequestPermissionSystemAlertWindow()) {
                 requestPermissionAlertWindowLauncher.launch(it.requestPermissionAlertWindow(packageName))
             }
-            if(it.getRemainRequestPermissionList().isNotEmpty()) {
-                ActivityCompat.requestPermissions(this, it.getRemainRequestPermissionList(), PermissionCheck.PERMISSION_REQUEST_CODE)
+            val remainRequestPermissions = it.getRemainRequestPermissionList()
+            if(remainRequestPermissions.isNotEmpty()) {
+                ActivityCompat.requestPermissions(this, remainRequestPermissions, PermissionCheck.PERMISSION_REQUEST_CODE)
             }
         }
     }

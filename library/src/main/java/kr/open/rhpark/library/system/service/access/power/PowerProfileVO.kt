@@ -27,6 +27,7 @@ public enum class PowerProfileVO(public val  res: String) {
     //    @UnsupportedAppUsage
     POWER_CPU_ACTIVE("cpu.active"),
 
+    POWER_SCREEN_FULL("screen.full"),
     /**
      * Power consumption when WiFi driver is scanning for networks.
      */

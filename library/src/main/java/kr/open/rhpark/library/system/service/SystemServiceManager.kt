@@ -11,7 +11,7 @@ import android.telephony.euicc.EuiccManager
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
-import kr.open.rhpark.library.system.service.access.BatteryStateInfo
+import kr.open.rhpark.library.system.service.access.battery.BatteryStateInfo
 import kr.open.rhpark.library.system.service.access.DisplayInfo
 import kr.open.rhpark.library.system.service.controller.SoftKeyboardController
 import kr.open.rhpark.library.system.service.controller.VibratorController
