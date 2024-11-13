@@ -1,5 +1,6 @@
 package kr.open.rhpark.library.system.service.controller
 
+import android.Manifest.permission.VIBRATE
 import android.content.Context
 import android.os.Build
 import android.os.CombinedVibration
@@ -7,6 +8,7 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
 import androidx.annotation.RequiresApi
+import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.AppCompatActivity
 import kr.open.rhpark.library.system.service.base.BaseSystemService
 
@@ -19,7 +21,7 @@ import kr.open.rhpark.library.system.service.base.BaseSystemService
  *
  */
 public class VibratorController(context: Context) :
-    BaseSystemService(context, listOf(android.Manifest.permission.VIBRATE)) {
+    BaseSystemService(context, listOf(VIBRATE)) {
 
     /**
      * be used Build.VERSION.SDK_INT < Build.VERSION_CODES.S(31)
@@ -36,6 +38,7 @@ public class VibratorController(context: Context) :
     /**
      * be used Build.VERSION.SDK_INT >= Build.VERSION_CODES.S(31)
      */
+    @delegate:RequiresApi(Build.VERSION_CODES.S)
     public val vibratorManger: VibratorManager by lazy {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             (context.getSystemService(AppCompatActivity.VIBRATOR_MANAGER_SERVICE) as VibratorManager)
@@ -48,9 +51,8 @@ public class VibratorController(context: Context) :
      * effect : Int (-1 ~ 255)
      * be used Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
      */
+    @RequiresPermission(VIBRATE)
     public fun createOneShot(timer: Long, effect: Int = VibrationEffect.DEFAULT_AMPLITUDE) {
-
-        if(!isPermissionAllGranted()) { return }
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             vibrator.vibrate(timer)
@@ -70,9 +72,8 @@ public class VibratorController(context: Context) :
      * vibrationEffectClick  ex) VibrationEffect.EFFECT_CLICK
      */
     @RequiresApi(Build.VERSION_CODES.Q)
+    @RequiresPermission(VIBRATE)
     public fun createPredefined(vibrationEffectClick: Int) {
-
-        if(!isPermissionAllGranted()) { return }
 
         val effect = VibrationEffect.createPredefined(vibrationEffectClick)
 
@@ -110,19 +111,16 @@ public class VibratorController(context: Context) :
      * 즉 배열의 어디부터 시작해서 반복할 건지 설정, ex repeat 값이 1이면 배열 1번부터 무한히 반복
      */
     @RequiresApi(Build.VERSION_CODES.S)
+    @RequiresPermission(VIBRATE)
     public fun createWaveform(times: LongArray, amplitudes: IntArray, repeat: Int = -1) {
-
-        if(!isPermissionAllGranted()) { return }
 
         val effectWave = VibrationEffect.createWaveform(times, amplitudes, repeat)
 
         vibratorManger.vibrate(CombinedVibration.createParallel(effectWave))
     }
 
-
+    @RequiresPermission(VIBRATE)
     public fun cancel() {
-
-        if(!isPermissionAllGranted()) { return }
 
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S) {
             vibrator.cancel()

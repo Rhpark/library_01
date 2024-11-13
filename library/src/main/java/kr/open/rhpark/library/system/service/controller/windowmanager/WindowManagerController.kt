@@ -13,7 +13,7 @@ import kr.open.rhpark.library.system.service.controller.windowmanager.floating.W
 /**
  * Several functions require Android.Manifest.permission.SYSTEM_ALERT_WINDOW permission.
  */
-public class WindowManagerController(context: Context, private val windowManager: WindowManager)
+public class WindowManagerController(context: Context, public val windowManager: WindowManager)
     : BaseSystemService(context, listOf(android.Manifest.permission.SYSTEM_ALERT_WINDOW)) {
 
     private var floatingViewInfoList: MutableList<FloatingViewManager> = mutableListOf()
@@ -31,8 +31,8 @@ public class WindowManagerController(context: Context, private val windowManager
         }
 
         addView(floatingView.view, params)
-        val floatingAddConfig = FloatingViewManager(floatingView, params) { view, params ->
-            updateView(view, params)
+        val floatingAddConfig = FloatingViewManager(floatingView, params) { view, param ->
+            updateView(view, param)
         }
 
         floatingViewInfoList.add(floatingAddConfig)

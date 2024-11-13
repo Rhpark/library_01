@@ -10,9 +10,12 @@ import android.telephony.TelephonyManager
 import android.telephony.euicc.EuiccManager
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.AppCompatActivity
 import kr.open.rhpark.library.system.service.access.battery.BatteryStateInfo
-import kr.open.rhpark.library.system.service.access.DisplayInfo
+import kr.open.rhpark.library.system.service.access.display.DisplayInfo
+import kr.open.rhpark.library.system.service.access.network.NetworkStateInfo
+import kr.open.rhpark.library.system.service.base.telephony_subscription.telephony.callback.CommonTelephonyCallback
 import kr.open.rhpark.library.system.service.controller.SoftKeyboardController
 import kr.open.rhpark.library.system.service.controller.VibratorController
 import kr.open.rhpark.library.system.service.controller.windowmanager.WindowManagerController
@@ -26,6 +29,7 @@ public class SystemServiceManager(context: Context) {
         context.getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE) as InputMethodManager
     }
 
+    @delegate:RequiresPermission(android.Manifest.permission.BATTERY_STATS)
     public val batteryManager: BatteryManager by lazy {
         context.getSystemService(AppCompatActivity.BATTERY_SERVICE) as BatteryManager
     }
@@ -38,10 +42,12 @@ public class SystemServiceManager(context: Context) {
         context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
     }
 
+    @delegate:RequiresPermission(android.Manifest.permission.READ_PHONE_STATE)
     public val telephonyManager: TelephonyManager by lazy {
         context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
     }
 
+    @delegate:RequiresPermission(android.Manifest.permission.READ_PHONE_STATE)
     public val subscriptionManager: SubscriptionManager by lazy {
         context.getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE) as SubscriptionManager
     }
@@ -83,4 +89,6 @@ public class SystemServiceManager(context: Context) {
     public val batteryInfo: BatteryStateInfo by lazy { BatteryStateInfo(context, batteryManager) }
 
     public val displayInfo: DisplayInfo by lazy { DisplayInfo(context, windowManager) }
+    public val onBaseTelephonyCallback: CommonTelephonyCallback = CommonTelephonyCallback()
+    public val networkInfo: NetworkStateInfo by lazy { NetworkStateInfo(context, telephonyManager, subscriptionManager, onBaseTelephonyCallback, connectivityManager, wifiManager) }
 }

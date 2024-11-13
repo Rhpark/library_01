@@ -13,9 +13,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kr.open.rhpark.library.system.service.base.BaseSystemService
 import kr.open.rhpark.library.system.service.access.power.PowerProfile
 import kr.open.rhpark.library.system.service.access.power.PowerProfileVO
+import kr.open.rhpark.library.system.service.base.BaseSystemService
 
 /**
  * Thisclass provides information about the battery state of an Android device.
@@ -42,7 +42,7 @@ import kr.open.rhpark.library.system.service.access.power.PowerProfileVO
  */
 public class BatteryStateInfo(
     private val context: Context,
-    private val batteryManager: BatteryManager,
+    public val batteryManager: BatteryManager,
 ) : BaseSystemService(context, listOf(android.Manifest.permission.BATTERY_STATS)) {
 
     private val UPDATE_BATTERY = "RHPARK_BATTERY_STATE_UPDATE"
@@ -336,14 +336,12 @@ public class BatteryStateInfo(
     public fun isHealthCool(): Boolean = getHealth() == BatteryManager.BATTERY_HEALTH_COLD
     public fun isHealthDead(): Boolean = getHealth() == BatteryManager.BATTERY_HEALTH_DEAD
     public fun isHealthOverVoltage(): Boolean = getHealth() == BatteryManager.BATTERY_HEALTH_OVER_VOLTAGE
-    public fun getHealthStr(): String {
-        return when(getHealth()) {
-            BatteryManager.BATTERY_HEALTH_GOOD -> return STR_BATTERY_HELTH_GOOD
-            BatteryManager.BATTERY_HEALTH_COLD -> return STR_BATTERY_HELTH_COLD
-            BatteryManager.BATTERY_HEALTH_DEAD -> return STR_BATTERY_HELTH_DEAD
-            BatteryManager.BATTERY_HEALTH_OVER_VOLTAGE -> return STR_BATTERY_HELTH_OVER_VOLTAGE
-            else -> return STR_BATTERY_HELTH_UNKNOWN
-        }
+    public fun getHealthStr(): String = when (getHealth()) {
+        BatteryManager.BATTERY_HEALTH_GOOD -> STR_BATTERY_HELTH_GOOD
+        BatteryManager.BATTERY_HEALTH_COLD -> STR_BATTERY_HELTH_COLD
+        BatteryManager.BATTERY_HEALTH_DEAD -> STR_BATTERY_HELTH_DEAD
+        BatteryManager.BATTERY_HEALTH_OVER_VOLTAGE -> STR_BATTERY_HELTH_OVER_VOLTAGE
+        else -> STR_BATTERY_HELTH_UNKNOWN
     }
 
 

@@ -15,7 +15,7 @@ import kr.open.rhpark.library.system.service.base.BaseSystemService
  * Screen Soft Keyboard control class
  * search windowSoftInputMode in https://blog.naver.com/il7942li/222671675950
  */
-public class SoftKeyboardController(context: Context, private val imm: InputMethodManager)
+public class SoftKeyboardController(context: Context, public val imm: InputMethodManager)
     : BaseSystemService(context,null) {
 
 
