@@ -22,7 +22,7 @@ import kr.open.rhpark.library.ui.util.getStatusBarHeight
  * @param windowManager The WindowManager instance.
  * @param windowManager WindowManager 인스턴스.
  */
-public class DisplayInfo(private val context: Context, public val windowManager: WindowManager)
+public class DisplayInfo(context: Context, public val windowManager: WindowManager)
     : BaseSystemService(context, null) {
 
     /**

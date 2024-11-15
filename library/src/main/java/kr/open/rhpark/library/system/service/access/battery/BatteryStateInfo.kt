@@ -41,7 +41,7 @@ import kr.open.rhpark.library.system.service.base.BaseSystemService
  * @param batteryManager BatteryManager 인스턴스.
  */
 public class BatteryStateInfo(
-    private val context: Context,
+    context: Context,
     public val batteryManager: BatteryManager,
 ) : BaseSystemService(context, listOf(android.Manifest.permission.BATTERY_STATS)) {
 
@@ -305,9 +305,11 @@ public class BatteryStateInfo(
     /**
      * Battery Temperature
      * return double
-     * error return errorValue(-999.0)
+     * error return errorValue(Integer.MIN_VALUE)
      */
-    public fun getTemperature(): Double = (batteryStatus?.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, ERROR_VALUE * 10) ?: ERROR_VALUE * 10).toDouble() / 10
+    public fun getTemperature(): Double =
+        (batteryStatus?.let { it.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, ERROR_VALUE).toDouble() }
+            ?: ERROR_VALUE.toDouble())
 
     /**
      * boolean indicating whether a battery is present.

@@ -13,13 +13,13 @@
     </data>
 
     <FrameLayout
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
         android:id="@+id/main"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="8dp">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -87,13 +87,27 @@
                     android:text="Show Window Activity" />
 
                 <Button
+                    android:id="@+id/btnShowNetwork"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{(v)->vm.onClickNetworkActivity(v)}"
+                    android:text="Show Network Activity" />
+
+                <Button
+                    android:id="@+id/btnShowTelephony"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{(v)->vm.onClickTelephonyActivity(v)}"
+                    android:text="Show Telephony Activity" />
+
+                <Button
                     android:id="@+id/btnToastSnackbar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:onClick="@{(v)->vm.onClickToastSnackBar(v)}"
-                    android:text="Toast and SnackBar"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/btnTestPermission" />
+                    android:text="Toast and SnackBar" />
+
+
             </androidx.appcompat.widget.LinearLayoutCompat>
         </ScrollView>
     </FrameLayout>

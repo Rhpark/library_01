@@ -2,6 +2,7 @@ package kr.open.rhpark.library.system.service
 
 import android.app.NotificationManager
 import android.content.Context
+import android.location.LocationManager
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import android.os.BatteryManager
@@ -14,8 +15,9 @@ import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.AppCompatActivity
 import kr.open.rhpark.library.system.service.access.battery.BatteryStateInfo
 import kr.open.rhpark.library.system.service.access.display.DisplayInfo
-import kr.open.rhpark.library.system.service.access.network.NetworkStateInfo
-import kr.open.rhpark.library.system.service.base.telephony_subscription.telephony.callback.CommonTelephonyCallback
+import kr.open.rhpark.library.system.service.access.telephony.telephony.TelephonyStateInfo
+import kr.open.rhpark.library.system.service.access.telephony.base.CommonTelephonyCallback
+import kr.open.rhpark.library.system.service.access.telephony.telephony.LocationStateInfo
 import kr.open.rhpark.library.system.service.controller.SoftKeyboardController
 import kr.open.rhpark.library.system.service.controller.VibratorController
 import kr.open.rhpark.library.system.service.controller.windowmanager.WindowManagerController
@@ -64,6 +66,10 @@ public class SystemServiceManager(context: Context) {
         context.getSystemService(AppCompatActivity.WIFI_SERVICE) as WifiManager
     }
 
+    public val locationManager: LocationManager  by lazy {
+        context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+    }
+
 
 
     /*******************
@@ -89,6 +95,14 @@ public class SystemServiceManager(context: Context) {
     public val batteryInfo: BatteryStateInfo by lazy { BatteryStateInfo(context, batteryManager) }
 
     public val displayInfo: DisplayInfo by lazy { DisplayInfo(context, windowManager) }
+
+    public val telephonyStateInfo: TelephonyStateInfo by lazy {
+        TelephonyStateInfo(context, telephonyManager, subscriptionManager)
+    }
+
+    public val locationStateInfo : LocationStateInfo by lazy{ LocationStateInfo(context, locationManager) }
+
     public val onBaseTelephonyCallback: CommonTelephonyCallback = CommonTelephonyCallback()
-    public val networkInfo: NetworkStateInfo by lazy { NetworkStateInfo(context, telephonyManager, subscriptionManager, onBaseTelephonyCallback, connectivityManager, wifiManager) }
+
+//    public val networkInfo: NetworkStateInfo by lazy { NetworkStateInfo(context, telephonyManager, subscriptionManager, onBaseTelephonyCallback, connectivityManager, wifiManager) }
 }

@@ -6,8 +6,10 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import kr.open.rhpark.app.activity.battery.BatteryActivity
 import kr.open.rhpark.app.activity.display.DisplayActivity
+import kr.open.rhpark.app.activity.network.NetworkActivity
 import kr.open.rhpark.app.activity.recyclerview.RecyclerViewActivity
 import kr.open.rhpark.app.activity.second.FragmentShowActivity
+import kr.open.rhpark.app.activity.telephony.TelephonyActivity
 import kr.open.rhpark.app.activity.toast_snackbar.ToastSnackBarActivity
 import kr.open.rhpark.app.activity.vibrator.VibratorActivity
 import kr.open.rhpark.app.activity.window.WindowActivity
@@ -35,6 +37,14 @@ class MainActivityVm : BaseViewModelEventFlow<MainActivityVmEvent>() {
 
     private fun showActivity(activity: Class<*>) {
         sendEvent(MainActivityVmEvent.OnShowActivity(activity))
+    }
+
+    fun onClickNetworkActivity(v:View) {
+        showActivity(NetworkActivity::class.java)
+    }
+
+    fun onClickTelephonyActivity(v:View) {
+        showActivity(TelephonyActivity::class.java)
     }
 
     fun onClickToastSnackBar(v: View) {
