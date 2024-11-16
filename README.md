@@ -1,4 +1,4 @@
-# Android Easy Development Library (v0.5.2)
+# Android Easy Development Library (v0.6.0)
 
 ![image](https://jitpack.io/v/rhpark/library_01.svg)
 <br>
@@ -189,7 +189,7 @@ class MainActivity : AppCompatActivity() {
 <br>
 </br>
 
-####  5 - 2 DisplayInfo
+####  5 - 2 DisplayStateInfo
 ![image](https://github.com/Rhpark/library_01/blob/master/Sample_Base_SystemManager_Display.png)
 
 
@@ -197,8 +197,16 @@ class MainActivity : AppCompatActivity() {
 <br>
 </br>
 
-####  5 - 3 BatteryInfo
+####  5 - 3 BatteryStateInfo
 ![image](https://github.com/Rhpark/library_01/blob/master/Sample_Base_SystemManager_Battery.png)
+
+<br>
+</br>
+
+
+####  5 - 4 TelephonyStateInfo
+![image](https://github.com/Rhpark/library_01/blob/master/Sample_Base_SystemManager_TelophonyStateInfo.png)
+
 
 
 <br>
@@ -241,7 +249,7 @@ android {
 
 dependencies {
 	...
-	implementation("com.github.rhpark:library_01:0.5.2")
+	implementation("com.github.rhpark:library_01:0.6.0")
 	...
 }
 ```
