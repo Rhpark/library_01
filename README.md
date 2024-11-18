@@ -5,6 +5,8 @@
 </br>
 This library helps you make easy and more simple code for Android developers
 
+Android 개발자를 위해 자주사용되는 코드들을 쉽고 간단하게 생성.
+
 <br>
 </br>
 
