@@ -72,4 +72,9 @@ public class WindowManagerController(context: Context, public val windowManager:
             PixelFormat.TRANSLUCENT
         )
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        removeAllFloatingView()
+    }
 }

@@ -59,15 +59,15 @@ public open class CommonTelephonyCallback() {
         this.onDataConnectionState = onDataConnectionState
     }
 
-    public fun setOnCellInfo(onCellInfo: ((currentCellInfo: CurrentCellInfo?) -> Unit)?) {
+    public fun setOnCellInfo(onCellInfo: ((currentCellInfo: CurrentCellInfo) -> Unit)?) {
         this.onCellInfo = onCellInfo
     }
 
-    public fun setOnSignalStrength(onSignalStrength: ((currentSignalStrength: CurrentSignalStrength?) -> Unit)?) {
+    public fun setOnSignalStrength(onSignalStrength: ((currentSignalStrength: CurrentSignalStrength) -> Unit)?) {
         this.onSignalStrength = onSignalStrength
     }
 
-    public fun setOnServiceState(onServiceState: ((currentServiceState: CurrentServiceState?) -> Unit)?) {
+    public fun setOnServiceState(onServiceState: ((currentServiceState: CurrentServiceState) -> Unit)?) {
         this.onServiceState = onServiceState
     }
 

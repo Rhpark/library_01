@@ -11,6 +11,9 @@ import kotlinx.coroutines.launch
 import kr.open.rhpark.app.R
 import kr.open.rhpark.app.databinding.ActivityTelephonyBinding
 import kr.open.rhpark.library.debug.logcat.Logx
+import kr.open.rhpark.library.system.service.access.telephony.data.current.CurrentCellInfo
+import kr.open.rhpark.library.system.service.access.telephony.data.current.CurrentServiceState
+import kr.open.rhpark.library.system.service.access.telephony.data.current.CurrentSignalStrength
 import kr.open.rhpark.library.ui.activity.BaseBindingActivity
 
 class TelephonyActivity :
@@ -18,11 +21,23 @@ class TelephonyActivity :
 
     private fun getTelephonyStateInfo() = systemServiceManagerInfo.telephonyStateInfo
 
-    /**
-     * This is needed because of TelephonyCallback.CellInfoListener(Telephony.registerCallBack)
-     * or
-     * PhoneStateListener.LISTEN_CELL_INFO(Telephony.registerListen).
-     */
+    private var onActiveDataSubId: ((subId: Int) -> Unit)? = { subId -> binding.tvActiveDataSubId.text = "subId = $subId\n\n" }
+
+    private var onDataConnectionState: ((state: Int, networkType: Int) -> Unit)? =
+        { state, networkType -> binding.tvSimState.text = "state = $state, networkType = $networkType\n\n" }
+
+    private var onCellInfo: ((currentCellInfo: CurrentCellInfo) -> Unit)? =
+        { currentCellInfo -> binding.tvCellInfo.text = "currentCellInfo = $currentCellInfo\n\n" }
+
+    private var onSignalStrength: ((currentSignalStrength: CurrentSignalStrength) -> Unit)? =
+        { currentSignalStrength -> binding.tvSignalStrength.text = "currentSignalStrength = $currentSignalStrength\n\n" }
+
+    private var onServiceState: ((currentServiceState: CurrentServiceState) -> Unit)? =
+        { currentServiceState -> binding.tvServiceState.text = "currentServiceState = $currentServiceState\n\n" }
+
+    private var onCallState: ((callState: Int, phoneNumber: String?) -> Unit)? =
+        { callState,phoneNumber -> binding.tvCallState.text = "callState = $callState, phoneNumber $phoneNumber \n\n" }
+
     private fun getGpsStateInfo() = systemServiceManagerInfo.locationStateInfo
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,16 +53,11 @@ class TelephonyActivity :
 
                 lifecycleScope.launch {
                     getTelephonyStateInfo().run {
-                        binding.tvMccMnc.text =
-                            "Mcc Mnc = ${getMccFromDefaultUSimString()},${getMncFromDefaultUSimString()}\n\n"
-                        binding.tvPhoneNumber.text =
-                            "PhoneNumber = ${getPhoneNumberFromDefaultUSim()}\n\n"
-                        binding.tvDisplayName.text =
-                            "DisplayName = ${getDisplayNameFromDefaultUSim()}\n\n"
-                        binding.tvCountryIso.text =
-                            "CountryIso = ${getDisplayNameFromDefaultUSim()}\n\n"
-                        binding.tvNetworkRoaming.text =
-                            "NetworkRoaming = ${isNetworkRoamingFromDefaultUSim()}\n\n"
+                        binding.tvMccMnc.text = "Mcc Mnc = ${getMccFromDefaultUSimString()},${getMncFromDefaultUSimString()}\n\n"
+                        binding.tvPhoneNumber.text = "PhoneNumber = ${getPhoneNumberFromDefaultUSim()}\n\n"
+                        binding.tvDisplayName.text = "DisplayName = ${getDisplayNameFromDefaultUSim()}\n\n"
+                        binding.tvCountryIso.text = "CountryIso = ${getDisplayNameFromDefaultUSim()}\n\n"
+                        binding.tvNetworkRoaming.text = "NetworkRoaming = ${isNetworkRoamingFromDefaultUSim()}\n\n"
                     }
                     registers()
                 }
@@ -59,50 +69,40 @@ class TelephonyActivity :
 
     @RequiresPermission(READ_PHONE_STATE)
     private fun registers() {
-        registerTelephony()
+        registerTelephony(getGpsStateInfo().isGpsEnabled())
         registerLocationState()
     }
 
     @RequiresPermission(READ_PHONE_STATE)
-    private fun registerTelephony() {
+    private fun registerTelephony(gpsState:Boolean) {
         getTelephonyStateInfo().run {
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                registerCallBack(applicationContext.mainExecutor, getGpsStateInfo().isGpsEnabled())
+                registerCallBack(applicationContext.mainExecutor, gpsState,
+                    onActiveDataSubId =  onActiveDataSubId, onDataConnectionState =  onDataConnectionState, onCellInfo = onCellInfo,
+                    onSignalStrength = onSignalStrength, onServiceState =  onServiceState, onCallState = onCallState)
             } else {
-                registerListen(getGpsStateInfo().isGpsEnabled())
+                registerListen(gpsState,
+                    onActiveDataSubId =  onActiveDataSubId, onDataConnectionState =  onDataConnectionState, onCellInfo = onCellInfo,
+                    onSignalStrength = onSignalStrength, onServiceState =  onServiceState, onCallState = onCallState)
             }
-            setOnActiveDataSubId { subId -> binding.tvActiveDataSubId.text = "subId = $subId\n\n" }
-
-            setOnDataConnectionState { state, networkType -> binding.tvSimState.text = "state = $state, networkType = $networkType\n\n" }
-
-            setOnCellInfo { currentCellInfo -> binding.tvCellInfo.text = "currentCellInfo = $currentCellInfo\n\n" }
-
-            setOnSignalStrength { currentSignalStrength -> binding.tvSignalStrength.text = "currentSignalStrength = $currentSignalStrength\n\n" }
-
-            setOnServiceState { currentServiceState -> binding.tvServiceState.text = "currentServiceState = $currentServiceState\n\n" }
         }
     }
 
+    /**
+     * This is needed because of TelephonyCallback.CellInfoListener(Telephony.registerCallBack)
+     * or
+     * PhoneStateListener.LISTEN_CELL_INFO(Telephony.registerListen).
+     */
     @RequiresPermission(READ_PHONE_STATE)
     private fun registerLocationState() {
-        getGpsStateInfo().registerGpsState{ isEnabled ->
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                getTelephonyStateInfo().registerCallBack(applicationContext.mainExecutor, isEnabled)
-            } else {
-                getTelephonyStateInfo().registerListen(isEnabled)
-            }
-        }
+        getGpsStateInfo().registerGpsState{ isEnabled -> registerTelephony(isEnabled) }
     }
 
     private fun unregisterLocationState() { getGpsStateInfo().unregisterGpsState() }
 
     override fun onDestroy() {
         super.onDestroy()
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            getTelephonyStateInfo().unregisterCallBack()
-        } else {
-            getTelephonyStateInfo().unregisterListen()
-        }
+        getTelephonyStateInfo().onDestroy()
         unregisterLocationState()
     }
 }

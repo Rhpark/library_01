@@ -19,7 +19,7 @@ import kr.open.rhpark.library.system.service.access.telephony.data.current.Curre
 import java.util.concurrent.Executor
 
 
-public class TelephonyStateInfo(
+public open class TelephonyStateInfo(
     context: Context,
     telephonyManager: TelephonyManager,
     subscriptionManager: SubscriptionManager,
@@ -74,21 +74,45 @@ public class TelephonyStateInfo(
      */
     @RequiresApi(Build.VERSION_CODES.S)
     @RequiresPermission(READ_PHONE_STATE)
-    public fun registerCallBack(executor: Executor, isGpsOn: Boolean) {
+    public fun registerCallBack(
+        executor: Executor,
+        isGpsOn: Boolean,
+        onActiveDataSubId: ((subId: Int) -> Unit)? = null,
+        onDataConnectionState: ((state: Int, networkType: Int) -> Unit)? = null,
+        onCellInfo: ((currentCellInfo: CurrentCellInfo) -> Unit)? = null,
+        onSignalStrength: ((currentSignalStrength: CurrentSignalStrength) -> Unit)? = null,
+        onServiceState: ((currentServiceState: CurrentServiceState) -> Unit)? = null,
+        onCallState: ((callState: Int, phoneNumber: String?) -> Unit)? = null
+        )
+    {
         unregisterCallBack()
         if(isGpsOn) {
             telephonyManager.registerTelephonyCallback(executor, telephonyCallback.baseGpsTelephonyCallback)
         } else {
             telephonyManager.registerTelephonyCallback(executor, telephonyCallback.baseTelephonyCallback)
         }
+
         isRegistered = true
+
+        setOnActiveDataSubId(onActiveDataSubId)
+        setOnDataConnectionState(onDataConnectionState)
+        setOnCellInfo(onCellInfo)
+        setOnSignalStrength(onSignalStrength)
+        setOnServiceState(onServiceState)
+        setOnCallState(onCallState)
     }
 
     /**
      * SDK_INT < Build.VERSION_CODES.S
      */
     @RequiresPermission(READ_PHONE_STATE)
-    public fun registerListen(isGpsOn:Boolean) {
+    public fun registerListen(isGpsOn:Boolean,
+                              onActiveDataSubId: ((subId: Int) -> Unit)? = null,
+                              onDataConnectionState: ((state: Int, networkType: Int) -> Unit)? = null,
+                              onCellInfo: ((currentCellInfo: CurrentCellInfo) -> Unit)? = null,
+                              onSignalStrength: ((currentSignalStrength: CurrentSignalStrength) -> Unit)? = null,
+                              onServiceState: ((currentServiceState: CurrentServiceState) -> Unit)? = null,
+                              onCallState: ((callState: Int, phoneNumber: String?) -> Unit)? = null) {
         unregisterListen()
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             throw UnsupportedOperationException("SDK_INT >= Build.VERSION_CODES.S Your Version is ${Build.VERSION.SDK_INT}")
@@ -115,9 +139,15 @@ public class TelephonyStateInfo(
         }
         telephonyManager.listen(telephonyCallback.basePhoneStateListener,event)
 
-
         isRegistered = true
         Logx.d("isRegistered $isRegistered")
+
+        setOnActiveDataSubId(onActiveDataSubId)
+        setOnDataConnectionState(onDataConnectionState)
+        setOnCellInfo(onCellInfo)
+        setOnSignalStrength(onSignalStrength)
+        setOnServiceState(onServiceState)
+        setOnCallState(onCallState)
     }
 
     /**
@@ -151,15 +181,22 @@ public class TelephonyStateInfo(
         isRegistered = false
     }
 
-    /**
-     * You must call
-     * TelephonyStateInfo.registerCallBack() or TelephonyStateInfo.registerListen() first before using it.
-     * **/
+    public override fun onDestroy() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            unregisterCallBack()
+        } else {
+            unregisterListen()
+        }
+    }
+
     @RequiresPermission(READ_PHONE_STATE)
-    public fun setOnActiveDataSubId(onActiveDataSubId: (subId: Int) -> Unit) {
-        checkIfRegistered()
-        this.telephonyCallback.setOnActiveDataSubId(onActiveDataSubId)
-        this.telephonyCallback.setOnActiveDataSubId(null)
+    public fun allClearCallback() {
+        setOnActiveDataSubId(null)
+        setOnDataConnectionState(null)
+        setOnCellInfo(null)
+        setOnSignalStrength(null)
+        setOnServiceState(null)
+        setOnCallState(null)
     }
 
     /**
@@ -167,7 +204,17 @@ public class TelephonyStateInfo(
      * TelephonyStateInfo.registerCallBack() or TelephonyStateInfo.registerListen() first before using it.
      * **/
     @RequiresPermission(READ_PHONE_STATE)
-    public fun setOnDataConnectionState(onDataConnectionState: (state: Int, networkType: Int) -> Unit) {
+    public fun setOnActiveDataSubId(onActiveDataSubId: ((subId: Int) -> Unit)? = null) {
+        checkIfRegistered()
+        this.telephonyCallback.setOnActiveDataSubId(onActiveDataSubId)
+    }
+
+    /**
+     * You must call
+     * TelephonyStateInfo.registerCallBack() or TelephonyStateInfo.registerListen() first before using it.
+     * **/
+    @RequiresPermission(READ_PHONE_STATE)
+    public fun setOnDataConnectionState(onDataConnectionState: ((state: Int, networkType: Int) -> Unit)? = null) {
         checkIfRegistered()
         this.telephonyCallback.setOnDataConnectionState(onDataConnectionState)
     }
@@ -177,7 +224,7 @@ public class TelephonyStateInfo(
      * TelephonyStateInfo.registerCallBack() or TelephonyStateInfo.registerListen() first before using it.
      * **/
     @RequiresPermission(READ_PHONE_STATE)
-    public fun setOnCellInfo(onCellInfo: (currentCellInfo: CurrentCellInfo?) -> Unit) {
+    public fun setOnCellInfo(onCellInfo: ((currentCellInfo: CurrentCellInfo) -> Unit)? = null) {
         checkIfRegistered()
         this.telephonyCallback.setOnCellInfo(onCellInfo)
     }
@@ -187,7 +234,7 @@ public class TelephonyStateInfo(
      * TelephonyStateInfo.registerCallBack() or TelephonyStateInfo.registerListen() first before using it.
      * **/
     @RequiresPermission(READ_PHONE_STATE)
-    public fun setOnSignalStrength(onSignalStrength: (currentSignalStrength: CurrentSignalStrength?) -> Unit) {
+    public fun setOnSignalStrength(onSignalStrength: ((currentSignalStrength: CurrentSignalStrength) -> Unit)? = null) {
         checkIfRegistered()
         this.telephonyCallback.setOnSignalStrength(onSignalStrength)
     }
@@ -197,9 +244,15 @@ public class TelephonyStateInfo(
      * TelephonyStateInfo.registerCallBack() or TelephonyStateInfo.registerListen() first before using it.
      * **/
     @RequiresPermission(READ_PHONE_STATE)
-    public fun setOnServiceState(onServiceState: (currentServiceState: CurrentServiceState?) -> Unit) {
+    public fun setOnServiceState(onServiceState: ((currentServiceState: CurrentServiceState) -> Unit)? = null) {
         checkIfRegistered()
         this.telephonyCallback.setOnServiceState(onServiceState)
+    }
+
+    @RequiresPermission(READ_PHONE_STATE)
+    public fun setOnCallState(onCallState: ((callState: Int, phoneNumber: String?) -> Unit)? = null) {
+        checkIfRegistered()
+        this.telephonyCallback.setOnCallState(onCallState)
     }
 
     private fun checkIfRegistered() {
