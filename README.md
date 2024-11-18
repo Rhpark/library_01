@@ -110,7 +110,7 @@ class MainActivity : AppCompatActivity() {
 </br>
 
 ####  1 - 3 Result Logcat
-![image](https://github.com/user-attachments/assets/b8176ca0-4f1b-4f59-a38d-38ef9ffe7d9c)
+![image](https://github.com/Rhpark/library_01/blob/master/sample_img/SampleLogx.PNG)
 
 <br>
 </br>
@@ -121,27 +121,27 @@ class MainActivity : AppCompatActivity() {
 
 
 ####  2 - 1 XML
-![image](https://github.com/Rhpark/library_01/blob/master/Sample_Base_Activity_Binding_XML.png)
+![image](https://github.com/Rhpark/library_01/blob/master/sample_img/Sample_Base_Activity_Binding_XML.png)
 <br>
 </br>
 
 ####  2 - 2 ViewModel
-![image](https://github.com/Rhpark/library_01/blob/master/Sample_Base_Activity_Binding_ViewModel.png)
+![image](https://github.com/Rhpark/library_01/blob/master/sample_img/Sample_Base_Activity_Binding_ViewModel.png)
 <br>
 </br>
 
 ####  2 - 3 ViewModelEvent
-![image](https://github.com/Rhpark/library_01/blob/master/Sample_Base_Activity_Binding_ViewModel_Event.png)
+![image](https://github.com/Rhpark/library_01/blob/master/sample_img/Sample_Base_Activity_Binding_ViewModel_Event.png)
 <br>
 </br>
 
 ####  2 - 4 Activity (Binding)
-![image](https://github.com/Rhpark/library_01/blob/master/Sample_Base_Activity_Binding_MainActivity.png)
+![image](https://github.com/Rhpark/library_01/blob/master/sample_img/Sample_Base_Activity_Binding_MainActivity.png)
 <br>
 </br>
 
 ####  2 - 5 Fragment (Binding)
-![image](https://github.com/Rhpark/library_01/blob/master/Sample_Base_Fragment_Binding.png)
+![image](https://github.com/Rhpark/library_01/blob/master/sample_img/Sample_Base_Fragment_Binding.png)
 
 <br>
 </br>
@@ -152,12 +152,12 @@ class MainActivity : AppCompatActivity() {
 
 
 ####  3 - 1 Adapter
-![image](https://github.com/Rhpark/library_01/blob/master/Sample_Base_Binding_Adapter.png)
+![image](https://github.com/Rhpark/library_01/blob/master/sample_img/Sample_Base_Binding_Adapter.png)
 <br>
 </br>
 
 ####  3 - 2 List Adapter
-![image](https://github.com/Rhpark/library_01/blob/master/Sample_Base_Binding_List_Adapter.png)
+![image](https://github.com/Rhpark/library_01/blob/master/sample_img/Sample_Base_Binding_List_Adapter.png)
 
 <br>
 </br>
@@ -168,12 +168,12 @@ class MainActivity : AppCompatActivity() {
 ### 4. RecyclerScrollStateView(Custom RecyclerView)
 
 #### 4 - 1 RecyclerStateViewConfig (Activity)
-![image](https://github.com/Rhpark/library_01/blob/master/Sample_Base_Binding_RecyclerScrollStateView.png)
+![image](https://github.com/Rhpark/library_01/blob/master/sample_img/Sample_Base_Binding_RecyclerScrollStateView.png)
 <br>
 </br>
 
 ####  4 - 2 RecyclerStateViewConfig (XML)
-![image](https://github.com/Rhpark/library_01/blob/master/Sample_Base_Binding_RecyclerStateView_XML.png)
+![image](https://github.com/Rhpark/library_01/blob/master/sample_img/Sample_Base_Binding_RecyclerStateView_XML.png)
 
 
 <br>
@@ -183,14 +183,14 @@ class MainActivity : AppCompatActivity() {
 ### 5. SystemServiceManager 
 
 ####  5 - 1 VibratorController
-![image](https://github.com/Rhpark/library_01/blob/master/Sample_Base_SystemManager_Vibrator.png)
+![image](https://github.com/Rhpark/library_01/blob/master/sample_img/Sample_Base_SystemManager_Vibrator.png)
 
 
 <br>
 </br>
 
 ####  5 - 2 DisplayStateInfo
-![image](https://github.com/Rhpark/library_01/blob/master/Sample_Base_SystemManager_Display.png)
+![image](https://github.com/Rhpark/library_01/blob/master/sample_img/Sample_Base_SystemManager_Display.png)
 
 
 
@@ -198,14 +198,14 @@ class MainActivity : AppCompatActivity() {
 </br>
 
 ####  5 - 3 BatteryStateInfo
-![image](https://github.com/Rhpark/library_01/blob/master/Sample_Base_SystemManager_Battery.png)
+![image](https://github.com/Rhpark/library_01/blob/master/sample_img/Sample_Base_SystemManager_Battery.png)
 
 <br>
 </br>
 
 
 ####  5 - 4 TelephonyStateInfo
-![image](https://github.com/Rhpark/library_01/blob/master/Sample_Base_SystemManager_TelophonyStateInfo.png)
+![image](https://github.com/Rhpark/library_01/blob/master/sample_img/Sample_Base_SystemManager_TelophonyStateInfo.png)
 
 
 
@@ -215,7 +215,7 @@ class MainActivity : AppCompatActivity() {
 </br>
 
 ### 6. Toast, SnackBar
-![image](https://github.com/Rhpark/library_01/blob/master/Sample_Base_SystemManager_Toast_Snackbar.png)
+![image](https://github.com/Rhpark/library_01/blob/master/sample_img/Sample_Base_SystemManager_Toast_Snackbar.png)
 
 
 
