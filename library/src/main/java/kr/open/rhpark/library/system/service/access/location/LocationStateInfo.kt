@@ -1,4 +1,4 @@
-package kr.open.rhpark.library.system.service.access.telephony.telephony
+package kr.open.rhpark.library.system.service.access.internet.telephony
 
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
@@ -22,24 +22,28 @@ public class LocationStateInfo(
      * or
      * PhoneStateListener.LISTEN_CELL_INFO(Telephony.registerListen).
      */
-    private val gpsStateBroadcastReceiver = object : BroadcastReceiver() {
-
-        override fun onReceive(context: Context, intent: Intent) {
-            if (intent.action.equals(LocationManager.PROVIDERS_CHANGED_ACTION)) {
-                onGpsChanged?.let { it(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) }
-            }
-        }
-    }
+    private var gpsStateBroadcastReceiver : BroadcastReceiver?=null
 
     private val intentFilter = IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION)
 
     public fun registerGpsState(onGpsChanged: ((isEnabled: Boolean) -> Unit)? = null) {
+        unregisterGpsState()
         this.onGpsChanged = onGpsChanged
+        gpsStateBroadcastReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                if (intent.action.equals(LocationManager.PROVIDERS_CHANGED_ACTION)) {
+                    onGpsChanged?.let { it(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) }
+                }
+            }
+        }
         context.registerReceiver(gpsStateBroadcastReceiver, intentFilter)
     }
 
     public fun unregisterGpsState() {
-        context.unregisterReceiver(gpsStateBroadcastReceiver)
+        gpsStateBroadcastReceiver?.let {
+            context.unregisterReceiver(it)
+        }
+        gpsStateBroadcastReceiver = null
     }
 
     public fun isLocationEnabled(): Boolean =

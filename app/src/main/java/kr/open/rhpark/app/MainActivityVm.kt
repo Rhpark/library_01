@@ -11,6 +11,7 @@ import kr.open.rhpark.app.activity.recyclerview.RecyclerViewActivity
 import kr.open.rhpark.app.activity.second.FragmentShowActivity
 import kr.open.rhpark.app.activity.telephony.TelephonyActivity
 import kr.open.rhpark.app.activity.toast_snackbar.ToastSnackBarActivity
+import kr.open.rhpark.app.activity.usim.UsimActivity
 import kr.open.rhpark.app.activity.vibrator.VibratorActivity
 import kr.open.rhpark.app.activity.window.WindowActivity
 import kr.open.rhpark.library.viewmodels.BaseViewModelEventFlow
@@ -73,6 +74,10 @@ class MainActivityVm : BaseViewModelEventFlow<MainActivityVmEvent>() {
 
     fun onClickShowBatteryActivity(v:View) {
         showActivity(BatteryActivity::class.java)
+    }
+
+    fun onClickShowUsimActivity(v:View) {
+        showActivity(UsimActivity::class.java)
     }
 
 

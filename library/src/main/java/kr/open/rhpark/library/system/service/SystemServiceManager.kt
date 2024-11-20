@@ -15,9 +15,10 @@ import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.AppCompatActivity
 import kr.open.rhpark.library.system.service.access.battery.BatteryStateInfo
 import kr.open.rhpark.library.system.service.access.display.DisplayInfo
-import kr.open.rhpark.library.system.service.access.telephony.telephony.TelephonyStateInfo
-import kr.open.rhpark.library.system.service.access.telephony.base.CommonTelephonyCallback
-import kr.open.rhpark.library.system.service.access.telephony.telephony.LocationStateInfo
+import kr.open.rhpark.library.system.service.access.internet.telephony.TelephonyStateInfo
+import kr.open.rhpark.library.system.service.access.internet.network.NetworkStateInfo
+import kr.open.rhpark.library.system.service.access.internet.telephony.LocationStateInfo
+import kr.open.rhpark.library.system.service.access.internet.usim.UsimStateInfo
 import kr.open.rhpark.library.system.service.controller.SoftKeyboardController
 import kr.open.rhpark.library.system.service.controller.VibratorController
 import kr.open.rhpark.library.system.service.controller.windowmanager.WindowManagerController
@@ -31,7 +32,7 @@ public class SystemServiceManager(context: Context) {
         context.getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE) as InputMethodManager
     }
 
-    @delegate:RequiresPermission(android.Manifest.permission.BATTERY_STATS)
+    @get:RequiresPermission(android.Manifest.permission.BATTERY_STATS)
     public val batteryManager: BatteryManager by lazy {
         context.getSystemService(AppCompatActivity.BATTERY_SERVICE) as BatteryManager
     }
@@ -44,12 +45,12 @@ public class SystemServiceManager(context: Context) {
         context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
     }
 
-    @delegate:RequiresPermission(android.Manifest.permission.READ_PHONE_STATE)
+    @get:RequiresPermission(android.Manifest.permission.READ_PHONE_STATE)
     public val telephonyManager: TelephonyManager by lazy {
         context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
     }
 
-    @delegate:RequiresPermission(android.Manifest.permission.READ_PHONE_STATE)
+    @get:RequiresPermission(android.Manifest.permission.READ_PHONE_STATE)
     public val subscriptionManager: SubscriptionManager by lazy {
         context.getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE) as SubscriptionManager
     }
@@ -100,9 +101,14 @@ public class SystemServiceManager(context: Context) {
         TelephonyStateInfo(context, telephonyManager, subscriptionManager)
     }
 
+    public val usimStateInfo: UsimStateInfo by lazy {
+        UsimStateInfo(context, telephonyManager, subscriptionManager, euiccManager)
+    }
+
     public val locationStateInfo : LocationStateInfo by lazy{ LocationStateInfo(context, locationManager) }
 
-    public val onBaseTelephonyCallback: CommonTelephonyCallback = CommonTelephonyCallback()
 
-//    public val networkInfo: NetworkStateInfo by lazy { NetworkStateInfo(context, telephonyManager, subscriptionManager, onBaseTelephonyCallback, connectivityManager, wifiManager) }
+    public val networkInfo: NetworkStateInfo by lazy {
+        NetworkStateInfo(context, telephonyManager, subscriptionManager, connectivityManager, wifiManager)
+    }
 }

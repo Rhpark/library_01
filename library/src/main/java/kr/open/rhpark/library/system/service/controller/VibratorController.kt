@@ -38,7 +38,7 @@ public class VibratorController(context: Context) :
     /**
      * be used Build.VERSION.SDK_INT >= Build.VERSION_CODES.S(31)
      */
-    @delegate:RequiresApi(Build.VERSION_CODES.S)
+    @get:RequiresApi(Build.VERSION_CODES.S)
     public val vibratorManger: VibratorManager by lazy {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             (context.getSystemService(AppCompatActivity.VIBRATOR_MANAGER_SERVICE) as VibratorManager)
@@ -54,7 +54,7 @@ public class VibratorController(context: Context) :
     @RequiresPermission(VIBRATE)
     public fun createOneShot(timer: Long, effect: Int = VibrationEffect.DEFAULT_AMPLITUDE) {
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             vibrator.vibrate(timer)
             return
         }

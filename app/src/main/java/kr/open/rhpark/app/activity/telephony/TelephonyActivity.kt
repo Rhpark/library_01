@@ -5,15 +5,16 @@ import android.Manifest.permission.READ_PHONE_NUMBERS
 import android.Manifest.permission.READ_PHONE_STATE
 import android.os.Build
 import android.os.Bundle
+import android.telephony.TelephonyDisplayInfo
 import androidx.annotation.RequiresPermission
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import kr.open.rhpark.app.R
 import kr.open.rhpark.app.databinding.ActivityTelephonyBinding
 import kr.open.rhpark.library.debug.logcat.Logx
-import kr.open.rhpark.library.system.service.access.telephony.data.current.CurrentCellInfo
-import kr.open.rhpark.library.system.service.access.telephony.data.current.CurrentServiceState
-import kr.open.rhpark.library.system.service.access.telephony.data.current.CurrentSignalStrength
+import kr.open.rhpark.library.system.service.access.internet.telephony.data.current.CurrentCellInfo
+import kr.open.rhpark.library.system.service.access.internet.telephony.data.current.CurrentServiceState
+import kr.open.rhpark.library.system.service.access.internet.telephony.data.current.CurrentSignalStrength
 import kr.open.rhpark.library.ui.activity.BaseBindingActivity
 
 class TelephonyActivity :
@@ -24,7 +25,7 @@ class TelephonyActivity :
     private var onActiveDataSubId: ((subId: Int) -> Unit)? = { subId -> binding.tvActiveDataSubId.text = "subId = $subId\n\n" }
 
     private var onDataConnectionState: ((state: Int, networkType: Int) -> Unit)? =
-        { state, networkType -> binding.tvSimState.text = "state = $state, networkType = $networkType\n\n" }
+        { state, networkType -> binding.tvSimState.text = "state = $state, networkType = $networkType\n\n, isNr = ${getTelephonyStateInfo().isNrConnected()}" }
 
     private var onCellInfo: ((currentCellInfo: CurrentCellInfo) -> Unit)? =
         { currentCellInfo -> binding.tvCellInfo.text = "currentCellInfo = $currentCellInfo\n\n" }
@@ -37,6 +38,9 @@ class TelephonyActivity :
 
     private var onCallState: ((callState: Int, phoneNumber: String?) -> Unit)? =
         { callState,phoneNumber -> binding.tvCallState.text = "callState = $callState, phoneNumber $phoneNumber \n\n" }
+
+    private var onDisplayInfo: ((telephonyDisplayInfo: TelephonyDisplayInfo) -> Unit)? =
+        {  t-> binding.tvDisplayInfo.text = "DisplayInfo $t, isNr = ${getTelephonyStateInfo().isNrConnected()}" }
 
     private fun getGpsStateInfo() = systemServiceManagerInfo.locationStateInfo
 
@@ -79,11 +83,11 @@ class TelephonyActivity :
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 registerCallBack(applicationContext.mainExecutor, gpsState,
                     onActiveDataSubId =  onActiveDataSubId, onDataConnectionState =  onDataConnectionState, onCellInfo = onCellInfo,
-                    onSignalStrength = onSignalStrength, onServiceState =  onServiceState, onCallState = onCallState)
+                    onSignalStrength = onSignalStrength, onServiceState =  onServiceState, onCallState = onCallState, onDisplayInfo = onDisplayInfo)
             } else {
                 registerListen(gpsState,
                     onActiveDataSubId =  onActiveDataSubId, onDataConnectionState =  onDataConnectionState, onCellInfo = onCellInfo,
-                    onSignalStrength = onSignalStrength, onServiceState =  onServiceState, onCallState = onCallState)
+                    onSignalStrength = onSignalStrength, onServiceState =  onServiceState, onCallState = onCallState, onDisplayInfo = onDisplayInfo)
             }
         }
     }
