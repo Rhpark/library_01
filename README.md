@@ -1,4 +1,4 @@
-# Android Easy Development Library (v0.6.0)
+# Android Easy Development Library (v0.7.1)
 
 ![image](https://jitpack.io/v/rhpark/library_01.svg)
 <br>
@@ -220,6 +220,12 @@ class MainActivity : AppCompatActivity() {
 ####  5 - 4 TelephonyStateInfo
 ![image](https://github.com/Rhpark/library_01/blob/master/sample_img/Sample_Base_SystemManager_TelophonyStateInfo.png)
 
+<br>
+</br>
+
+####  5 - 5 UsimStateInfo
+![image](https://github.com/Rhpark/library_01/blob/master/sample_img/Sample_Base_SystemManager_UsimStateInfo.png)
+
 
 
 <br>
@@ -262,7 +268,7 @@ android {
 
 dependencies {
 	...
-	implementation("com.github.rhpark:library_01:0.6.0")
+	implementation("com.github.rhpark:library_01:0.7.1")
 	...
 }
 ```
