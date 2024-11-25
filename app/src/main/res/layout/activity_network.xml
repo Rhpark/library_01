@@ -21,49 +21,49 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+
                 <TextView
-                    android:id="@+id/tvSimState"
+                    android:id="@+id/tvState"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <TextView
-                    android:id="@+id/tvDataConnectionState"
+                    android:id="@+id/tvDefaultState"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <TextView
-                    android:id="@+id/tvDefaultConnectState"
+                    android:id="@+id/tvConnectType"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <TextView
-                    android:id="@+id/tvCellInfo"
+                    android:id="@+id/tvDefaultConnectType"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <TextView
-                    android:id="@+id/tvDefaultCellInfo"
+                    android:id="@+id/tvCapabilities"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <TextView
-                    android:id="@+id/tvSignalStrength"
+                    android:id="@+id/tvDefaultCapabilities"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <TextView
-                    android:id="@+id/tvDefaultSignalStrength"
+                    android:id="@+id/tvLinkProperties"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/tvDefaultLinkProperties"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
             </LinearLayout>
         </ScrollView>
-
-        <Button
-            android:id="@+id/btnSimState"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Sim State" />
 
     </LinearLayout>
 </layout>

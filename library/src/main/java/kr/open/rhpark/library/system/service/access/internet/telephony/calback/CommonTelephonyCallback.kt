@@ -9,11 +9,16 @@ import android.telephony.ServiceState
 import android.telephony.SignalStrength
 import android.telephony.TelephonyCallback
 import android.telephony.TelephonyDisplayInfo
+import android.telephony.TelephonyManager
 import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
+import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.system.service.access.internet.telephony.data.current.CurrentCellInfo
 import kr.open.rhpark.library.system.service.access.internet.telephony.data.current.CurrentServiceState
 import kr.open.rhpark.library.system.service.access.internet.telephony.data.current.CurrentSignalStrength
+import kr.open.rhpark.library.system.service.access.internet.telephony.data.state.TelephonyNetworkDetailType
+import kr.open.rhpark.library.system.service.access.internet.telephony.data.state.TelephonyNetworkState
+import kr.open.rhpark.library.system.service.access.internet.telephony.data.state.TelephonyNetworkType
 
 /**
  * Using for telephonyManager.registerTelephonyCallback or telephonyManager.listen
@@ -25,7 +30,7 @@ import kr.open.rhpark.library.system.service.access.internet.telephony.data.curr
  * first before using it.
  *
  */
-public open class CommonTelephonyCallback() {
+public open class CommonTelephonyCallback(private val telephonyManager: TelephonyManager) {
 
     /***************************
      * CallBack Listener List  *
@@ -44,6 +49,10 @@ public open class CommonTelephonyCallback() {
 
     private var onDisplayInfo: ((telephonyDisplayInfo: TelephonyDisplayInfo) -> Unit)? = null
 
+    private var onTelephonyNetworkType: ((telephonyNetworkState: TelephonyNetworkState) -> Unit)? = null
+
+    private var currentTelephonyDisplayInfo: TelephonyDisplayInfo? = null
+    private var currentTelephonyState: TelephonyNetworkState? = null
 
     @delegate:RequiresApi(Build.VERSION_CODES.S)
     public val baseTelephonyCallback: BaseTelephonyCallback by lazy { BaseTelephonyCallback() }
@@ -82,6 +91,10 @@ public open class CommonTelephonyCallback() {
         this.onDisplayInfo = onDisplay
     }
 
+    public fun setOnTelephonyNetworkType(onTelephonyNetworkType: ((telephonyNetworkState: TelephonyNetworkState) -> Unit)?) {
+        this.onTelephonyNetworkType = onTelephonyNetworkType
+    }
+
     /**
      * Using for telephonyManager.registerTelephonyCallback
      */
@@ -97,8 +110,10 @@ public open class CommonTelephonyCallback() {
         /**
          * Using for telephonyManager.registerTelephonyCallback onDataConnectionStateChanged
          */
+        @RequiresPermission(READ_PHONE_STATE)
         public override fun onDataConnectionStateChanged(state: Int, networkType: Int) {
             onDataConnectionState?.invoke(state, networkType)
+            updateDataState(state)
         }
 
         override fun onCallStateChanged(state: Int) {
@@ -108,7 +123,9 @@ public open class CommonTelephonyCallback() {
         /**
          * Using for telephonyManager.registerTelephonyCallback onServiceStateChanged
          */
+        @RequiresPermission(READ_PHONE_STATE)
         public override fun onServiceStateChanged(serviceState: ServiceState) {
+            getTelephonyServiceStateNetworkCheck(serviceState)
             onServiceState?.invoke(CurrentServiceState(serviceState))
         }
 
@@ -126,7 +143,9 @@ public open class CommonTelephonyCallback() {
             onActiveDataSubId?.invoke(subId)
         }
 
+        @RequiresPermission(READ_PHONE_STATE)
         override fun onDisplayInfoChanged(telephonyDisplayInfo: TelephonyDisplayInfo) {
+            setNetworkType(telephonyDisplayInfo)
             onDisplayInfo?.invoke(telephonyDisplayInfo)
         }
     }
@@ -165,16 +184,20 @@ public open class CommonTelephonyCallback() {
             onActiveDataSubId?.invoke(subId)
         }
 
+        @RequiresPermission(READ_PHONE_STATE)
         override fun onDataConnectionStateChanged(state: Int, networkType: Int) {
             super.onDataConnectionStateChanged(state, networkType)
+            updateDataState(state)
             onDataConnectionState?.invoke(state, networkType)
         }
 
-        //
+        @RequiresPermission(READ_PHONE_STATE)
         public override fun onServiceStateChanged(serviceState: ServiceState?) {
             super.onServiceStateChanged(serviceState)
-            serviceState?.let { data -> onServiceState?.invoke(CurrentServiceState(data)) }
-
+            serviceState?.let { data ->
+                getTelephonyServiceStateNetworkCheck(data)
+                onServiceState?.invoke(CurrentServiceState(data))
+            }
         }
 
         public override fun onSignalStrengthsChanged(signalStrength: SignalStrength?) {
@@ -190,6 +213,7 @@ public open class CommonTelephonyCallback() {
         @RequiresPermission(READ_PHONE_STATE)
         override fun onDisplayInfoChanged(telephonyDisplayInfo: TelephonyDisplayInfo) {
             super.onDisplayInfoChanged(telephonyDisplayInfo)
+            setNetworkType(telephonyDisplayInfo)
             onDisplayInfo?.invoke(telephonyDisplayInfo)
         }
 
@@ -205,5 +229,166 @@ public open class CommonTelephonyCallback() {
             super.onCellInfoChanged(cellInfo)
             cellInfo?.let { data-> onCellInfo?.invoke(CurrentCellInfo(data)) }
         }
+    }
+
+    @RequiresPermission(allOf = [READ_PHONE_STATE])
+    private fun updateDataState(state: Int) {
+        if(state == TelephonyManager.DATA_DISCONNECTED) {
+            updateNetwork(TelephonyNetworkState(TelephonyNetworkType.DISCONNECT, TelephonyNetworkDetailType.DISCONNECT))
+        } else if(state == TelephonyManager.DATA_CONNECTING) {
+            updateNetwork(TelephonyNetworkState(TelephonyNetworkType.CONNECTING, TelephonyNetworkDetailType.CONNECTING))
+        } else if(state == TelephonyManager.DATA_CONNECTED) {
+            updateNetwork(getTelephonyManagerNetworkState())
+        }
+    }
+
+    @RequiresPermission(allOf = [READ_PHONE_STATE])
+    private fun setNetworkType(telephonyDisplayInfo:TelephonyDisplayInfo ) {
+
+        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.R) {
+            var telephonyNetworkState : TelephonyNetworkState
+            if(telephonyDisplayInfo.overrideNetworkType == TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_NR_ADVANCED) {
+                telephonyNetworkState = TelephonyNetworkState(TelephonyNetworkType.CONNECT_5G,TelephonyNetworkDetailType.OVERRIDE_NETWORK_TYPE_NR_ADVANCED)
+            } else if(telephonyDisplayInfo.overrideNetworkType == TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_NR_NSA_MMWAVE) {
+                telephonyNetworkState = TelephonyNetworkState(TelephonyNetworkType.CONNECT_5G,TelephonyNetworkDetailType.OVERRIDE_NETWORK_TYPE_NR_NSA_MMWAVE)
+            } else if(telephonyDisplayInfo.overrideNetworkType == TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_NR_NSA) {
+                telephonyNetworkState = TelephonyNetworkState(TelephonyNetworkType.CONNECT_5G,TelephonyNetworkDetailType.OVERRIDE_NETWORK_TYPE_NR_NSA)
+            } else {
+                telephonyNetworkState = getTelephonyManagerNetworkState()
+            }
+
+            updateNetwork(telephonyNetworkState)
+        } else {
+            Logx.w("Can not update Network TelephonyDisplayInfo")
+        }
+    }
+
+    private fun updateNetwork(telephonyNetworkState: TelephonyNetworkState) {
+        if (!isSameTelephonyNetworkState(telephonyNetworkState)) {
+            currentTelephonyState = telephonyNetworkState
+            onTelephonyNetworkType?.invoke(telephonyNetworkState)
+        }
+    }
+
+    @RequiresPermission(allOf = [READ_PHONE_STATE])
+    private fun getTelephonyManagerNetworkState():TelephonyNetworkState =  when (telephonyManager.dataNetworkType) {
+        TelephonyManager.NETWORK_TYPE_GPRS -> {
+            TelephonyNetworkState(TelephonyNetworkType.CONNECT_2G,TelephonyNetworkDetailType.NETWORK_TYPE_GPRS)
+        }
+
+        TelephonyManager.NETWORK_TYPE_EDGE -> {
+            TelephonyNetworkState(TelephonyNetworkType.CONNECT_2G,TelephonyNetworkDetailType.NETWORK_TYPE_EDGE)
+        }
+
+        TelephonyManager.NETWORK_TYPE_CDMA -> {
+            TelephonyNetworkState(TelephonyNetworkType.CONNECT_2G,TelephonyNetworkDetailType.NETWORK_TYPE_CDMA)
+        }
+
+        TelephonyManager.NETWORK_TYPE_1xRTT -> {
+            TelephonyNetworkState(TelephonyNetworkType.CONNECT_2G,TelephonyNetworkDetailType.NETWORK_TYPE_1xRTT)
+        }
+
+        TelephonyManager.NETWORK_TYPE_IDEN -> {
+            TelephonyNetworkState(TelephonyNetworkType.CONNECT_2G,TelephonyNetworkDetailType.NETWORK_TYPE_IDEN)
+        }
+
+        TelephonyManager.NETWORK_TYPE_GSM -> {
+            TelephonyNetworkState(TelephonyNetworkType.CONNECT_2G,TelephonyNetworkDetailType.NETWORK_TYPE_GSM)
+        }
+
+        TelephonyManager.NETWORK_TYPE_UMTS -> {
+            TelephonyNetworkState(TelephonyNetworkType.CONNECT_3G,TelephonyNetworkDetailType.NETWORK_TYPE_UMTS)
+        }
+
+        TelephonyManager.NETWORK_TYPE_EVDO_0 -> {
+            TelephonyNetworkState(TelephonyNetworkType.CONNECT_3G,TelephonyNetworkDetailType.NETWORK_TYPE_EVDO_0)
+        }
+
+        TelephonyManager.NETWORK_TYPE_EVDO_A -> {
+            TelephonyNetworkState(TelephonyNetworkType.CONNECT_3G,TelephonyNetworkDetailType.NETWORK_TYPE_EVDO_A)
+        }
+
+        TelephonyManager.NETWORK_TYPE_HSDPA -> {
+            TelephonyNetworkState(TelephonyNetworkType.CONNECT_3G,TelephonyNetworkDetailType.NETWORK_TYPE_HSDPA)
+        }
+
+        TelephonyManager.NETWORK_TYPE_HSUPA -> {
+            TelephonyNetworkState(TelephonyNetworkType.CONNECT_3G,TelephonyNetworkDetailType.NETWORK_TYPE_HSUPA)
+        }
+
+        TelephonyManager.NETWORK_TYPE_HSPA -> {
+            TelephonyNetworkState(TelephonyNetworkType.CONNECT_3G,TelephonyNetworkDetailType.NETWORK_TYPE_HSPA)
+        }
+
+        TelephonyManager.NETWORK_TYPE_EVDO_B -> {
+            TelephonyNetworkState(TelephonyNetworkType.CONNECT_3G,TelephonyNetworkDetailType.NETWORK_TYPE_EVDO_B)
+        }
+
+        TelephonyManager.NETWORK_TYPE_EHRPD -> {
+            TelephonyNetworkState(TelephonyNetworkType.CONNECT_3G,TelephonyNetworkDetailType.NETWORK_TYPE_EHRPD)
+        }
+
+        TelephonyManager.NETWORK_TYPE_HSPAP -> {
+            TelephonyNetworkState(TelephonyNetworkType.CONNECT_3G,TelephonyNetworkDetailType.NETWORK_TYPE_HSPAP)
+        }
+
+        TelephonyManager.NETWORK_TYPE_TD_SCDMA -> {
+            TelephonyNetworkState(TelephonyNetworkType.CONNECT_3G,TelephonyNetworkDetailType.NETWORK_TYPE_TD_SCDMA)
+        }
+
+        TelephonyManager.NETWORK_TYPE_LTE -> {
+            TelephonyNetworkState(TelephonyNetworkType.CONNECT_4G,TelephonyNetworkDetailType.NETWORK_TYPE_LTE)
+        }
+
+        TelephonyManager.NETWORK_TYPE_IWLAN -> {
+            TelephonyNetworkState(TelephonyNetworkType.CONNECT_4G,TelephonyNetworkDetailType.NETWORK_TYPE_IWLAN)
+        }
+
+        19 /* NETWORK_TYPE_LTE_CA */ -> {
+            TelephonyNetworkState(TelephonyNetworkType.CONNECT_4G,TelephonyNetworkDetailType.NETWORK_TYPE_LTE_CA)
+        }
+
+        20 /* NETWORK_TYPE_NR */ -> {
+            TelephonyNetworkState(TelephonyNetworkType.CONNECT_5G,TelephonyNetworkDetailType.NETWORK_TYPE_NR)
+        }
+
+        else -> {
+            TelephonyNetworkState(TelephonyNetworkType.UNKNOWN,TelephonyNetworkDetailType.UNKNOWN)
+        }
+    }
+
+    @RequiresPermission(allOf = [READ_PHONE_STATE])
+    private fun getTelephonyServiceStateNetworkCheck(serviceState: ServiceState) {
+
+        var telephonyNetworkState = getTelephonyManagerNetworkState()
+
+        if (telephonyNetworkState.networkTypeState == TelephonyNetworkType.CONNECT_4G) {
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
+                currentTelephonyDisplayInfo?.let {
+                    telephonyNetworkState = if (it.overrideNetworkType == TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_NR_NSA) {
+                         TelephonyNetworkState(TelephonyNetworkType.CONNECT_5G,TelephonyNetworkDetailType.OVERRIDE_NETWORK_TYPE_NR_NSA)
+                    } else if (it.overrideNetworkType == TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_NR_NSA_MMWAVE) {
+                        TelephonyNetworkState(TelephonyNetworkType.CONNECT_5G,TelephonyNetworkDetailType.OVERRIDE_NETWORK_TYPE_NR_NSA_MMWAVE)
+                    } else if (it.overrideNetworkType == TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_NR_ADVANCED) {
+                        TelephonyNetworkState(TelephonyNetworkType.CONNECT_5G,TelephonyNetworkDetailType.OVERRIDE_NETWORK_TYPE_NR_ADVANCED)
+                    } else telephonyNetworkState
+
+                    updateNetwork(telephonyNetworkState)
+                }
+            } else {
+                val str = serviceState.toString()
+                if (str.contains("nrState=CONNECTED") && str.contains("nsaState=5")) {
+                    telephonyNetworkState = TelephonyNetworkState(TelephonyNetworkType.CONNECT_5G,TelephonyNetworkDetailType.NETWORK_TYPE_NR)
+                }
+                updateNetwork(telephonyNetworkState)
+            }
+        }
+    }
+
+    private fun isSameTelephonyNetworkState(telephonyNetworkState: TelephonyNetworkState): Boolean  {
+        return currentTelephonyState?.let {
+            (it.networkTypeState == telephonyNetworkState.networkTypeState &&
+                    it.networkTypeDetailState == telephonyNetworkState.networkTypeDetailState)
+        }?:false
     }
 }

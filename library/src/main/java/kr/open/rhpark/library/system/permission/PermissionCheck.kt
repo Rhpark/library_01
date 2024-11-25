@@ -52,7 +52,7 @@ public class PermissionCheck(
      *
      * 아직 요청되지 않은 권한 목록.
      */
-    private var remainRequestPermissionList :Array<String>  = remainingPermission()
+    private var remainRequestPermissionList :Array<String>  = remainingPermission(permissions)
 
     init {
         if (remainRequestPermissionList.isEmpty()) {
@@ -118,7 +118,7 @@ public class PermissionCheck(
      * @return remain request permission list.
      * @return 아직 요청되지 않은 권한 목록.
      */
-    public fun remainingPermission(): Array<String> = permissions.filter { permission->
+    public fun remainingPermission(permissions: List<String>): Array<String> = permissions.filter { permission->
         if(isContainsSystemAlertWindow()) {
             !Settings.canDrawOverlays(context)
         } else {

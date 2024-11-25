@@ -29,6 +29,9 @@ public abstract class BaseSubscriptionState(
 
     public fun isCanReadSimInfo(): Boolean = isReadSimInfo
 
+    init {
+        getDefaultSubId()
+    }
 
     /**
      * 주어진 subscription ID에 대한 SubscriptionInfo 객체를 반환.
@@ -40,10 +43,6 @@ public abstract class BaseSubscriptionState(
     @RequiresPermission(READ_PHONE_STATE)
     protected fun getActiveSubscriptionInfoSubId(subId: Int): SubscriptionInfo? =
         subscriptionManager.getActiveSubscriptionInfo(subId)
-
-    init {
-        getDefaultSubId()
-    }
 
     /**
      * 기본 subscription ID를 반환.
@@ -58,7 +57,7 @@ public abstract class BaseSubscriptionState(
             telephonyManager.subscriptionId
         } else {
             // 첫 번째 활성화된 subscription의 ID 반환
-            getActiveSubscriptionInfoList().firstOrNull()?.subscriptionId ?: null
+            getActiveSubscriptionInfoList().firstOrNull()?.subscriptionId
         }
         isReadSimInfo = if(id == null)  false
         else true
@@ -118,21 +117,21 @@ public abstract class BaseSubscriptionState(
         getDefaultSubId()?.let { getActiveSubscriptionInfoSimSlot(it) }
             ?: throw NoSuchMethodError("Can not read uSim Chip")
 
-    protected fun isNrConnected(telephonyManager:TelephonyManager):Boolean {
-        try {
-            val obj = telephonyManager.javaClass.getDeclaredMethod("getServiceState").invoke(telephonyManager)
-
-            val methods = Class.forName(obj.javaClass.name).declaredMethods
-
-            for (method in methods) {
-                if (method.name == "getNrStatus" || method.name == "getNrState") {
-                    method.isAccessible = true
-                    return method.invoke(obj) as Int == 3
-                }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return false
-    }
+//    @RequiresPermission(allOf = [READ_PHONE_STATE, ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION])
+//    private fun nrLteNetworkState(telephonyManager:TelephonyManager):String? {
+//
+//        telephonyManager.getAllCellInfo().let {
+//
+//        }
+//
+//        return telephonyManager.serviceState?.let {
+//            Logx.d("A ${it.networkRegistrationInfoList.toList()}")
+//            if(it.state == ServiceState.STATE_IN_SERVICE) {
+//                if (it.cellBandwidths.all { it  in 1400..20000 }) "LTE"
+//                else if (it.cellBandwidths.any { it in 20001..100000 }) "5G(Sub-6G)"
+//                else if (it.cellBandwidths.any{ it > 100000 }) "5G(mmWave)"
+//                else null
+//            } else null
+//        }?:null
+//    }
 }

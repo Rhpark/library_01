@@ -28,7 +28,7 @@ public abstract class BaseSystemService(protected val context: Context, permissi
 
         permissionList?.let { permissions->
             PermissionCheck(context, permissions).also {
-                val deniedPermissionList = it.remainingPermission()
+                val deniedPermissionList = it.remainingPermission(permissionList)
                 if(deniedPermissionList.isEmpty()) {
                     setAllGranted()
                 } else {

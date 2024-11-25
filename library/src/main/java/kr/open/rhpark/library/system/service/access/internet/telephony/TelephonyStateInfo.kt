@@ -13,6 +13,7 @@ import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
 import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.system.service.access.internet.base.BaseSubscriptionState
+import kr.open.rhpark.library.system.service.access.internet.telephony.data.state.TelephonyNetworkState
 import kr.open.rhpark.library.system.service.access.internet.telephony.calback.CommonTelephonyCallback
 import kr.open.rhpark.library.system.service.access.internet.telephony.data.current.CurrentCellInfo
 import kr.open.rhpark.library.system.service.access.internet.telephony.data.current.CurrentServiceState
@@ -31,9 +32,7 @@ public open class TelephonyStateInfo(
     telephonyManager
 ) {
 
-    private val telephonyCallback: CommonTelephonyCallback = CommonTelephonyCallback()
-
-    private var isRegistered = false
+    private val telephonyCallback: CommonTelephonyCallback = CommonTelephonyCallback(telephonyManager)
 
     /**
      * return
@@ -66,8 +65,7 @@ public open class TelephonyStateInfo(
 
     @RequiresPermission(READ_PHONE_STATE)
     public fun isNetworkRoamingFromDefaultUSim(): Boolean =
-        getDefaultSubId()?.let { subscriptionManager.isNetworkRoaming(it) }
-            ?: false
+        getDefaultSubId()?.let { subscriptionManager.isNetworkRoaming(it) } ?: false
 
     /**
      * SDK_INT >= Build.VERSION_CODES.S
@@ -83,7 +81,8 @@ public open class TelephonyStateInfo(
         onSignalStrength: ((currentSignalStrength: CurrentSignalStrength) -> Unit)? = null,
         onServiceState: ((currentServiceState: CurrentServiceState) -> Unit)? = null,
         onCallState: ((callState: Int, phoneNumber: String?) -> Unit)? = null,
-        onDisplayInfo: ((telephonyDisplayInfo: TelephonyDisplayInfo) -> Unit)? = null
+        onDisplayInfo: ((telephonyDisplayInfo: TelephonyDisplayInfo) -> Unit)? = null,
+        onTelephonyNetworkState: ((telephonyNetworkState: TelephonyNetworkState) -> Unit)? = null
         )
     {
         unregisterCallBack()
@@ -93,8 +92,6 @@ public open class TelephonyStateInfo(
             telephonyManager.registerTelephonyCallback(executor, telephonyCallback.baseTelephonyCallback)
         }
 
-        isRegistered = true
-
         setOnActiveDataSubId(onActiveDataSubId)
         setOnDataConnectionState(onDataConnectionState)
         setOnCellInfo(onCellInfo)
@@ -102,6 +99,7 @@ public open class TelephonyStateInfo(
         setOnServiceState(onServiceState)
         setOnCallState(onCallState)
         setOnDisplayState(onDisplayInfo)
+        setOnTelephonyNetworkType(onTelephonyNetworkState)
     }
 
     /**
@@ -115,7 +113,8 @@ public open class TelephonyStateInfo(
                               onSignalStrength: ((currentSignalStrength: CurrentSignalStrength) -> Unit)? = null,
                               onServiceState: ((currentServiceState: CurrentServiceState) -> Unit)? = null,
                               onCallState: ((callState: Int, phoneNumber: String?) -> Unit)? = null,
-                              onDisplayInfo: ((telephonyDisplayInfo: TelephonyDisplayInfo) -> Unit)? = null) {
+                              onDisplayInfo: ((telephonyDisplayInfo: TelephonyDisplayInfo) -> Unit)? = null,
+                              onTelephonyNetworkState: ((telephonyNetworkState: TelephonyNetworkState) -> Unit)? = null) {
         unregisterListen()
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             throw UnsupportedOperationException("SDK_INT >= Build.VERSION_CODES.S Your Version is ${Build.VERSION.SDK_INT}")
@@ -142,9 +141,6 @@ public open class TelephonyStateInfo(
         }
         telephonyManager.listen(telephonyCallback.basePhoneStateListener,event)
 
-        isRegistered = true
-        Logx.d("isRegistered $isRegistered")
-
         setOnActiveDataSubId(onActiveDataSubId)
         setOnDataConnectionState(onDataConnectionState)
         setOnCellInfo(onCellInfo)
@@ -152,6 +148,7 @@ public open class TelephonyStateInfo(
         setOnServiceState(onServiceState)
         setOnCallState(onCallState)
         setOnDisplayState(onDisplayInfo)
+        setOnTelephonyNetworkType(onTelephonyNetworkState)
     }
 
     /**
@@ -170,7 +167,6 @@ public open class TelephonyStateInfo(
         } catch (e:Exception) {
             Logx.w("Failed to unregister listener", e)
         }
-        isRegistered = false
     }
 
     /**
@@ -182,7 +178,6 @@ public open class TelephonyStateInfo(
         }
 
         telephonyManager.listen(telephonyCallback.basePhoneStateListener, PhoneStateListener.LISTEN_NONE)
-        isRegistered = false
     }
 
     public override fun onDestroy() {
@@ -248,18 +243,26 @@ public open class TelephonyStateInfo(
         this.telephonyCallback.setOnServiceState(onServiceState)
     }
 
+    /**
+     * You must call
+     * TelephonyStateInfo.registerCallBack() or TelephonyStateInfo.registerListen() first before using it.
+     * **/
     @RequiresPermission(READ_PHONE_STATE)
     public fun setOnCallState(onCallState: ((callState: Int, phoneNumber: String?) -> Unit)? = null) {
         this.telephonyCallback.setOnCallState(onCallState)
     }
 
+    /**
+     * You must call
+     * TelephonyStateInfo.registerCallBack() or TelephonyStateInfo.registerListen() first before using it.
+     * **/
     @RequiresPermission(READ_PHONE_STATE)
     public fun setOnDisplayState(onDisplay: ((telephonyDisplayInfo: TelephonyDisplayInfo) -> Unit)? = null) {
         this.telephonyCallback.setOnDisplay(onDisplay)
     }
 
-    public fun isRegistered():Boolean = isRegistered
-
-    public fun isNrConnected(): Boolean = isNrConnected(telephonyManager)
+    public fun setOnTelephonyNetworkType(onTelephonyNetworkType: ((telephonyNetworkState: TelephonyNetworkState) -> Unit)? = null) {
+        this.telephonyCallback.setOnTelephonyNetworkType(onTelephonyNetworkType)
+    }
 
 }

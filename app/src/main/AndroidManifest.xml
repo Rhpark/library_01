@@ -43,6 +43,7 @@
         <activity android:name=".activity.battery.BatteryActivity" />
         <activity android:name=".activity.network.NetworkActivity" />
         <activity android:name=".activity.telephony.TelephonyActivity" />
+        <activity android:name=".activity.usim.UsimActivity" />
     </application>
 
 </manifest>

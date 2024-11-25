@@ -15,6 +15,7 @@ import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.system.service.access.internet.telephony.data.current.CurrentCellInfo
 import kr.open.rhpark.library.system.service.access.internet.telephony.data.current.CurrentServiceState
 import kr.open.rhpark.library.system.service.access.internet.telephony.data.current.CurrentSignalStrength
+import kr.open.rhpark.library.system.service.access.internet.telephony.data.state.TelephonyNetworkState
 import kr.open.rhpark.library.ui.activity.BaseBindingActivity
 
 class TelephonyActivity :
@@ -24,23 +25,29 @@ class TelephonyActivity :
 
     private var onActiveDataSubId: ((subId: Int) -> Unit)? = { subId -> binding.tvActiveDataSubId.text = "subId = $subId\n\n" }
 
-    private var onDataConnectionState: ((state: Int, networkType: Int) -> Unit)? =
-        { state, networkType -> binding.tvSimState.text = "state = $state, networkType = $networkType\n\n, isNr = ${getTelephonyStateInfo().isNrConnected()}" }
+    private var onDataConnectionState: ((state: Int, networkType: Int) -> Unit)? = { state, networkType ->
+            binding.tvSimState.text = "state = $state, networkType = $networkType\n\n" }
 
-    private var onCellInfo: ((currentCellInfo: CurrentCellInfo) -> Unit)? =
-        { currentCellInfo -> binding.tvCellInfo.text = "currentCellInfo = $currentCellInfo\n\n" }
+    private var onCellInfo: ((currentCellInfo: CurrentCellInfo) -> Unit)? = { currentCellInfo ->
+            binding.tvCellInfo.text = "currentCellInfo = $currentCellInfo\n\n" }
 
-    private var onSignalStrength: ((currentSignalStrength: CurrentSignalStrength) -> Unit)? =
-        { currentSignalStrength -> binding.tvSignalStrength.text = "currentSignalStrength = $currentSignalStrength\n\n" }
+    private var onSignalStrength: ((currentSignalStrength: CurrentSignalStrength) -> Unit)? = { currentSignalStrength ->
+            binding.tvSignalStrength.text = "currentSignalStrength = $currentSignalStrength\n\n" }
 
-    private var onServiceState: ((currentServiceState: CurrentServiceState) -> Unit)? =
-        { currentServiceState -> binding.tvServiceState.text = "currentServiceState = $currentServiceState\n\n" }
+    private var onServiceState: ((currentServiceState: CurrentServiceState) -> Unit)? = { currentServiceState ->
+            binding.tvServiceState.text = "currentServiceState = $currentServiceState\n\n" }
 
-    private var onCallState: ((callState: Int, phoneNumber: String?) -> Unit)? =
-        { callState,phoneNumber -> binding.tvCallState.text = "callState = $callState, phoneNumber $phoneNumber \n\n" }
+    private var onCallState: ((callState: Int, phoneNumber: String?) -> Unit)? = { callState,phoneNumber ->
+        binding.tvCallState.text = "callState = $callState, phoneNumber $phoneNumber \n\n" }
 
-    private var onDisplayInfo: ((telephonyDisplayInfo: TelephonyDisplayInfo) -> Unit)? =
-        {  t-> binding.tvDisplayInfo.text = "DisplayInfo $t, isNr = ${getTelephonyStateInfo().isNrConnected()}" }
+    private var onDisplayInfo: ((telephonyDisplayInfo: TelephonyDisplayInfo) -> Unit)? = { t ->
+        binding.tvDisplayInfo.text = "DisplayInfo $t\n\n"
+    }
+
+    private var onTelephonyNetworkState: ((telephonyNetworkState: TelephonyNetworkState) -> Unit)? = { telephonyNetworkState ->
+        Logx.d("telephonyNetworkState $telephonyNetworkState")
+        binding.tvTelephonyNetworkState.text = "$telephonyNetworkState\n\n"
+    }
 
     private fun getGpsStateInfo() = systemServiceManagerInfo.locationStateInfo
 
@@ -83,11 +90,13 @@ class TelephonyActivity :
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 registerCallBack(applicationContext.mainExecutor, gpsState,
                     onActiveDataSubId =  onActiveDataSubId, onDataConnectionState =  onDataConnectionState, onCellInfo = onCellInfo,
-                    onSignalStrength = onSignalStrength, onServiceState =  onServiceState, onCallState = onCallState, onDisplayInfo = onDisplayInfo)
+                    onSignalStrength = onSignalStrength, onServiceState =  onServiceState, onCallState = onCallState,
+                    onDisplayInfo = onDisplayInfo, onTelephonyNetworkState = onTelephonyNetworkState)
             } else {
                 registerListen(gpsState,
                     onActiveDataSubId =  onActiveDataSubId, onDataConnectionState =  onDataConnectionState, onCellInfo = onCellInfo,
-                    onSignalStrength = onSignalStrength, onServiceState =  onServiceState, onCallState = onCallState, onDisplayInfo = onDisplayInfo)
+                    onSignalStrength = onSignalStrength, onServiceState =  onServiceState, onCallState = onCallState,
+                    onDisplayInfo = onDisplayInfo, onTelephonyNetworkState = onTelephonyNetworkState)
             }
         }
     }
