@@ -15,10 +15,8 @@ import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.AppCompatActivity
 import kr.open.rhpark.library.system.service.access.battery.BatteryStateInfo
 import kr.open.rhpark.library.system.service.access.display.DisplayInfo
-import kr.open.rhpark.library.system.service.access.internet.telephony.TelephonyStateInfo
-import kr.open.rhpark.library.system.service.access.internet.network.NetworkStateInfo
-import kr.open.rhpark.library.system.service.access.internet.telephony.LocationStateInfo
-import kr.open.rhpark.library.system.service.access.internet.usim.UsimStateInfo
+import kr.open.rhpark.library.system.service.access.location.LocationStateInfo
+import kr.open.rhpark.library.system.service.access.network.NetworkStateInfo
 import kr.open.rhpark.library.system.service.controller.SoftKeyboardController
 import kr.open.rhpark.library.system.service.controller.VibratorController
 import kr.open.rhpark.library.system.service.controller.windowmanager.WindowManagerController
@@ -77,9 +75,7 @@ public class SystemServiceManager(context: Context) {
      *  SystemManager  *
      *  Controller     *
      *******************/
-    public val softKeyboardController: SoftKeyboardController by lazy {
-        SoftKeyboardController(context, inputMethodManager)
-    }
+    public val softKeyboardController: SoftKeyboardController by lazy { SoftKeyboardController(context, inputMethodManager) }
 
     public val vibratorController: VibratorController by lazy { VibratorController(context) }
 
@@ -97,18 +93,9 @@ public class SystemServiceManager(context: Context) {
 
     public val displayInfo: DisplayInfo by lazy { DisplayInfo(context, windowManager) }
 
-    public val telephonyStateInfo: TelephonyStateInfo by lazy {
-        TelephonyStateInfo(context, telephonyManager, subscriptionManager)
-    }
-
-    public val usimStateInfo: UsimStateInfo by lazy {
-        UsimStateInfo(context, telephonyManager, subscriptionManager, euiccManager)
-    }
-
     public val locationStateInfo : LocationStateInfo by lazy{ LocationStateInfo(context, locationManager) }
 
-
     public val networkInfo: NetworkStateInfo by lazy {
-        NetworkStateInfo(context, telephonyManager, subscriptionManager, connectivityManager, wifiManager)
+        NetworkStateInfo(context, telephonyManager, subscriptionManager, connectivityManager, wifiManager, euiccManager)
     }
 }

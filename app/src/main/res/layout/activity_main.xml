@@ -94,20 +94,6 @@
                     android:text="Show Network Activity" />
 
                 <Button
-                    android:id="@+id/btnShowTelephony"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="@{(v)->vm.onClickTelephonyActivity(v)}"
-                    android:text="Show Telephony Activity" />
-
-                <Button
-                    android:id="@+id/btnShowUsim"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="@{(v)->vm.onClickShowUsimActivity(v)}"
-                    android:text="Show UsimState Activity" />
-
-                <Button
                     android:id="@+id/btnToastSnackbar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

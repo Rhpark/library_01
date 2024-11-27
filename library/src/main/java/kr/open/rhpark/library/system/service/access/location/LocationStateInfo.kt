@@ -1,4 +1,4 @@
-package kr.open.rhpark.library.system.service.access.internet.telephony
+package kr.open.rhpark.library.system.service.access.location
 
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION

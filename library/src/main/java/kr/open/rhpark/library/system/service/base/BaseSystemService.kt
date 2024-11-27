@@ -21,10 +21,10 @@ public abstract class BaseSystemService(protected val context: Context, permissi
     private var deniedPermissionList = emptyList<String>()
 
     init {
-        checkPermission(context, permissionList)
+        checkPermission(permissionList)
     }
 
-    protected fun checkPermission(context: Context,permissionList: List<String>?){
+    protected fun checkPermission(permissionList: List<String>?){
 
         permissionList?.let { permissions->
             PermissionCheck(context, permissions).also {
