@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.telephony.TelephonyDisplayInfo
+import android.widget.TextView
 import androidx.annotation.RequiresPermission
 import kr.open.rhpark.app.R
 import kr.open.rhpark.app.databinding.ActivityNetworkBinding
@@ -21,7 +22,6 @@ import kr.open.rhpark.library.system.service.access.network.telephony.data.curre
 import kr.open.rhpark.library.system.service.access.network.telephony.data.current.CurrentServiceState
 import kr.open.rhpark.library.system.service.access.network.telephony.data.current.CurrentSignalStrength
 import kr.open.rhpark.library.system.service.access.network.telephony.data.state.TelephonyNetworkState
-
 import kr.open.rhpark.library.ui.activity.BaseBindingActivity
 
 class NetworkActivity : BaseBindingActivity<ActivityNetworkBinding>(R.layout.activity_network) {
@@ -50,13 +50,9 @@ class NetworkActivity : BaseBindingActivity<ActivityNetworkBinding>(R.layout.act
 
     private fun registerNetworkCallback() {
         getNetworkStateInfo().registerNetworkCallback(Handler(Looper.getMainLooper()),
-            onNetworkAvailable = { network: Network ->
-                binding.tvConnectState.text = "Default NetworkAvailable - network $network, " +
-                        "is Wifi Connect ${getNetworkStateInfo().isConnectedWifi()}, isMobileConnect ${getNetworkStateInfo().isConnectedMobile()}\n\n" },
-            onNetworkLosing = { network: Network, maxMsToLive: Int ->
-                binding.tvConnectState.text = "NetworkLosing - network $network maxMsToLive $maxMsToLive\n\n" },
-            onNetworkLost = { network: Network ->
-                binding.tvConnectState.text = "NetworkLost - network $network\n\n" },
+            onNetworkAvailable = { network: Network ->  updateAvailable("NetworkAvailable ",binding.tvConnectState, network) },
+            onNetworkLosing = { network: Network, maxMsToLive: Int ->  updateAvailable("onNetworkLosing ",binding.tvConnectState, network)},
+            onNetworkLost = { network: Network -> updateAvailable("onNetworkLost ",binding.tvConnectState, network)},
             onNetworkCapabilitiesChanged = { network: Network, networkCapabilities: NetworkCapabilitiesData ->
                 binding.tvCapabilities.text = "networkCapabilities\n ${networkCapabilities.toResString()}" },
             onLinkPropertiesChanged = { network: Network, linkProperties: NetworkLinkPropertiesData ->
@@ -69,13 +65,9 @@ class NetworkActivity : BaseBindingActivity<ActivityNetworkBinding>(R.layout.act
 
     private fun registerDefaultNetworkCallback() {
         getNetworkStateInfo().registerDefaultNetworkCallback(Handler(Looper.getMainLooper()),
-            onNetworkAvailable = { network: Network ->
-                binding.tvConnectDefaultState.text = "Default NetworkAvailable - network $network, " +
-                        "is Wifi Connect ${getNetworkStateInfo().isConnectedWifi()}, isMobileConnect ${getNetworkStateInfo().isConnectedMobile()}\n\n" },
-            onNetworkLosing = { network: Network, maxMsToLive: Int ->
-                binding.tvConnectDefaultState.text = "Default NetworkLosing - network $network maxMsToLive $maxMsToLive\n\n" },
-            onNetworkLost = { network: Network ->
-                binding.tvConnectDefaultState.text = "Default NetworkLost - network $network\n\n" },
+            onNetworkAvailable = { network: Network -> updateAvailable("Default NetworkAvailable ",binding.tvConnectDefaultState, network) },
+            onNetworkLosing = { network: Network, maxMsToLive: Int -> updateAvailable("Default NetworkLosing ",binding.tvConnectDefaultState, network) },
+            onNetworkLost = { network: Network -> updateAvailable("Default NetworkLost ",binding.tvConnectDefaultState, network) },
             onNetworkCapabilitiesChanged = { network: Network, networkCapabilities: NetworkCapabilitiesData ->
                 binding.tvDefaultCapabilities.text = "Default networkCapabilities\n ${networkCapabilities.toResString()}" },
             onLinkPropertiesChanged = { network: Network, linkProperties: NetworkLinkPropertiesData ->
@@ -91,60 +83,24 @@ class NetworkActivity : BaseBindingActivity<ActivityNetworkBinding>(R.layout.act
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             getNetworkStateInfo().registerTelephonyCallBackFromDefaultUSim(
                 this@NetworkActivity.mainExecutor, isGpsOn,
-                onActiveDataSubId = { subId: Int ->
-                    binding.tvTelephonyActiveSubId.text = "\n Telephony\n\n ActiveDataSubId\n $subId\n\n"
-                    binding.tvTelephonyActiveSimCount.text = "getActiveSimCount ${getNetworkStateInfo().getActiveSimCount()}"
-                    binding.tvTelephonyActiveSimStatus.text = "Sim Status ${getSimStatus()}"
-                },
-                onDataConnectionState = { state: Int, networkType: Int ->
-                    binding.tvTelephonyConnectState.text = "Default ConnectState \n $state , networkType $networkType\n\n"
-                },
-                onCellInfo = { currentCellInfo: CurrentCellInfo ->
-                    binding.tvTelephonyCellInfo.text = "Default CellInfo \n ${currentCellInfo.toResString()}\n"
-                },
-                onSignalStrength = { currentSignalStrength: CurrentSignalStrength ->
-                    binding.tvTelephonySignalStrength.text = "Default SignalStrength\n ${currentSignalStrength.toResString()}\n"
-                },
-                onServiceState = { currentServiceState: CurrentServiceState ->
-                    binding.tvTelephonyServiceState.text = "Default ServiceState\n ${currentServiceState.toResString()}\n\n"
-                },
-                onCallState = { callState: Int, phoneNumber: String? ->
-                    binding.tvTelephonyCallState.text = "Default callState\n $callState, phoneNumber $phoneNumber\n\n"
-                },
-                onDisplayInfo = { telephonyDisplayInfo: TelephonyDisplayInfo ->
-                    binding.tvTelephonyDisplayInfo.text = "Default DisplayInfo\n $telephonyDisplayInfo\n\n"
-                },
-                onTelephonyNetworkState = { telephonyNetworkState: TelephonyNetworkState ->
-                    binding.tvTelephonyNetworkState.text = "Default TelephonyNetworkState\n $telephonyNetworkState\n\n"
-                })
+                onActiveDataSubId = { subId: Int -> updateActiveDataSubId(subId) },
+                onDataConnectionState = { state: Int, networkType: Int -> updateConnectState(state,networkType) },
+                onCellInfo = { currentCellInfo: CurrentCellInfo -> updateCellInfo(currentCellInfo) },
+                onSignalStrength = { currentSignalStrength: CurrentSignalStrength ->updateSignalStrength(currentSignalStrength) },
+                onServiceState = { currentServiceState: CurrentServiceState -> updateServiceState(currentServiceState) },
+                onCallState = { callState: Int, phoneNumber: String? ->updateCallState(callState,phoneNumber) },
+                onDisplayInfo = { telephonyDisplayInfo: TelephonyDisplayInfo -> updateDisplayInfo(telephonyDisplayInfo) },
+                onTelephonyNetworkState = { telephonyNetworkState: TelephonyNetworkState -> updateNetworkState(telephonyNetworkState) })
         } else {
             getNetworkStateInfo().registerTelephonyListenFromDefaultUSim(isGpsOn,
-                onActiveDataSubId = { subId: Int ->
-                    binding.tvTelephonyActiveSubId.text = "\n Telephony\n\n ActiveDataSubId\n $subId\n\n"
-                    binding.tvTelephonyActiveSimCount.text = "getActiveSimCount ${getNetworkStateInfo().getActiveSimCount()}"
-                    binding.tvTelephonyActiveSimStatus.text = "Sim Status ${getSimStatus()}"
-                },
-                onDataConnectionState = { state: Int, networkType: Int ->
-                    binding.tvTelephonyConnectState.text = "Default ConnectState \n $state , networkType $networkType\n\n"
-                },
-                onCellInfo = { currentCellInfo: CurrentCellInfo ->
-                    binding.tvTelephonyCellInfo.text = "Default CellInfo \n ${currentCellInfo.toResString()}\n"
-                },
-                onSignalStrength = { currentSignalStrength: CurrentSignalStrength ->
-                    binding.tvTelephonySignalStrength.text = "Default SignalStrength\n ${currentSignalStrength.toResString()}\n"
-                },
-                onServiceState = { currentServiceState: CurrentServiceState ->
-                    binding.tvTelephonyServiceState.text = "Default ServiceState\n ${currentServiceState.toResString()}\n\n"
-                },
-                onCallState = { callState: Int, phoneNumber: String? ->
-                    binding.tvTelephonyCallState.text = "Default callState\n $callState, phoneNumber $phoneNumber\n\n"
-                },
-                onDisplayInfo = { telephonyDisplayInfo: TelephonyDisplayInfo ->
-                    binding.tvTelephonyDisplayInfo.text = "Default DisplayInfo\n $telephonyDisplayInfo\n\n"
-                },
-                onTelephonyNetworkState = { telephonyNetworkState: TelephonyNetworkState ->
-                    binding.tvTelephonyNetworkState.text = "Default TelephonyNetworkState\n $telephonyNetworkState\n\n"
-                })
+                onActiveDataSubId = { subId: Int -> updateActiveDataSubId(subId) },
+                onDataConnectionState = { state: Int, networkType: Int -> updateConnectState(state,networkType) },
+                onCellInfo = { currentCellInfo: CurrentCellInfo -> updateCellInfo(currentCellInfo) },
+                onSignalStrength = { currentSignalStrength: CurrentSignalStrength ->updateSignalStrength(currentSignalStrength) },
+                onServiceState = { currentServiceState: CurrentServiceState -> updateServiceState(currentServiceState) },
+                onCallState = { callState: Int, phoneNumber: String? ->updateCallState(callState,phoneNumber) },
+                onDisplayInfo = { telephonyDisplayInfo: TelephonyDisplayInfo -> updateDisplayInfo(telephonyDisplayInfo) },
+                onTelephonyNetworkState = { telephonyNetworkState: TelephonyNetworkState -> updateNetworkState(telephonyNetworkState) })
         }
     }
 
@@ -180,6 +136,45 @@ class NetworkActivity : BaseBindingActivity<ActivityNetworkBinding>(R.layout.act
             ACCESS_COARSE_LOCATION,
             READ_PHONE_STATE,
         )
+    }
+
+    @RequiresPermission(READ_PHONE_STATE)
+    private fun updateActiveDataSubId(subId:Int) {
+        binding.tvTelephonyActiveSubId.text = "\n Telephony\n\n ActiveDataSubId\n $subId\n\n"
+        binding.tvTelephonyActiveSimCount.text = "getActiveSimCount ${getNetworkStateInfo().getActiveSimCount()}"
+        binding.tvTelephonyActiveSimStatus.text = "Sim Status ${getSimStatus()}"
+    }
+
+    private fun updateAvailable(msg:String ,tv: TextView, network: Network) {
+        tv.text = "$msg network $network, " +
+                "is Wifi Connect ${getNetworkStateInfo().isConnectedWifi()}, isMobileConnect ${getNetworkStateInfo().isConnectedMobile()}\n\n"
+    }
+    private fun updateCellInfo(currentCellInfo: CurrentCellInfo) {
+        binding.tvTelephonyCellInfo.text = "Default CellInfo \n ${currentCellInfo.toResString()}\n"
+    }
+
+    private fun updateSignalStrength(currentSignalStrength: CurrentSignalStrength) {
+        binding.tvTelephonySignalStrength.text = "Default SignalStrength\n ${currentSignalStrength.toResString()}\n"
+    }
+
+    private fun updateConnectState(state: Int, networkType: Int) {
+        binding.tvTelephonyConnectState.text = "Default ConnectState \n $state , networkType $networkType\n\n"
+    }
+
+    private fun updateServiceState(currentServiceState: CurrentServiceState) {
+        binding.tvTelephonyServiceState.text = "Default ServiceState\n ${currentServiceState.toResString()}\n\n"
+    }
+
+    private fun updateCallState(callState: Int, phoneNumber: String?) {
+        binding.tvTelephonyCallState.text = "Default callState\n $callState, phoneNumber $phoneNumber\n\n"
+    }
+
+    private fun updateDisplayInfo(telephonyDisplayInfo: TelephonyDisplayInfo) {
+        binding.tvTelephonyDisplayInfo.text = "Default DisplayInfo\n $telephonyDisplayInfo\n\n"
+    }
+
+    private fun updateNetworkState(telephonyNetworkState: TelephonyNetworkState) {
+        binding.tvTelephonyNetworkState.text = "Default TelephonyNetworkState\n $telephonyNetworkState\n\n"
     }
     private fun getNetworkStateInfo() = systemServiceManagerInfo.networkInfo
     private fun getGpsStateInfo() = systemServiceManagerInfo.locationStateInfo
