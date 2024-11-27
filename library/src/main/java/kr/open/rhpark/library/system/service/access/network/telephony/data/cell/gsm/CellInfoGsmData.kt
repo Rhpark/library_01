@@ -14,9 +14,9 @@ public data class CellInfoGsmData(
      * get CellInfoLte *
      *******************/
     @RequiresApi(Build.VERSION_CODES.R)
-    public fun getTimestampMillis(): Long? = cellInfo.timestampMillis
-    public fun getCellConnectionStatus(): Int? = cellInfo.cellConnectionStatus
-    public fun isRegistered(): Boolean? = cellInfo.isRegistered
+    public fun getTimestampMillis(): Long = cellInfo.timestampMillis
+    public fun getCellConnectionStatus(): Int = cellInfo.cellConnectionStatus
+    public fun isRegistered(): Boolean = cellInfo.isRegistered
 
     public fun getIdentity(): CellIdentityGsmData = cellDataGsmIdentity
     public fun getSignalStrength(): CellSignalStrengthGsmData = cellDataGsmSignalStrength

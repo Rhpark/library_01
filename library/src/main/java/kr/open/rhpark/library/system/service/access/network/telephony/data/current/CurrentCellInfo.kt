@@ -35,8 +35,7 @@ public data class CurrentCellInfo(val cellInfo: List<CellInfo>) {
         }
     }
     public fun toResString() :String {
-        var res :String = ""
-        res += "cellDataGsmList ${cellDataGsmList.toList()}\n" +
+        val res = "cellDataGsmList ${cellDataGsmList.toList()}\n" +
                 "cellDataCdmaList ${cellDataCdmaList.toList()}\n"
                 "cellDataWcdmaList ${cellDataWcdmaList.toList()}\n"
                 "cellDataTdscdmaList ${cellDataTdscdmaList.toList()}\n"

@@ -7,6 +7,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.location.LocationManager
+import android.os.Build
+import androidx.annotation.RequiresApi
 import kr.open.rhpark.library.system.service.base.BaseSystemService
 
 public class LocationStateInfo(
@@ -61,12 +63,19 @@ public class LocationStateInfo(
         locationManager.isProviderEnabled(LocationManager.PASSIVE_PROVIDER)
 
 
+    @RequiresApi(Build.VERSION_CODES.S)
     public fun isFusedEnabled(): Boolean =
         locationManager.isProviderEnabled(LocationManager.FUSED_PROVIDER)
 
 
-    public fun isAnyEnabled(): Boolean =
-        isLocationEnabled() || isGpsEnabled() || isNetworkEnabled() || isPassiveEnabled() || isFusedEnabled()
+    public fun isAnyEnabled(): Boolean {
+        return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            (isLocationEnabled() || isGpsEnabled() || isNetworkEnabled() || isPassiveEnabled() || isFusedEnabled())
+        } else {
+            (isLocationEnabled() || isGpsEnabled() || isNetworkEnabled() || isPassiveEnabled())
+        }
+    }
+
 
 
 }

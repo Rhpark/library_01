@@ -18,9 +18,9 @@ public data class CellInfoNrData(
      *  get CellInfoNr *
      *******************/
     @RequiresApi(Build.VERSION_CODES.R)
-    public fun getTimestampMillis(): Long? = cellInfo.timestampMillis
-    public fun isRegistered(): Boolean? = cellInfo.isRegistered
-    public fun getCellConnectionStatus(): Int? = cellInfo.cellConnectionStatus
+    public fun getTimestampMillis(): Long = cellInfo.timestampMillis
+    public fun isRegistered(): Boolean = cellInfo.isRegistered
+    public fun getCellConnectionStatus(): Int = cellInfo.cellConnectionStatus
 
     @RequiresApi(Build.VERSION_CODES.Q)
     public fun getIdentity(): CellIdentityNrData = cellDataNrIdentity
