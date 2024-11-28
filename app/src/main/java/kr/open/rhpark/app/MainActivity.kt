@@ -9,6 +9,8 @@ import kotlinx.coroutines.launch
 import kr.open.rhpark.app.databinding.ActivityMainBinding
 import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.ui.activity.BaseBindingActivity
+import kr.open.rhpark.library.util.extensions.debug.logxD
+import kr.open.rhpark.library.util.extensions.debug.logxJ
 
 class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_main) {
 
@@ -45,5 +47,9 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
         Logx.d("Tag","mmssgg")
         Logx.p()
         Logx.t()
+        "[[[{fase}]]]".logxJ()
+        "gfas".logxD()
+        "gfas".logxD("fsae")
+        "a".toIntOrNull()
     }
 }

@@ -16,12 +16,12 @@ import androidx.annotation.RequiresPermission
 import kr.open.rhpark.app.R
 import kr.open.rhpark.app.databinding.ActivityNetworkBinding
 import kr.open.rhpark.library.debug.logcat.Logx
-import kr.open.rhpark.library.system.service.access.network.connectivity.data.NetworkCapabilitiesData
-import kr.open.rhpark.library.system.service.access.network.connectivity.data.NetworkLinkPropertiesData
-import kr.open.rhpark.library.system.service.access.network.telephony.data.current.CurrentCellInfo
-import kr.open.rhpark.library.system.service.access.network.telephony.data.current.CurrentServiceState
-import kr.open.rhpark.library.system.service.access.network.telephony.data.current.CurrentSignalStrength
-import kr.open.rhpark.library.system.service.access.network.telephony.data.state.TelephonyNetworkState
+import kr.open.rhpark.library.system.service.info.network.connectivity.data.NetworkCapabilitiesData
+import kr.open.rhpark.library.system.service.info.network.connectivity.data.NetworkLinkPropertiesData
+import kr.open.rhpark.library.system.service.info.network.telephony.data.current.CurrentCellInfo
+import kr.open.rhpark.library.system.service.info.network.telephony.data.current.CurrentServiceState
+import kr.open.rhpark.library.system.service.info.network.telephony.data.current.CurrentSignalStrength
+import kr.open.rhpark.library.system.service.info.network.telephony.data.state.TelephonyNetworkState
 import kr.open.rhpark.library.ui.activity.BaseBindingActivity
 
 class NetworkActivity : BaseBindingActivity<ActivityNetworkBinding>(R.layout.activity_network) {

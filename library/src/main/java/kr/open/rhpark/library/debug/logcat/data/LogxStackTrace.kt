@@ -5,10 +5,14 @@ import kr.open.rhpark.library.debug.logcat.Logx
 
 internal class LogxStackTrace {
 
+    private val LOG_EXTENTIONS_PARENT_STACK_LEVEL = 9
     private val LOG_PARENT_STACK_LEVEL = 8
+    private val LOG_EXTEPTIONS_STACK_LEVEL = 8
     private val LOG_NORMAL_STACK_LEVEL = 7
 
     fun getParentStackTrace() = getStackTrace(LOG_PARENT_STACK_LEVEL)
+    fun getParentExtensionsStackTrace() = getStackTrace(LOG_EXTENTIONS_PARENT_STACK_LEVEL)
+    fun getExtensionsStackTrace() = getStackTrace(LOG_EXTEPTIONS_STACK_LEVEL)
     fun getStackTrace() = getStackTrace(LOG_NORMAL_STACK_LEVEL)
 
     private fun getStackTrace(level: Int): LogxStackTraceMetaData {

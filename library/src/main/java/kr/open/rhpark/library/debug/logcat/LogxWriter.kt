@@ -10,6 +10,12 @@ internal class LogxWriter {
     private val logxStackTrace = LogxStackTrace()
     private val logSaver:LogxFileManager by lazy { LogxFileManager(Logx.saveFilePath) }
 
+    fun writeExtensions(tag: String, msg: Any?, type: LogxType) {
+        if (!isDebug(type)) { return }
+        try { log(filterExtensionsType(tag, type), msg, type) }
+        catch (e: IndexOutOfBoundsException) { e.printStackTrace() }
+    }
+
     fun write(tag: String, msg: Any?, type: LogxType) {
         if (!isDebug(type)) { return }
         try { log(filter(tag, type), msg, type) }
@@ -34,10 +40,35 @@ internal class LogxWriter {
         catch (e: IndexOutOfBoundsException) { e.printStackTrace() }
     }
 
+    fun writeExtensionsParent(tag: String, msg: Any?) {
+        val type = LogxType.PARENT
+        if (!isDebug(type)) { return }
+        try {log(parentExtensionsType(filter(tag, type)), msg, type)}
+        catch (e: IndexOutOfBoundsException) { e.printStackTrace() }
+    }
+
     private fun parentType(pair: Pair<String, String?>?): Pair<String, String?>? = logxStackTrace.getParentStackTrace().let {
         if (pair == null) return null
         log(Pair(pair.first,"┎${it.getMsgFrontParent()}"), "", LogxType.PARENT)
         return Pair(pair.first, "┖${pair.second}")
+    }
+
+    private fun parentExtensionsType(pair: Pair<String, String?>?): Pair<String, String?>? = logxStackTrace.getParentExtensionsStackTrace().let {
+        if (pair == null) return null
+        log(Pair(pair.first,"┎${it.getMsgFrontParent()}"), "", LogxType.PARENT)
+        return Pair(pair.first, "┖${pair.second}")
+    }
+
+    fun writeJsonExtensions(tag: String, msg: String) {
+        if (!isDebug(LogxType.JSON)) { return }
+        try {
+            filterExtensionsType(tag, LogxType.JSON)?.let {
+                val jsonTag = jsonType(it)
+                log(jsonTag, "=========JSON_START========", LogxType.JSON)
+                jsonMsgSort(it.first, msg)
+                log(jsonTag, "=========JSON_END==========", LogxType.JSON)
+            }
+        } catch (e: IndexOutOfBoundsException) { e.printStackTrace() }
     }
 
     fun writeJson(tag: String, msg: String) {
@@ -74,6 +105,20 @@ internal class LogxWriter {
         if (Logx.isDebugSave) { logSaver.addWriteLog(logType, logTag, logMsg) }
     }
 
+
+    private fun getTypeToString(typeRes:LogxType) :String = when(typeRes) {
+        LogxType.THREAD_ID -> " [T_ID] :"
+        LogxType.PARENT -> " [PARENT] :"
+        LogxType.JSON -> " [JSON] :"
+        else -> " :"
+    }
+
+    private fun filterExtensionsType(tag:String, type: LogxType):Pair<String,String>? = logxStackTrace.getExtensionsStackTrace().let {
+
+        if(!isLogFilter(tag, it.fileName.split(".")[0])) return null
+        return Pair("${Logx.appName} [$tag]${getTypeToString(type)}", it.getMsgFrontNormal())
+    }
+
     /**
      * stackTrace ex)
      * it.className -> include Package (ex a.b.c.MainActivity)
@@ -83,13 +128,7 @@ internal class LogxWriter {
     private fun filter(tag:String, type: LogxType):Pair<String,String>? = logxStackTrace.getStackTrace().let {
 
         if(!isLogFilter(tag, it.fileName.split(".")[0])) return null
-        val typeRes = when(type) {
-            LogxType.THREAD_ID -> " [T_ID] :"
-            LogxType.PARENT -> " [PARENT] :"
-            LogxType.JSON -> " [JSON] :"
-            else -> " :"
-        }
-        return Pair("${Logx.appName} [$tag]$typeRes", it.getMsgFrontNormal())
+        return Pair("${Logx.appName} [$tag]${getTypeToString(type)}", it.getMsgFrontNormal())
     }
 
     private fun jsonTag(): String = logxStackTrace.getParentStackTrace().getMsgFrontJson()

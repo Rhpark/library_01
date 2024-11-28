@@ -111,6 +111,20 @@ public object Logx {
     public fun v(tag: String, msg: Any?) { logWriter.write(tag, msg, LogxType.VERBOSE) }
 
 
+    /**
+     * Only Used Extensions Type Logx
+     *  ex) Log.v AppName [] : (FileName:LineNumber).Method - @param msg
+     */
+    @JvmStatic
+    public fun v1(msg: Any?) { logWriter.writeExtensions(DEFAULT_TAG, msg , LogxType.VERBOSE) }
+
+    /**
+     * Only Used Extensions Type Logx
+     *  ex) Log.v AppName ["tag"] : (FileName:LineNumber).Method - @param msg *
+     */
+    @JvmStatic
+    public fun v1(tag: String, msg: Any?) { logWriter.writeExtensions(tag, msg, LogxType.VERBOSE) }
+
     /** ex) Log.d AppName [] : (FileName:LineNumber).Method - **/
     @JvmStatic
     public fun d() { logWriter.write(DEFAULT_TAG, DEFAULT_MSG, LogxType.DEBUG) }
@@ -122,6 +136,20 @@ public object Logx {
     /** ex) Log.d AppName ["tag"] : (FileName:LineNumber).Method - msg **/
     @JvmStatic
     public fun d(tag: String, msg: Any?) { logWriter.write(tag, msg, LogxType.DEBUG) }
+
+    /**
+     * Only Used Extensions Type Logx
+     * AppName ["tag"] : (FileName:LineNumber).Method - msg
+     */
+    @JvmStatic
+    public fun d1(tag: String, msg: Any?) { logWriter.writeExtensions(tag, msg, LogxType.DEBUG) }
+
+    /**
+     * Only Used Extensions Type Logx
+     *  ex) Log.d AppName [] : (FileName:LineNumber).Method - msg
+     */
+    @JvmStatic
+    public fun d1(msg: Any?) { logWriter.writeExtensions(DEFAULT_TAG, msg, LogxType.DEBUG) }
 
 
     /** ex) Log.i AppName [] : (FileName:LineNumber).Method - **/
@@ -136,6 +164,17 @@ public object Logx {
     @JvmStatic
     public fun i(tag: String, msg: Any?) { logWriter.write(tag, msg, LogxType.INFO) }
 
+    /**
+     * Only Used Extensions Type Logx
+     * ex) Log.i AppName [] : (FileName:LineNumber).Method - msg *
+     */
+    @JvmStatic
+    public fun i1(msg: Any?) { logWriter.writeExtensions(DEFAULT_TAG, msg, LogxType.INFO)}
+
+    /** ex) Log.i AppName ["tag"] : (FileName:LineNumber).Method - msg **/
+    @JvmStatic
+    public fun i1(tag: String, msg: Any?) { logWriter.writeExtensions(tag, msg, LogxType.INFO) }
+
 
     /** ex) Log.w AppName [] : (FileName:LineNumber).Method - **/
     @JvmStatic
@@ -149,6 +188,20 @@ public object Logx {
     @JvmStatic
     public fun w(tag: String, msg: Any?) { logWriter.write(tag, msg, LogxType.WARN) }
 
+    /**
+     * Only Used Extensions Type Logx
+     * ex) Log.w AppName [] : (FileName:LineNumber).Method - msg
+     */
+    @JvmStatic
+    public fun w1(msg: Any?) { logWriter.writeExtensions(DEFAULT_TAG, msg, LogxType.WARN) }
+
+    /**
+     * Only Used Extensions Type Logx
+     * ex) Log.w AppName ["tag"] : (FileName:LineNumber).Method - msg
+     */
+    @JvmStatic
+    public fun w1(tag: String, msg: Any?) { logWriter.writeExtensions(tag, msg, LogxType.WARN) }
+
 
     /** ex) Log.e AppName [] : (FileName:LineNumber).Method - **/
     @JvmStatic
@@ -161,6 +214,20 @@ public object Logx {
     /** ex) Log.d AppName ["tag"] : (FileName:LineNumber).Method - msg **/
     @JvmStatic
     public fun e(tag: String, msg: Any?) { logWriter.write(tag, msg, LogxType.ERROR) }
+
+    /**
+     * Only Used Extensions Type Logx
+     * ex) Log.e AppName [] : (FileName:LineNumber).Method - msg
+     */
+    @JvmStatic
+    public fun e1(msg: Any?) { logWriter.writeExtensions(DEFAULT_TAG, msg, LogxType.ERROR) }
+
+    /**
+     * Only Used Extensions Type Logx
+     * ex) Log.d AppName ["tag"] : (FileName:LineNumber).Method - msg
+     */
+    @JvmStatic
+    public fun e1(tag: String, msg: Any?) { logWriter.writeExtensions(tag, msg, LogxType.ERROR) }
 
 
     /**
@@ -187,6 +254,26 @@ public object Logx {
     @JvmStatic
     public fun p(tag: String, msg: Any?) { logWriter.writeParent(tag, msg) }
 
+
+    /**
+     * Only Used Extensions Type Logx
+     *
+     * Log.i + Parent call method name
+     * ex) Log.i AppName [] ["PARENT"] : ┎(ParentFileName:ParentLineNumber) -["ClassPath.Method"]
+     *     Log.i AppName [] ["PARENT"] : ┖(FileName:LineNumber).Method - msg
+     */
+    @JvmStatic
+    public fun p1(msg: Any?) { logWriter.writeExtensionsParent(DEFAULT_TAG, msg) }
+
+    /**
+     * Only Used Extensions Type Logx
+     *
+     * Log.i + Parent call method name
+     * ex) Log.i AppName ["tag"] ["PARENT"] : ┎(ParentFileName:ParentLineNumber) -["ClassPath.Method"]
+     *     Log.i AppName ["tag"] ["PARENT"] : ┖(FileName:LineNumber).Method - msg
+     */
+    @JvmStatic
+    public fun p1(tag: String, msg: Any?) { logWriter.writeExtensionsParent(tag, msg) }
 
     /**
      * Log.d + Current Thread Id
@@ -229,4 +316,28 @@ public object Logx {
      */
     @JvmStatic
     public fun j(tag: String, msg: String) { logWriter.writeJson(tag, msg) }
+
+    /**
+     * Only Used Extensions Type Logx
+     *
+     * Log.v + Json Parse
+     * ex) Log.d AppName [] ["JSON"] : (FileName:LineNumber).Method - ====Json Start====
+     *     Log.d AppName [] ["JSON"] : (FileName:LineNumber). Json Format msg ...
+     *     Log.d AppName [] ["JSON"] : (FileName:LineNumber). Json Format msg ...
+     *     Log.d AppName [] ["JSON"] : (FileName:LineNumber).Method - ====JsonEnd====
+     */
+    @JvmStatic
+    public fun j1(msg: String) { logWriter.writeJsonExtensions(DEFAULT_TAG, msg) }
+
+    /**
+     * Only Used Extensions Type Logx
+     *
+     * Log.v + Json Parse
+     * ex) Log.d AppName ["tag"] ["JSON"] : (FileName:LineNumber).Method - ====Json Start====
+     *     Log.d AppName ["tag"] ["JSON"] : (FileName:LineNumber). Json Format msg ...
+     *     Log.d AppName ["tag"] ["JSON"] : (FileName:LineNumber). Json Format msg ...
+     *     Log.d AppName ["tag"] ["JSON"] : (FileName:LineNumber).Method - ====JsonEnd====
+     */
+    @JvmStatic
+    public fun j1(tag: String, msg: String) { logWriter.writeJsonExtensions(tag, msg) }
 }

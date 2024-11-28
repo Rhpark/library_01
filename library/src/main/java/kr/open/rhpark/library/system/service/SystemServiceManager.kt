@@ -12,62 +12,51 @@ import android.telephony.euicc.EuiccManager
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.RequiresPermission
-import androidx.appcompat.app.AppCompatActivity
-import kr.open.rhpark.library.system.service.access.battery.BatteryStateInfo
-import kr.open.rhpark.library.system.service.access.display.DisplayInfo
-import kr.open.rhpark.library.system.service.access.location.LocationStateInfo
-import kr.open.rhpark.library.system.service.access.network.NetworkStateInfo
+import kr.open.rhpark.library.system.service.info.battery.BatteryStateInfo
+import kr.open.rhpark.library.system.service.info.display.DisplayInfo
+import kr.open.rhpark.library.system.service.info.location.LocationStateInfo
+import kr.open.rhpark.library.system.service.info.network.NetworkStateInfo
 import kr.open.rhpark.library.system.service.controller.SoftKeyboardController
 import kr.open.rhpark.library.system.service.controller.VibratorController
 import kr.open.rhpark.library.system.service.controller.windowmanager.WindowManagerController
+import kr.open.rhpark.library.util.extensions.context.getSystemBatteryManager
+import kr.open.rhpark.library.util.extensions.context.getSystemConnectivityManager
+import kr.open.rhpark.library.util.extensions.context.getSystemEuiccManager
+import kr.open.rhpark.library.util.extensions.context.getSystemInputMethodManager
+import kr.open.rhpark.library.util.extensions.context.getSystemLocationManager
+import kr.open.rhpark.library.util.extensions.context.getSystemNotificationManager
+import kr.open.rhpark.library.util.extensions.context.getSystemSubscriptionManager
+import kr.open.rhpark.library.util.extensions.context.getSystemTelephonyManager
+import kr.open.rhpark.library.util.extensions.context.getSystemWifiManager
+import kr.open.rhpark.library.util.extensions.context.getSystemWindowManager
 
 public class SystemServiceManager(context: Context) {
 
     /***************************
      *  System Service Manager *
      ***************************/
-    public val inputMethodManager: InputMethodManager by lazy {
-        context.getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE) as InputMethodManager
-    }
+    public val inputMethodManager: InputMethodManager by lazy { context.getSystemInputMethodManager() }
 
     @get:RequiresPermission(android.Manifest.permission.BATTERY_STATS)
-    public val batteryManager: BatteryManager by lazy {
-        context.getSystemService(AppCompatActivity.BATTERY_SERVICE) as BatteryManager
-    }
+    public val batteryManager: BatteryManager by lazy { context.getSystemBatteryManager() }
 
-    public val notificationManager: NotificationManager by lazy {
-        context.getSystemService(AppCompatActivity.NOTIFICATION_SERVICE) as NotificationManager
-    }
+    public val notificationManager: NotificationManager by lazy { context.getSystemNotificationManager() }
 
-    public val windowManager: WindowManager by lazy {
-        context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-    }
+    public val windowManager: WindowManager by lazy { context.getSystemWindowManager() }
 
     @get:RequiresPermission(android.Manifest.permission.READ_PHONE_STATE)
-    public val telephonyManager: TelephonyManager by lazy {
-        context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-    }
+    public val telephonyManager: TelephonyManager by lazy { context.getSystemTelephonyManager() }
 
     @get:RequiresPermission(android.Manifest.permission.READ_PHONE_STATE)
-    public val subscriptionManager: SubscriptionManager by lazy {
-        context.getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE) as SubscriptionManager
-    }
+    public val subscriptionManager: SubscriptionManager by lazy { context.getSystemSubscriptionManager() }
 
-    public val euiccManager: EuiccManager by lazy {
-        context.getSystemService(Context.EUICC_SERVICE) as EuiccManager
-    }
+    public val euiccManager: EuiccManager by lazy { context.getSystemEuiccManager() }
 
-    public val connectivityManager: ConnectivityManager by lazy {
-        context.getSystemService(AppCompatActivity.CONNECTIVITY_SERVICE) as ConnectivityManager
-    }
+    public val connectivityManager: ConnectivityManager by lazy { context.getSystemConnectivityManager()    }
 
-    public val wifiManager: WifiManager by lazy {
-        context.getSystemService(AppCompatActivity.WIFI_SERVICE) as WifiManager
-    }
+    public val wifiManager: WifiManager by lazy { context.getSystemWifiManager() }
 
-    public val locationManager: LocationManager  by lazy {
-        context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-    }
+    public val locationManager: LocationManager  by lazy { context.getSystemLocationManager()   }
 
 
 
