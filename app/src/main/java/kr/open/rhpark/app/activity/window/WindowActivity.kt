@@ -14,8 +14,8 @@ public class WindowActivity : BaseBindingActivity<ActivityWindowBinding>(R.layou
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        requestPermissions(listOf(Manifest.permission.SYSTEM_ALERT_WINDOW)) { grantedPermissions, deniedPermissions ->
-            Logx.d("grantedPermissions $grantedPermissions, \n deniedPermissions $deniedPermissions")
+        requestPermissions(listOf(Manifest.permission.SYSTEM_ALERT_WINDOW)) { requestCode, deniedPermissionList ->
+            Logx.d("requestCode $requestCode, deniedPermissionList $deniedPermissionList")
         }
         initListener()
     }

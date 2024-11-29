@@ -2,6 +2,7 @@ package kr.open.rhpark.library.util.extensions.debug
 
 import kr.open.rhpark.library.debug.logcat.Logx
 
+
 public fun Any.logxD(): Unit = Logx.d1(this)
 public fun Any.logxD(tag: String): Unit = Logx.d1(tag, this)
 

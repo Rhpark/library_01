@@ -9,8 +9,8 @@ import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.annotation.RequiresApi
 import kr.open.rhpark.library.system.service.base.BaseSystemService
-import kr.open.rhpark.library.util.extensions.activity.getNavigationBarHeight
-import kr.open.rhpark.library.util.extensions.activity.getStatusBarHeight
+import kr.open.rhpark.library.util.extensions.ui.activity.getNavigationBarHeight
+import kr.open.rhpark.library.util.extensions.ui.activity.getStatusBarHeight
 
 /**
  * This class provides information about the display of an Android device.

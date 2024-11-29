@@ -1,5 +1,6 @@
 package kr.open.rhpark.app.fragment
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.lifecycleScope
@@ -13,26 +14,30 @@ class FirstFragment:BaseBindingFragment<FragmentFirstBinding>(R.layout.fragment_
 
     private val vm: FirstFragmentVm by lazy { getViewModel<FirstFragmentVm>() }
 
+    @SuppressLint("UnsafeRepeatOnLifecycleDetector")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Logx.d()
         binding.vm = vm
+
         lifecycleScope.launch {
-            vm.eventVm.collect{
-                when (it) {
-                    is FirstFragmentVmEvent.OnPermissionCheck -> {
-                        requestPermissions(it.permissionList) { grantedPermissions, deniedPermissions ->
-                            Logx.d("grantedPermissions $grantedPermissions, \n deniedPermissions $deniedPermissions")
+//            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                vm.eventVm.collect{
+                    when (it) {
+                        is FirstFragmentVmEvent.OnPermissionCheck -> {
+                            requestPermissions(12313,it.permissionList) { requestCode, deniedPermissions ->
+                                Logx.d("requestCode $requestCode, \n deniedPermissions $deniedPermissions")
+                            }
+                        }
+                        is FirstFragmentVmEvent.OnShowSnackBar -> {
+                            snackBar.showMsgShort(binding.btnTestToastShow, it.msg)
+                        }
+                        is FirstFragmentVmEvent.OnShowToast -> {
+                            toast.showMsgShort(it.msg)
                         }
                     }
-                    is FirstFragmentVmEvent.OnShowSnackBar -> {
-                        snackBar.showMsgShort(binding.btnTestToastShow, it.msg)
-                    }
-                    is FirstFragmentVmEvent.OnShowToast -> {
-                        toast.showMsgShort(it.msg)
-                    }
                 }
-            }
+//            }
         }
     }
 }

@@ -1,4 +1,4 @@
-package kr.open.rhpark.library.util.extensions.unit_convert
+package kr.open.rhpark.library.util.extensions.ui.display
 
 import android.content.Context
 import android.util.DisplayMetrics
@@ -41,8 +41,3 @@ public fun Float.spToPx(context: Context): Float {
 public fun Int.spToDp(context: Context): Float = this.toFloat().spToDp(context)
 public fun Float.spToDp(context: Context): Float =
     this * context.resources.configuration.fontScale / context.resources.displayMetrics.density
-
-public fun String.toSafeInt(): Int? = try { toInt() } catch (e:NumberFormatException) { null }
-public fun String.toSafeLong(): Long? = try { toLong() } catch (e:NumberFormatException) { null }
-public fun String.toSafeFloat(): Float? = try { toFloat() } catch (e:NumberFormatException) { null }
-public fun String.toSafeDouble(): Double? = try { toDouble() } catch (e:NumberFormatException) { null }

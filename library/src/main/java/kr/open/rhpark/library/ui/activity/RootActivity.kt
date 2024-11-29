@@ -1,16 +1,13 @@
 package kr.open.rhpark.library.ui.activity
 
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.WindowCompat
-import kr.open.rhpark.library.debug.logcat.Logx
-import kr.open.rhpark.library.system.permission.PermissionCheck
+import kr.open.rhpark.library.system.permission.PermissionManagerForActivity
 import kr.open.rhpark.library.system.service.SystemServiceManager
 import kr.open.rhpark.library.ui.view.snackbar.DefaultSnackBar
 import kr.open.rhpark.library.ui.view.toast.DefaultToast
@@ -58,44 +55,8 @@ public abstract class RootActivity : AppCompatActivity() {
      * The permission listener for handling permission request results.
      * 권한 요청과 결과를 처리하기 위한 permissionCheck
      */
-    private var permission: PermissionCheck? = null
+    private lateinit var permissionManager: PermissionManagerForActivity
 
-    private val requestPermissionAlertWindowLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == RESULT_OK) {
-                Logx.d("RESULT_OK SYSTEM_ALERT_WINDOW")
-            }
-        }
-
-    /**
-     * Requests the specified permissions from the user.
-     * 사용자에게 지정된 권한을요청.
-     *
-     * @param permissions The list of permissions to request.
-     * @param onPermissionResult The callback to be invoked when permissions result.
-     *
-     * @param permissions 요청할 권한 목록.
-     * @param onPermissionResult 권한 결과 콜백
-     */
-    protected fun requestPermissions(
-        permissions: List<String>,
-        onPermissionResult:(grantedPermissions: List<String>, deniedPermissions: List<String>) ->Unit,
-    ) {
-        permission =
-            PermissionCheck(this, permissions, onPermissionResult)
-
-        permission?.let {
-            if(it.isAllGranted()) return
-
-            if(it.isRequestPermissionSystemAlertWindow()) {
-                requestPermissionAlertWindowLauncher.launch(it.requestPermissionAlertWindow(packageName))
-            }
-            val remainRequestPermissions = it.getRemainRequestPermissionList()
-            if(remainRequestPermissions.isNotEmpty()) {
-                ActivityCompat.requestPermissions(this, remainRequestPermissions, PermissionCheck.PERMISSION_REQUEST_CODE)
-            }
-        }
-    }
 
     /**
      * Handles the results of a permission request.
@@ -111,18 +72,12 @@ public abstract class RootActivity : AppCompatActivity() {
      */
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == PermissionCheck.PERMISSION_REQUEST_CODE) {
-            permission?.let {
-                val grantedList = mutableListOf<String>()
-                val deniedList = mutableListOf<String>()
-                permissions.forEachIndexed { index, s ->
-                    if(grantResults[index] == PackageManager.PERMISSION_GRANTED) grantedList.add(s)
-                    else deniedList.add(s)
-                }
-                it.result(grantedList, deniedList)
-            }
-            permission = null
-        }
+        permissionManager.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        permissionManager = PermissionManagerForActivity(this)
     }
 
     /**
@@ -165,9 +120,24 @@ public abstract class RootActivity : AppCompatActivity() {
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
             )
-            if(Build.VERSION.SDK_INT >= 30) {	// API 30 에 적용
-                WindowCompat.setDecorFitsSystemWindows(window, false)
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {	// API 30 에 적용
+                WindowCompat.setDecorFitsSystemWindows(this, false)
             }
         }
+    }
+
+    protected fun requestPermissions(
+        requestCode: Int,
+        permissions: List<String>,
+        onDenied: ((requestCode: Int, deniedPermissions: List<String>) -> Unit)
+    ) {
+        permissionManager.requestPermissions(requestCode, permissions, onDenied)
+    }
+
+    protected fun requestPermissions(
+        permissions: List<String>,
+        onDenied: ((requestCode: Int, deniedPermissions: List<String>) -> Unit)
+    ) {
+        permissionManager.requestPermissions(permissions, onDenied)
     }
 }

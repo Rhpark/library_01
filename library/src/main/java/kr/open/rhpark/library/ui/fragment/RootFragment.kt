@@ -2,11 +2,11 @@ package kr.open.rhpark.library.ui.fragment
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity.RESULT_OK
+import android.view.View
 import androidx.fragment.app.Fragment
 import kr.open.rhpark.library.debug.logcat.Logx
-import kr.open.rhpark.library.system.permission.PermissionCheck
+import kr.open.rhpark.library.system.permission.PermissionManagerBase
+import kr.open.rhpark.library.system.permission.PermissionManagerForFragment
 import kr.open.rhpark.library.system.service.SystemServiceManager
 import kr.open.rhpark.library.ui.view.snackbar.DefaultSnackBar
 import kr.open.rhpark.library.ui.view.toast.DefaultToast
@@ -50,63 +50,37 @@ public abstract class RootFragment : Fragment() {
      * The PermissionCheck for handling permission request results.
      * 권한 요청 결과를 처리하기 위한 PermissionCheck.
      */
-    private var permission: PermissionCheck? = null
+    private lateinit var permissionManager: PermissionManagerForFragment
 
-    /**
-     * The activity result launcher for requesting permissions.
-     * 권한을 요청하기 위한 액티비티 결과.
-     */
-    private val requestPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-            permission?.let {
-                val grantedList = mutableListOf<String>()
-                val deniedList = mutableListOf<String>()
-
-                permissions.forEach { t, u ->
-                    if (u == true) grantedList.add(t)
-                    else deniedList.add(t)
-                }
-                it.result(grantedList, deniedList)
-            }
-
-            permission = null
-        }
-
-    private val requestPermissionAlertWindowLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == RESULT_OK) {
-                Logx.d("RESULT_OK ${result.resultCode}, ${result.data} SYSTEM_ALERT_WINDOW")
-            }
-        }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        permissionManager = PermissionManagerForFragment(this)
+    }
 
     /**
      * Requests the specified permissions from the user.
      * 사용자에게 지정된 권한을 요청.
      *
      * @param permissions The list of permissions to request.
-     * @param onPermissionResult The callback to be invoked when permissions result.
+     * @param onDenied The callback to be invoked when permissions result.
      *
      * @param permissions 요청할 권한 목록.
-     * @param onPermissionResult 권한 결과 콜백
+     * @param onDenied 권한 결과 콜백
      */
     protected fun requestPermissions(
         permissions: List<String>,
-        onPermissionResult:(grantedPermissions: List<String>, deniedPermissions: List<String>) ->Unit,
+        onDenied: ((requestCode:Int, deniedPermissions: List<String>) -> Unit),
     ) {
         Logx.d("permissions $permissions")
-        permission =
-            PermissionCheck(requireContext(), permissions, onPermissionResult)
+        permissionManager.requestPermissions(PermissionManagerBase.PERMISSION_REQUEST_CODE, permissions, onDenied)
+    }
 
-        permission?.let {
-            if(it.isAllGranted()) return
-
-            if(it.isRequestPermissionSystemAlertWindow()) {
-                requestPermissionAlertWindowLauncher.launch(it.requestPermissionAlertWindow(requireContext().packageName))
-            }
-            if(it.getRemainRequestPermissionList().isNotEmpty()) {
-                requestPermissionLauncher.launch(it.getRemainRequestPermissionList())
-            }
-        }
+    protected fun requestPermissions(
+        requestCode: Int,
+        permissions: List<String>,
+        onDenied: ((requestCode: Int, deniedPermissions: List<String>) -> Unit)
+    ) {
+        permissionManager.requestPermissions(requestCode, permissions, onDenied)
     }
 
     /**

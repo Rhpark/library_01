@@ -2,7 +2,7 @@ package kr.open.rhpark.library.system.service.base
 
 import android.content.Context
 import kr.open.rhpark.library.debug.logcat.Logx
-import kr.open.rhpark.library.system.permission.PermissionCheck
+import kr.open.rhpark.library.util.extensions.context.remainPermissions
 
 /**
  * Base class for system services.
@@ -17,32 +17,19 @@ import kr.open.rhpark.library.system.permission.PermissionCheck
  */
 public abstract class BaseSystemService(protected val context: Context, permissionList: List<String>? = null) {
 
-    private var isPermissionAllGranted = false
-    private var deniedPermissionList = emptyList<String>()
+    private var remainPermissions = emptyList<String>()
 
     init {
-        checkPermission(permissionList)
-    }
-
-    protected fun checkPermission(permissionList: List<String>?){
-
-        permissionList?.let { permissions->
-            PermissionCheck(context, permissions).also {
-                val deniedPermissionList = it.remainingPermission(permissionList)
-                if(deniedPermissionList.isEmpty()) {
-                    setAllGranted()
-                } else {
-                    this.deniedPermissionList = deniedPermissionList.toList()
-                }
+        permissionList?.let {
+            remainPermissions = context.remainPermissions(it)
+            if(remainPermissions.isEmpty()) {
+                Logx.d("Requires that permission $remainPermissions")
             }
-        } ?: setAllGranted()
+        }
     }
 
-    protected fun setAllGranted() {
-        isPermissionAllGranted = true
-    }
 
-    protected fun getDeniedPermissionList(): List<String> = deniedPermissionList
+    protected fun getDeniedPermissionList(): List<String> = remainPermissions
 
     /**
      * Checks if all permissions have been granted.
@@ -51,20 +38,7 @@ public abstract class BaseSystemService(protected val context: Context, permissi
      * @return Returns true if all permissions have been granted, false otherwise.
      * @return 모든 권한이 부여된 경우 true, 그렇지 않으면 false를 반환.
      */
-    protected fun isPermissionAllGranted() :Boolean{
-        if(!isPermissionAllGranted) {
-            Logx.d("Is not permission granted")
-        }
-        return isPermissionAllGranted
-    }
-
-    protected fun isPermissionDenied(vararg permission: String) :Boolean {
-        permission.forEach { p->
-            if(deniedPermissionList.contains(p)) return true
-        }
-
-        return false
-    }
+    protected fun isPermissionAllGranted() :Boolean = remainPermissions.isEmpty()
 
     public open fun onDestroy() {}
 }

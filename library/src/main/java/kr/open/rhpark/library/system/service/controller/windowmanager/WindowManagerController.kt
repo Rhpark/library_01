@@ -55,7 +55,7 @@ public class WindowManagerController(context: Context, public val windowManager:
         floatingViewInfoList.clear()
     }
 
-    public fun getFloatingLayoutParam(): LayoutParams = if (Build.VERSION.SDK_INT < 26) {
+    public fun getFloatingLayoutParam(): LayoutParams = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O /*26*/) {
         LayoutParams(
             LayoutParams.WRAP_CONTENT,
             LayoutParams.WRAP_CONTENT,

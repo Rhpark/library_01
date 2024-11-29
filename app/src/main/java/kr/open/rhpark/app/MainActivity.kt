@@ -32,11 +32,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
 
     private fun eventVM(event: MainActivityVmEvent) = when (event) {
         is MainActivityVmEvent.OnPermissionCheck -> {
-            requestPermissions(event.permissionList) { grantedPermissions, deniedPermissions ->
-                Logx.d("grantedPermissions $grantedPermissions, \n deniedPermissions $deniedPermissions")
+            requestPermissions(1231, event.permissionList) { requestCode, deniedPermissionList ->
+                Logx.d("requestCode $requestCode, deniedPermissionList $deniedPermissionList")
             }
         }
-
         is MainActivityVmEvent.OnShowActivity -> startActivity(event.activity)
     }
 

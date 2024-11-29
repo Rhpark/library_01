@@ -23,16 +23,17 @@ import kr.open.rhpark.library.system.service.info.network.telephony.data.current
 import kr.open.rhpark.library.system.service.info.network.telephony.data.current.CurrentSignalStrength
 import kr.open.rhpark.library.system.service.info.network.telephony.data.state.TelephonyNetworkState
 import kr.open.rhpark.library.ui.activity.BaseBindingActivity
+import kr.open.rhpark.library.util.inline.sdk_version.checkSdkVersion
 
 class NetworkActivity : BaseBindingActivity<ActivityNetworkBinding>(R.layout.activity_network) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestPermissions(getPermissions()) { grantedPermissions, deniedPermissions ->
-            if (deniedPermissions.isEmpty()) {
+        requestPermissions(getPermissions()) { requestCode, deniedPermissions ->
+            Logx.d("requestCode $requestCode, deniedPermissions $deniedPermissions")
+            if(deniedPermissions.isEmpty()) {
                 initNetworkStateInfo()
             } else {
-                Logx.d("deniedPermissions $deniedPermissions")
                 toast.showMsgShort("deniedPermissions $deniedPermissions ")
             }
         }
@@ -121,25 +122,27 @@ class NetworkActivity : BaseBindingActivity<ActivityNetworkBinding>(R.layout.act
         return simStatus
     }
 
-    private fun getPermissions() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        listOf(
-            ACCESS_NETWORK_STATE,
-            ACCESS_FINE_LOCATION,
-            ACCESS_COARSE_LOCATION,
-            READ_PHONE_STATE,
-            READ_PHONE_NUMBERS
-        )
-    } else {
-        listOf(
-            ACCESS_NETWORK_STATE,
-            ACCESS_FINE_LOCATION,
-            ACCESS_COARSE_LOCATION,
-            READ_PHONE_STATE,
-        )
-    }
+    private fun getPermissions() = checkSdkVersion(Build.VERSION_CODES.S,
+        positiveWork = {
+            listOf(
+                ACCESS_NETWORK_STATE,
+                ACCESS_FINE_LOCATION,
+                ACCESS_COARSE_LOCATION,
+                READ_PHONE_STATE,
+                READ_PHONE_NUMBERS
+            )
+        }, negativeWork = {
+            listOf(
+                ACCESS_NETWORK_STATE,
+                ACCESS_FINE_LOCATION,
+                ACCESS_COARSE_LOCATION,
+                READ_PHONE_STATE,
+            )
+        })
+
 
     @RequiresPermission(READ_PHONE_STATE)
-    private fun updateActiveDataSubId(subId:Int) {
+    private fun updateActiveDataSubId(subId: Int) {
         binding.tvTelephonyActiveSubId.text = "\n Telephony\n\n ActiveDataSubId\n $subId\n\n"
         binding.tvTelephonyActiveSimCount.text = "getActiveSimCount ${getNetworkStateInfo().getActiveSimCount()}"
         binding.tvTelephonyActiveSimStatus.text = "Sim Status ${getSimStatus()}"

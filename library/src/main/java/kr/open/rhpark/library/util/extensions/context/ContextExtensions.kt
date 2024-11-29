@@ -1,16 +1,20 @@
 package kr.open.rhpark.library.util.extensions.context
 
+import android.Manifest
 import android.app.NotificationManager
 import android.content.Context
+import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import android.os.BatteryManager
+import android.provider.Settings
 import android.telephony.SubscriptionManager
 import android.telephony.TelephonyManager
 import android.telephony.euicc.EuiccManager
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+import androidx.core.content.ContextCompat
 
 
 public fun Context.getSystemWindowManager(): WindowManager =
@@ -42,3 +46,25 @@ public fun Context.getSystemWifiManager(): WifiManager =
 
 public fun Context.getSystemLocationManager(): LocationManager =
     getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+
+public fun Context.hasPermissions(vararg permissions:String):Boolean {
+
+    permissions.forEach { permission ->
+        if (permission == Manifest.permission.SYSTEM_ALERT_WINDOW) {
+            if (!Settings.canDrawOverlays(this)) return false
+        } else if (ContextCompat.checkSelfPermission(this, permission) ==
+            PackageManager.PERMISSION_DENIED) {
+            return false
+        }
+    }
+    return true
+}
+
+public fun Context.remainPermissions(permissions: List<String>): List<String> = permissions.filter { permission ->
+    if (permission == Manifest.permission.SYSTEM_ALERT_WINDOW) {
+        !Settings.canDrawOverlays(this)
+    } else {
+        ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_DENIED
+    }
+}

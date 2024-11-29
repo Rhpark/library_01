@@ -8,6 +8,7 @@ import kr.open.rhpark.app.R
 import kr.open.rhpark.app.databinding.ActivityVibratorBinding
 import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.ui.activity.BaseBindingActivity
+import kr.open.rhpark.library.util.inline.sdk_version.checkSdkVersion
 
 class VibratorActivity : BaseBindingActivity<ActivityVibratorBinding>(R.layout.activity_vibrator) {
 
@@ -15,8 +16,10 @@ class VibratorActivity : BaseBindingActivity<ActivityVibratorBinding>(R.layout.a
         super.onCreate(savedInstanceState)
 
         initListener()
-        requestPermissions(listOf(android.Manifest.permission.VIBRATE)) { grantedPermissions, deniedPermissions ->
-            Logx.d("grantedPermissions $grantedPermissions, \n deniedPermissions $deniedPermissions")
+
+        requestPermissions(listOf(android.Manifest.permission.VIBRATE)){
+            requestCode, deniedPermissions->
+            Logx.d("requestCode $requestCode, deniedPermissions $deniedPermissions")
         }
     }
 
@@ -30,8 +33,7 @@ class VibratorActivity : BaseBindingActivity<ActivityVibratorBinding>(R.layout.a
                 }
             }
 
-            btnWaveForm.visibility =
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) View.VISIBLE else View.GONE
+            btnWaveForm.visibility = checkSdkVersion(Build.VERSION_CODES.S, { View.VISIBLE }, { View.GONE })
 
             btnWaveForm.setOnClickListener {
                 val times = LongArray(3).apply { this[0] = 1000L; this[1] = 1000L; this[2] = 1000L }
