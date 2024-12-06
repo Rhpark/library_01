@@ -8,6 +8,7 @@ import kr.open.rhpark.app.databinding.ActivityWindowBinding
 import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.system.service.controller.windowmanager.floating.WindowManagerFloatingView
 import kr.open.rhpark.library.ui.activity.BaseBindingActivity
+import kr.open.rhpark.library.util.extensions.context.getWindowManagerController
 
 public class WindowActivity : BaseBindingActivity<ActivityWindowBinding>(R.layout.activity_window) {
 
@@ -41,5 +42,5 @@ public class WindowActivity : BaseBindingActivity<ActivityWindowBinding>(R.layou
         }
     }
 
-    private fun getWindowController() = systemServiceManagerInfo.windowManagerController
+    private fun getWindowController() = applicationContext.getWindowManagerController()
 }

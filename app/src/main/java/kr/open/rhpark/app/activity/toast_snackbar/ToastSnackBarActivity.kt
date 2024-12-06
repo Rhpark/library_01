@@ -9,6 +9,7 @@ import com.google.android.material.snackbar.BaseTransientBottomBar
 import kr.open.rhpark.app.R
 import kr.open.rhpark.app.databinding.ActivityToastSnackbarBinding
 import kr.open.rhpark.library.ui.activity.BaseBindingActivity
+import kr.open.rhpark.library.util.extensions.context.getSoftKeyboardController
 
 class ToastSnackBarActivity :
     BaseBindingActivity<ActivityToastSnackbarBinding>(R.layout.activity_toast_snackbar) {
@@ -17,7 +18,7 @@ class ToastSnackBarActivity :
         super.onCreate(savedInstanceState)
 
         binding.run {
-            systemServiceManagerInfo.softKeyboardController.show(editText,200L)
+            applicationContext.getSoftKeyboardController().showDelay(editText,200L)
 
             btnDefaultToast.setOnClickListener { toast.showMsgShort("Default Toast") }
 

@@ -16,10 +16,6 @@ public abstract class BaseViewModelEventFlow<EVENT_TYPE> : BaseViewModel() {
     private val _eventVm: MutableSharedFlow<EVENT_TYPE> = MutableSharedFlow<EVENT_TYPE>()
     public val eventVm: SharedFlow<EVENT_TYPE> = _eventVm.asSharedFlow()
 
-    protected fun sendEvent(event: EVENT_TYPE) {
-        viewModelScope.launch {
-            _eventVm.emit(event)
-        }
-    }
+    protected fun sendEvent(event: EVENT_TYPE) { viewModelScope.launch { _eventVm.emit(event) } }
 
 }

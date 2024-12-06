@@ -26,11 +26,10 @@ internal class LogxStackTrace {
 
         var isCoroutine = false
 
-
         for (i in level until stackTraceSize) {
 
+//            Log.d("Test", "isNormalMethod index $i, class Name ${Thread.currentThread().stackTrace[i].className}, ${Thread.currentThread().stackTrace[i].fileName}, ${Thread.currentThread().stackTrace[i].methodName}, ${Thread.currentThread().stackTrace[i].lineNumber}")
             val item = Thread.currentThread().stackTrace[i]
-
             if (!isNormalMethod(item)) {
 //                Log.d("Test","continue isNormalMethod index $i, class Name ${item.className}, ${item.fileName}, ${item.methodName}, ${item.lineNumber}")
                 continue
@@ -41,7 +40,6 @@ internal class LogxStackTrace {
 //                Log.d("Test","continue isCoroutinePath index $i, class Name ${item.className}, ${item.fileName}")
                 continue
             }
-//            Log.d("Test","index $i, isCoroutine $isCoroutine, class Name ${item.className}, ${item.fileName}")
             if (!isCoroutine) {
                 return LogxStackTraceMetaData(item)
             } else {
@@ -51,7 +49,7 @@ internal class LogxStackTrace {
 
         val defaultItem = Thread.currentThread().stackTrace[level]
 
-        Log.w(Logx.appName, "[Warning] Can not find class !!!, " + defaultItem.className + ", " + defaultItem.methodName)
+        Log.w(Logx.appName, "[Warning] Can not find class !!!, " + defaultItem.className + ", " + defaultItem.methodName )
 
         return LogxStackTraceMetaData(defaultItem)
     }

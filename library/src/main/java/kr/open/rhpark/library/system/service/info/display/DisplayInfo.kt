@@ -1,6 +1,5 @@
 package kr.open.rhpark.library.system.service.info.display
 
-import android.app.Activity
 import android.content.Context
 import android.content.res.Resources
 import android.os.Build
@@ -9,8 +8,6 @@ import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.annotation.RequiresApi
 import kr.open.rhpark.library.system.service.base.BaseSystemService
-import kr.open.rhpark.library.util.extensions.ui.activity.getNavigationBarHeight
-import kr.open.rhpark.library.util.extensions.ui.activity.getStatusBarHeight
 
 /**
  * This class provides information about the display of an Android device.
@@ -32,7 +29,7 @@ public class DisplayInfo(context: Context, public val windowManager: WindowManag
      * @return  The full screen size (width, height).
      * @return 전체 화면 크기 (너비, 높이)
      */
-    public fun getFullScreen():Pair<Int,Int> = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+    public fun getFullScreenSize():Pair<Int,Int> = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
         val metrics = getCurrentWindowMetrics().bounds
         val width = metrics.width()
         val height = metrics.height()
@@ -110,8 +107,6 @@ public class DisplayInfo(context: Context, public val windowManager: WindowManag
         else throw Resources.NotFoundException("Can not find status bar height. you can try call method getStatusBarHeight(activity: Activity).")
     }
 
-    public fun getStatusBarHeight(activity: Activity):Int = activity.getStatusBarHeight()
-
 
     /**
      * Returns the navigation bar height.
@@ -129,6 +124,4 @@ public class DisplayInfo(context: Context, public val windowManager: WindowManag
         if (resourceId > 0) context.resources.getDimensionPixelSize(resourceId)
         else throw Resources.NotFoundException("Can not find navigation bar height. you can try call method getNavigationBarHeight(activity: Activity).")
     }
-
-    public fun getNavigationBarHeight(activity: Activity): Int = activity.getNavigationBarHeight()
 }

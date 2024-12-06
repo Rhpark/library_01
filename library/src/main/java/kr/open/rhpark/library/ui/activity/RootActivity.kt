@@ -1,16 +1,24 @@
 package kr.open.rhpark.library.ui.activity
 
 import android.content.Intent
+import android.graphics.Rect
 import android.os.Build
 import android.os.Bundle
+import android.view.View
+import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.WindowCompat
+import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.system.permission.PermissionManagerForActivity
 import kr.open.rhpark.library.system.service.SystemServiceManager
 import kr.open.rhpark.library.ui.view.snackbar.DefaultSnackBar
 import kr.open.rhpark.library.ui.view.toast.DefaultToast
+import kr.open.rhpark.library.util.extensions.context.hasPermission
+import kr.open.rhpark.library.util.extensions.context.hasPermissions
+import kr.open.rhpark.library.util.extensions.context.remainPermissions
+import kr.open.rhpark.library.util.inline.sdk_version.checkSdkVersion
 
 /**
  * A base activity classthat provides common functionality for all activities in the application.
@@ -140,4 +148,53 @@ public abstract class RootActivity : AppCompatActivity() {
     ) {
         permissionManager.requestPermissions(permissions, onDenied)
     }
+
+    public fun getStatusBarHeight(): Int = checkSdkVersion(
+        Build.VERSION_CODES.R,
+        positiveWork = {
+            window.decorView.getRootWindowInsets().getInsets(WindowInsets.Type.statusBars()).top
+        }, negativeWork = {
+            val rectangle = Rect()
+            window.decorView.getWindowVisibleDisplayFrame(rectangle)
+            rectangle.top
+        })
+
+    public fun getStatusBarHeight1(): Int = checkSdkVersion(
+        Build.VERSION_CODES.R,
+        positiveWork = {
+            window.decorView.getRootWindowInsets().getInsets(WindowInsets.Type.statusBars()).top
+        },
+        negativeWork = {
+            val rectangle = Rect()
+            window.decorView.getWindowVisibleDisplayFrame(rectangle)
+            rectangle.top
+        })
+
+
+    public fun getNavigationBarHeight(): Int = checkSdkVersion(
+        Build.VERSION_CODES.R,
+        positiveWork = {
+            val res =
+                window.decorView.getRootWindowInsets().getInsets(WindowInsets.Type.navigationBars())
+            Logx.d("${res.top}, ${res.bottom}")
+            res.bottom
+        },
+        negativeWork = {
+            val rootView = window.decorView.rootView
+            val contentViewHeight = findViewById<View>(android.R.id.content).height
+            val otherViewHeight = rootView.height - contentViewHeight
+            val navigationBarHeight = otherViewHeight - getStatusBarHeight()
+            navigationBarHeight
+        }
+    )
+
+    /********************
+     * Permission Check *
+     ********************/
+
+    public fun hasPermission(permission: String): Boolean = applicationContext.hasPermission(permission)
+
+    public fun hasPermissions(vararg permissions: String): Boolean = applicationContext.hasPermissions(*permissions)
+
+    public fun remainPermissions(permissions: List<String>): List<String> = applicationContext.remainPermissions(permissions)
 }

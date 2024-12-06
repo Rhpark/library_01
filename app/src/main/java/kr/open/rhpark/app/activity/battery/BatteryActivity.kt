@@ -2,12 +2,18 @@ package kr.open.rhpark.app.activity.battery
 
 import android.os.Bundle
 import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import kr.open.rhpark.app.R
 import kr.open.rhpark.app.databinding.ActivityBatteryBinding
 import kr.open.rhpark.library.debug.logcat.Logx
+import kr.open.rhpark.library.system.service.info.battery.BatteryStateEvent
+import kr.open.rhpark.library.system.service.info.battery.BatteryStateInfo
 import kr.open.rhpark.library.ui.activity.BaseBindingActivity
+import kr.open.rhpark.library.util.extensions.context.getBatteryStateInfo
 
 class BatteryActivity : BaseBindingActivity<ActivityBatteryBinding>(R.layout.activity_battery) {
+
+    private val batteryStateInfo: BatteryStateInfo by lazy { applicationContext.getBatteryStateInfo(lifecycleScope) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,31 +26,33 @@ class BatteryActivity : BaseBindingActivity<ActivityBatteryBinding>(R.layout.act
 
     private fun initListener() {
         binding.btnBatteryStatusStart.setOnClickListener {
-            systemServiceManagerInfo.batteryInfo.registerBatteryReceiver()
-            systemServiceManagerInfo.batteryInfo.startUpdateScope(lifecycleScope)
-            updateInfo()
+            batteryStateInfo.registerBatteryReceiver()
+            batteryStateInfo.startUpdateScope(lifecycleScope)
+            collectBatteryInfo()
         }
     }
 
-    private fun updateInfo() {
-        systemServiceManagerInfo.batteryInfo.run {
-            updateCapacityListener { it-> binding.tvCapacity.text = "Capacity = ${it}" }
-            updateCurrentAmpereListener { it-> binding.tvCurrentAmpere.text = "Current Ampere = ${it} mA" }
-            updateCurrentAverageAmpereListener { it-> binding.tvCurrentAverageAmpere.text = "Current AverageAmpere = ${it} mA" }
-            updateChargePlugStrListener { it-> binding.tvChargeChargePlugStr.text = "ChargePlugStr = ${it}" }
-            updateChargeStatusListener { it-> binding.tvChargeStatus.text = "Health = ${it}" }
-            updateEnergyCounterListener {  it-> binding.tvEnergyCounte.text = "EnergyCounte = ${it}" }
-            updateHealthStrListener {  it-> binding.tvHealth.text = "Health = ${it}" }
-            updatePresentListener { it-> binding.tvPresent.text = "Present = ${it}" }
-            updateTemperatureListener { it-> binding.tvTemperature.text = "Temperature = ${it} C" }
-            updateTotalCapacityListener { it-> binding.tvTotalCapacity.text = "TotalCapacity = ${it} " }
-            updateVoltageListener { it-> binding.tvVoltage.text = "Charge voltage = ${it} v" }
-            updateChargeCountListener { it-> binding.tvChargeCounter.text = "ChargeCounter = ${it}" }
+    private fun collectBatteryInfo() = lifecycleScope.launch {
+        batteryStateInfo.sfUpdate.collect { type ->
+            when (type) {
+                is BatteryStateEvent.OnCapacity -> binding.tvCapacity.text = "Capacity = ${type.percent}"
+                is BatteryStateEvent.OnChargeCounter -> binding.tvChargeCounter.text = "ChargeCounter = ${type.counter}"
+                is BatteryStateEvent.OnChargePlug -> binding.tvChargeChargePlugStr.text = "ChargePlugStr = ${type.type}"
+                is BatteryStateEvent.OnChargeStatus -> binding.tvChargeStatus.text = "OnChargeStatus = ${type.status}"
+                is BatteryStateEvent.OnCurrentAmpere -> binding.tvCurrentAmpere.text = "Current Ampere = ${type.current} mA"
+                is BatteryStateEvent.OnCurrentAverageAmpere -> binding.tvCurrentAverageAmpere.text = "Current AverageAmpere = ${type.current} mA"
+                is BatteryStateEvent.OnEnergyCounter -> binding.tvEnergyCounte.text = "EnergyCounte = ${type.energy}"
+                is BatteryStateEvent.OnHealth -> binding.tvHealth.text = "Health = ${type.health}"
+                is BatteryStateEvent.OnPresent -> binding.tvPresent.text = "Present = ${type.present}"
+                is BatteryStateEvent.OnTemperature -> binding.tvTemperature.text = "Temperature = ${type.temperature}"
+                is BatteryStateEvent.OnTotalCapacity -> binding.tvTotalCapacity.text = "TotalCapacity = ${type.totalCapacity} "
+                is BatteryStateEvent.OnVoltage -> binding.tvVoltage.text = "Charge voltage = ${type.voltage} v"
+            }
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        systemServiceManagerInfo.batteryInfo.onDestroy()
+        batteryStateInfo.onDestroy()
     }
 }

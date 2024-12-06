@@ -10,6 +10,9 @@ import kr.open.rhpark.library.system.permission.PermissionManagerForFragment
 import kr.open.rhpark.library.system.service.SystemServiceManager
 import kr.open.rhpark.library.ui.view.snackbar.DefaultSnackBar
 import kr.open.rhpark.library.ui.view.toast.DefaultToast
+import kr.open.rhpark.library.util.extensions.context.hasPermission
+import kr.open.rhpark.library.util.extensions.context.hasPermissions
+import kr.open.rhpark.library.util.extensions.context.remainPermissions
 
 /**
  * A base fragment classthat provides common functionality for fragments.
@@ -112,4 +115,11 @@ public abstract class RootFragment : Fragment() {
         }
         startActivity(intent)
     }
+
+
+    public fun hasPermission(permission: String): Boolean = requireContext().hasPermission(permission)
+
+    public fun hasPermissions(vararg permissions: String): Boolean = requireContext().hasPermissions(*permissions)
+
+    public fun remainPermissions(permissions: List<String>): List<String> = requireContext().remainPermissions(permissions)
 }

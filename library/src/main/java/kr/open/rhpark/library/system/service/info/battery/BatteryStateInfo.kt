@@ -11,11 +11,15 @@ import androidx.annotation.RequiresApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kr.open.rhpark.library.system.service.info.power.PowerProfile
 import kr.open.rhpark.library.system.service.info.power.PowerProfileVO
 import kr.open.rhpark.library.system.service.base.BaseSystemService
+import kr.open.rhpark.library.system.service.base.DataUpdate
 
 /**
  * Thisclass provides information about the battery state of an Android device.
@@ -43,14 +47,45 @@ import kr.open.rhpark.library.system.service.base.BaseSystemService
 public class BatteryStateInfo(
     context: Context,
     public val batteryManager: BatteryManager,
+    private val coroutineScope: CoroutineScope,
 ) : BaseSystemService(context, listOf(android.Manifest.permission.BATTERY_STATS)) {
 
     private val UPDATE_BATTERY = "RHPARK_BATTERY_STATE_UPDATE"
 
+    public val ERROR_VALUE: Int = Integer.MIN_VALUE
+
+    private val powerProfile: PowerProfile by lazy { PowerProfile(context) }
+
+    private val msfUpdate: MutableStateFlow<BatteryStateEvent> = MutableStateFlow(BatteryStateEvent.OnCapacity(getCapacity()))
+    public val sfUpdate: StateFlow<BatteryStateEvent> = msfUpdate.asStateFlow()
+
+    private val capacity = DataUpdate(getCapacity()) { sendFlow(BatteryStateEvent.OnCapacity(it)) }
+
+    private val currentAmpere = DataUpdate(getCurrentAmpere()) { sendFlow(BatteryStateEvent.OnCurrentAmpere(it)) }
+
+    private val currentAverageAmpere = DataUpdate(getCurrentAverageAmpere()) { sendFlow(BatteryStateEvent.OnCurrentAverageAmpere(it)) }
+
+    private val chargeStatus = DataUpdate(getChargeStatus()) { sendFlow(BatteryStateEvent.OnChargeStatus(it)) }
+
+    private val chargeCounter = DataUpdate(getChargeCounter()) { sendFlow(BatteryStateEvent.OnChargeCounter(it)) }
+
+    private val chargePlug = DataUpdate(getChargePlug()) { sendFlow(BatteryStateEvent.OnChargePlug(it)) }
+
+    private val energyCounter = DataUpdate(getEnergyCounter()) { sendFlow(BatteryStateEvent.OnEnergyCounter(it)) }
+
+    private val health = DataUpdate(getHealth()) { sendFlow(BatteryStateEvent.OnHealth(it)) }
+
+    private val present = DataUpdate(getPresent()) { sendFlow(BatteryStateEvent.OnPresent(it)) }
+
+    private val totalCapacity = DataUpdate(getTotalCapacity()) { sendFlow(BatteryStateEvent.OnTotalCapacity(it)) }
+
+    private val temperature = DataUpdate(getTemperature()) { sendFlow(BatteryStateEvent.OnTemperature(it)) }
+
+    private val voltage = DataUpdate(getVoltage()) { sendFlow(BatteryStateEvent.OnVoltage(it)) }
+
     private val batteryBroadcastReceiver = object : BroadcastReceiver() {
 
         override fun onReceive(context: Context, intent: Intent) {
-
             batteryStatus = intent
             updateBatteryInfo()
         }
@@ -66,53 +101,10 @@ public class BatteryStateInfo(
         addAction(UPDATE_BATTERY)
     }
 
+
     private var batteryStatus: Intent? = null
 
-    private val powerProfile: PowerProfile by lazy { PowerProfile(context) }
-
-    public val ERROR_VALUE: Int = Integer.MIN_VALUE
-
-    private val capacity = BatteryUpdate<Int>(getCapacity())
-    public fun updateCapacityListener(updateListener: (res: Int) -> Unit) { capacity.updateListener(updateListener) }
-
-    private val currentAmpere = BatteryUpdate<Int>(getCurrentAmpere())
-    public fun updateCurrentAmpereListener(updateListener: (res: Int) -> Unit) { currentAmpere.updateListener(updateListener) }
-
-    private val currentAverageAmpere = BatteryUpdate<Int>(getCurrentAverageAmpere())
-    public fun updateCurrentAverageAmpereListener(updateListener: (res: Int) -> Unit) { currentAverageAmpere.updateListener(updateListener) }
-
-    private val chargePlug = BatteryUpdate<Int>(getChargePlug())
-    public fun updateChargePlugListener(updateListener: (res: Int) -> Unit) { chargePlug.updateListener(updateListener) }
-
-    private val chargePlugStr = BatteryUpdate<String>(getChargePlugStr())
-    public fun updateChargePlugStrListener(updateListener: (res: String?) -> Unit) { chargePlugStr.updateListener(updateListener) }
-
-    private val chargeStatus = BatteryUpdate<Int>(getChargeStatus())
-    public fun updateChargeStatusListener(updateListener: (res: Int) -> Unit) { chargeStatus.updateListener(updateListener) }
-
-    private val chargeCount = BatteryUpdate<Int>(getChargeCounter())
-    public fun updateChargeCountListener(updateListener: (res: Int) -> Unit) { chargeCount.updateListener(updateListener) }
-
-    private val energyCounter = BatteryUpdate<Long>(getEnergyCounter())
-    public fun updateEnergyCounterListener(updateListener: (res: Long) -> Unit) { energyCounter.updateListener(updateListener) }
-
-    private val health = BatteryUpdate<Int>(getHealth())
-    public fun updateHealthListener(updateListener: (res: Int) -> Unit) { health.updateListener(updateListener) }
-
-    private val healthStr = BatteryUpdate<String>(getHealthStr())
-    public fun updateHealthStrListener(updateListener: (res: String?) -> Unit) { healthStr.updateListener(updateListener) }
-
-    private val present = BatteryUpdate<Boolean>(getPresent())
-    public fun updatePresentListener(updateListener: (res: Boolean) -> Unit) { present.updateListener(updateListener) }
-
-    private val totalCapacity = BatteryUpdate<Double>(getTotalCapacity())
-    public fun updateTotalCapacityListener(updateListener: (res: Double) -> Unit) { totalCapacity.updateListener(updateListener) }
-
-    private val temperature = BatteryUpdate<Double>(getTemperature())
-    public fun updateTemperatureListener(updateListener: (res: Double) -> Unit) { temperature.updateListener(updateListener) }
-
-    private val voltage = BatteryUpdate<Double>(getVoltage())
-    public fun updateVoltageListener(updateListener: (res: Double) -> Unit) { voltage.updateListener(updateListener) }
+    private fun sendFlow(event: BatteryStateEvent) = coroutineScope.launch { msfUpdate.emit(event) }
 
     public fun registerBatteryReceiver() {
         unRegisterReceiver()
@@ -122,7 +114,6 @@ public class BatteryStateInfo(
             batteryStatus = context.registerReceiver(batteryBroadcastReceiver, intentFilter)
         }
     }
-
 
     public var scope: Job? = null
     public fun startUpdateScope(coroutineScope: CoroutineScope) {
@@ -148,15 +139,15 @@ public class BatteryStateInfo(
     private fun updateBatteryInfo() {
 
         capacity.update(getCapacity())
-        chargeCount.update(getChargeCounter())
+        chargeCounter.update(getChargeCounter())
         chargePlug.update(getChargePlug())
-        chargePlugStr.update(getChargePlugStr())
+//        chargePlugStr.update(getChargePlugStr())
         chargeStatus.update(getChargeStatus())
         currentAmpere.update(getCurrentAmpere())
         currentAverageAmpere.update(getCurrentAverageAmpere())
         energyCounter.update(getEnergyCounter())
         health.update(getHealth())
-        healthStr.update(getHealthStr())
+//        healthStr.update(getHealthStr())
         present.update(getPresent())
         temperature.update(getTemperature())
         totalCapacity.update(getTotalCapacity())
@@ -171,10 +162,12 @@ public class BatteryStateInfo(
     }
 
     private fun unRegisterReceiver() {
-        try {
-            context.unregisterReceiver(batteryBroadcastReceiver)
-        } catch (e:Exception) {
-            e.printStackTrace()
+        batteryStatus?.let {
+            try {
+                context.unregisterReceiver(batteryBroadcastReceiver)
+            } catch (e:Exception) {
+//            e.printStackTrace()
+            }
         }
         batteryStatus = null
     }
@@ -235,13 +228,19 @@ public class BatteryStateInfo(
     public fun isFull(): Boolean = getChargeStatus() == BatteryManager.BATTERY_STATUS_FULL
 
     /**
+     * @see BatteryManager.BATTERY_PROPERTY_
+     */
+    private fun getIntProperty(batteryType:Int) = batteryManager.getIntProperty(batteryType)
+    private fun getLongProperty(batteryType:Int) = batteryManager.getLongProperty(batteryType)
+
+    /**
      * Remaining battery capacity as an integer percentage of total capacity (with no fractional part).
      * 남은 배터리 용량을 총 용량의 백분율로 반환.
      *
      * @return The remaining battery capacity as a percentage.
      * @return 남은 배터리 용량 (백분율)
      */
-    public fun getCapacity(): Int = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
+    public fun getCapacity(): Int = getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
 
     /**
      * Battery capacity in microampere-hours, as an integer.
@@ -250,7 +249,7 @@ public class BatteryStateInfo(
      * @return The battery capacity in microampere-hours.
      * @return 배터리 용량 (마이크로암페어시).
      */
-    public fun getChargeCounter(): Int = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CHARGE_COUNTER)
+    public fun getChargeCounter(): Int = getIntProperty(BatteryManager.BATTERY_PROPERTY_CHARGE_COUNTER)
 
     /**
      * Returns the battery remaining energy in nanowatt-hours.
@@ -265,7 +264,7 @@ public class BatteryStateInfo(
      * @return The battery remaining energy in nanowatt-hours.
      * @return 배터리 잔여 에너지 (나노와트시).
      */
-    public fun getEnergyCounter(): Long = batteryManager.getLongProperty(BatteryManager.BATTERY_PROPERTY_ENERGY_COUNTER)
+    public fun getEnergyCounter(): Long = getLongProperty(BatteryManager.BATTERY_PROPERTY_ENERGY_COUNTER)
 
 
 
@@ -309,7 +308,7 @@ public class BatteryStateInfo(
      */
     public fun getTemperature(): Double =
         (batteryStatus?.let { it.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, ERROR_VALUE).toDouble() }
-            ?: ERROR_VALUE.toDouble())
+            ?: ERROR_VALUE.toDouble())/10.0
 
     /**
      * boolean indicating whether a battery is present.
@@ -338,13 +337,15 @@ public class BatteryStateInfo(
     public fun isHealthCool(): Boolean = getHealth() == BatteryManager.BATTERY_HEALTH_COLD
     public fun isHealthDead(): Boolean = getHealth() == BatteryManager.BATTERY_HEALTH_DEAD
     public fun isHealthOverVoltage(): Boolean = getHealth() == BatteryManager.BATTERY_HEALTH_OVER_VOLTAGE
-    public fun getHealthStr(): String = when (getHealth()) {
+    public fun getHealthStr(healthType: Int): String = when (healthType) {
         BatteryManager.BATTERY_HEALTH_GOOD -> STR_BATTERY_HELTH_GOOD
         BatteryManager.BATTERY_HEALTH_COLD -> STR_BATTERY_HELTH_COLD
         BatteryManager.BATTERY_HEALTH_DEAD -> STR_BATTERY_HELTH_DEAD
         BatteryManager.BATTERY_HEALTH_OVER_VOLTAGE -> STR_BATTERY_HELTH_OVER_VOLTAGE
         else -> STR_BATTERY_HELTH_UNKNOWN
     }
+
+    public fun getCurrentHealthStr():String = getHealthStr(getHealth())
 
 
     /**

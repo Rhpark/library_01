@@ -33,6 +33,7 @@ import kr.open.rhpark.library.system.service.info.network.telephony.data.current
 import kr.open.rhpark.library.system.service.info.network.telephony.data.current.CurrentSignalStrength
 import kr.open.rhpark.library.system.service.info.network.telephony.data.state.TelephonyNetworkState
 import kr.open.rhpark.library.system.service.base.BaseSystemService
+import kr.open.rhpark.library.util.extensions.context.hasPermissions
 import java.util.concurrent.Executor
 
 /**
@@ -70,7 +71,8 @@ public class NetworkStateInfo(
     private var networkDefaultCallback: NetworkStateCallback? = null
 
     init {
-        if(isPermissionDenied(READ_PHONE_STATE)) {
+
+        if(!context.hasPermissions(READ_PHONE_STATE)) {
             Logx.e("Can not read uSim Chip!")
         } else {
             getSubIdFromDefaultUSim()

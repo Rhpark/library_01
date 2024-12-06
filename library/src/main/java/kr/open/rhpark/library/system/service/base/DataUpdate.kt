@@ -1,12 +1,16 @@
-package kr.open.rhpark.library.system.service.info.battery
+package kr.open.rhpark.library.system.service.base
 
-
-public class BatteryUpdate<TYPE>(private var typeOrigin: TYPE) {
-
+public class DataUpdate<TYPE>(
+    private var typeOrigin: TYPE,
     private var updateListener: ((res: TYPE) -> Unit)? = null
+) {
+
+    init {
+        updateListener?.let { it(typeOrigin) }
+    }
 
     public fun update(typeNew: TYPE) {
-        if(typeOrigin != typeNew) {
+        if (typeOrigin != typeNew) {
             updateListener?.let { it(typeNew) }
         }
         typeOrigin = typeNew

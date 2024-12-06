@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import kr.open.rhpark.app.activity.battery.BatteryActivity
 import kr.open.rhpark.app.activity.display.DisplayActivity
+import kr.open.rhpark.app.activity.location.LocationActivity
 import kr.open.rhpark.app.activity.network.NetworkActivity
 import kr.open.rhpark.app.activity.recyclerview.RecyclerViewActivity
 import kr.open.rhpark.app.activity.second.FragmentShowActivity
@@ -69,5 +70,9 @@ class MainActivityVm : BaseViewModelEventFlow<MainActivityVmEvent>() {
 
     fun onClickShowBatteryActivity(v:View) {
         showActivity(BatteryActivity::class.java)
+    }
+
+    fun onClickShowLocationActivity(v:View) {
+        showActivity(LocationActivity::class.java)
     }
 }

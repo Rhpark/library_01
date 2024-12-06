@@ -13,9 +13,12 @@ import android.os.Looper
 import android.telephony.TelephonyDisplayInfo
 import android.widget.TextView
 import androidx.annotation.RequiresPermission
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import kr.open.rhpark.app.R
 import kr.open.rhpark.app.databinding.ActivityNetworkBinding
 import kr.open.rhpark.library.debug.logcat.Logx
+import kr.open.rhpark.library.system.service.info.location.LocationStateEvent
 import kr.open.rhpark.library.system.service.info.network.connectivity.data.NetworkCapabilitiesData
 import kr.open.rhpark.library.system.service.info.network.connectivity.data.NetworkLinkPropertiesData
 import kr.open.rhpark.library.system.service.info.network.telephony.data.current.CurrentCellInfo
@@ -23,6 +26,8 @@ import kr.open.rhpark.library.system.service.info.network.telephony.data.current
 import kr.open.rhpark.library.system.service.info.network.telephony.data.current.CurrentSignalStrength
 import kr.open.rhpark.library.system.service.info.network.telephony.data.state.TelephonyNetworkState
 import kr.open.rhpark.library.ui.activity.BaseBindingActivity
+import kr.open.rhpark.library.util.extensions.context.getLocationStateInfo
+import kr.open.rhpark.library.util.extensions.context.getNetworkStateInfo
 import kr.open.rhpark.library.util.inline.sdk_version.checkSdkVersion
 
 class NetworkActivity : BaseBindingActivity<ActivityNetworkBinding>(R.layout.activity_network) {
@@ -81,6 +86,7 @@ class NetworkActivity : BaseBindingActivity<ActivityNetworkBinding>(R.layout.act
 
     @RequiresPermission(READ_PHONE_STATE)
     private fun registerTelephonyCallback(isGpsOn: Boolean = false) {
+        Logx.d("isGpsOn $isGpsOn")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             getNetworkStateInfo().registerTelephonyCallBackFromDefaultUSim(
                 this@NetworkActivity.mainExecutor, isGpsOn,
@@ -106,7 +112,19 @@ class NetworkActivity : BaseBindingActivity<ActivityNetworkBinding>(R.layout.act
     }
 
     @RequiresPermission(READ_PHONE_STATE)
-    private fun registerLocationState() { getGpsStateInfo().registerGpsState{ isEnabled -> registerTelephonyCallback(isEnabled) } }
+    private fun registerLocationState() {
+        getGpsStateInfo().apply {
+            registerLocationOnOffState()
+            lifecycleScope.launch {
+                sfUpdate.collect{ type->
+                    when(type) {
+                        is LocationStateEvent.OnGpsEnabled ->registerTelephonyCallback(type.isEnabled)
+                        else -> {}
+                    }
+                }
+            }
+        }
+    }
 
     override fun onDestroy() {
         super.onDestroy()
@@ -179,6 +197,6 @@ class NetworkActivity : BaseBindingActivity<ActivityNetworkBinding>(R.layout.act
     private fun updateNetworkState(telephonyNetworkState: TelephonyNetworkState) {
         binding.tvTelephonyNetworkState.text = "Default TelephonyNetworkState\n $telephonyNetworkState\n\n"
     }
-    private fun getNetworkStateInfo() = systemServiceManagerInfo.networkInfo
-    private fun getGpsStateInfo() = systemServiceManagerInfo.locationStateInfo
+    private fun getNetworkStateInfo() = applicationContext.getNetworkStateInfo()
+    private fun getGpsStateInfo() = applicationContext.getLocationStateInfo(lifecycleScope)
 }

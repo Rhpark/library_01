@@ -40,40 +40,60 @@ public class SoftKeyboardController(context: Context, public val imm: InputMetho
      * View that can show input text)  EditText, SearchView ... etc.
      * default flag 0, select 0, SHOW_IMPLICIT, SHOW_FORCED(API 33 Deprecated)
      */
-    public fun show(v: View, flag: Int = InputMethodManager.SHOW_IMPLICIT) {
-        if(v.requestFocus()) { imm.showSoftInput(v, flag) }
-        else { Logx.e("view requestFocus() is false!!") }
-    }
+    public fun show(v: View, flag: Int = InputMethodManager.SHOW_IMPLICIT): Boolean =
+        if (v.requestFocus()) {
+            imm.showSoftInput(v, flag)
+        } else {
+            Logx.e("view requestFocus() is false!!")
+            false
+        }
+
 
     /**
      * View that can show input text delay(ms))  EditText, SearchView ... etc.
      * default flag 0, select 0, SHOW_IMPLICIT, SHOW_FORCED(API 33 Deprecated)
+     *
+     * @return true if the Runnable was successfully placed in to the
+     *         message queue.  Returns false on failure, usually because the
+     *         looper processing the message queue is exiting.  Note that a
+     *         result of true does not mean the Runnable will be processed --
+     *         if the looper is quit before the delivery time of the message
+     *         occurs then the message will be dropped.
      */
-    public fun show(v: View, delay: Long, flag: Int = InputMethodManager.SHOW_IMPLICIT): Boolean =
+    public fun showDelay(v: View, delay: Long, flag: Int = InputMethodManager.SHOW_IMPLICIT): Boolean =
         v.postDelayed(Runnable { show(v, flag) }, delay)
 
     /**
      * View that can hide input text)  EditText, SearchView ... etc.
      * default flag 0,select flat 0, HIDE_IMPLICIT_ONLY, HIDE_NOT_ALWAYS
      */
-    public fun hide(v: View, flag: Int = 0) {
-        Logx.d(flag)
-        if(v.requestFocus()) { imm.hideSoftInputFromWindow(v.windowToken, flag) }
-        else { Logx.e("view requestFocus() is false!!")      }
+    public fun hide(v: View, flag: Int = 0): Boolean = if (v.requestFocus()) {
+        imm.hideSoftInputFromWindow(v.windowToken, flag)
+    } else {
+        Logx.e("view requestFocus() is false!!")
+        false
     }
+
 
     /**
      * View that can hide input text delay(ms))  EditText, SearchView ... etc.
      * default flag 0,select flat 0, HIDE_IMPLICIT_ONLY, HIDE_NOT_ALWAYS
+     *
+     * @return true if the Runnable was successfully placed in to the
+     *         message queue.  Returns false on failure, usually because the
+     *         looper processing the message queue is exiting.  Note that a
+     *         result of true does not mean the Runnable will be processed --
+     *         if the looper is quit before the delivery time of the message
+     *         occurs then the message will be dropped.
      */
-    public fun hide(v: View, delay: Long, flag: Int = 0): Boolean =
-        v.postDelayed(Runnable { hide(v, flag) }, delay)
+    public fun hideDelay(v: View, delay: Long, flag: Int = 0): Boolean =
+        v.postDelayed(Runnable {    hide(v, flag)   }, delay)
 
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     public fun startStylusHandwriting(v: View) {
-        Logx.d(v.requestFocus())
         if (v.requestFocus()) { imm.startStylusHandwriting(v) }
+        else { Logx.e("view requestFocus() is false!!") }
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)

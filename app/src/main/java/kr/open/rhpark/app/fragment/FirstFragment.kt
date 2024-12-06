@@ -25,7 +25,7 @@ class FirstFragment:BaseBindingFragment<FragmentFirstBinding>(R.layout.fragment_
                 vm.eventVm.collect{
                     when (it) {
                         is FirstFragmentVmEvent.OnPermissionCheck -> {
-                            requestPermissions(12313,it.permissionList) { requestCode, deniedPermissions ->
+                            requestPermissions(12313, it.permissionList) { requestCode, deniedPermissions ->
                                 Logx.d("requestCode $requestCode, \n deniedPermissions $deniedPermissions")
                             }
                         }

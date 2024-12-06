@@ -12,13 +12,6 @@ import android.telephony.euicc.EuiccManager
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.RequiresPermission
-import kr.open.rhpark.library.system.service.info.battery.BatteryStateInfo
-import kr.open.rhpark.library.system.service.info.display.DisplayInfo
-import kr.open.rhpark.library.system.service.info.location.LocationStateInfo
-import kr.open.rhpark.library.system.service.info.network.NetworkStateInfo
-import kr.open.rhpark.library.system.service.controller.SoftKeyboardController
-import kr.open.rhpark.library.system.service.controller.VibratorController
-import kr.open.rhpark.library.system.service.controller.windowmanager.WindowManagerController
 import kr.open.rhpark.library.util.extensions.context.getSystemBatteryManager
 import kr.open.rhpark.library.util.extensions.context.getSystemConnectivityManager
 import kr.open.rhpark.library.util.extensions.context.getSystemEuiccManager
@@ -64,13 +57,13 @@ public class SystemServiceManager(context: Context) {
      *  SystemManager  *
      *  Controller     *
      *******************/
-    public val softKeyboardController: SoftKeyboardController by lazy { SoftKeyboardController(context, inputMethodManager) }
-
-    public val vibratorController: VibratorController by lazy { VibratorController(context) }
-
-    public val windowManagerController: WindowManagerController by lazy {
-        WindowManagerController(context, windowManager)
-    }
+//    public val softKeyboardController: SoftKeyboardController by lazy { SoftKeyboardController(context, inputMethodManager) }
+//
+//    public val vibratorController: VibratorController by lazy { VibratorController(context) }
+//
+//    public val windowManagerController: WindowManagerController by lazy {
+//        WindowManagerController(context, windowManager)
+//    }
 
 
 
@@ -78,13 +71,13 @@ public class SystemServiceManager(context: Context) {
      *  SystemManager  *
      *  Access         *
      *******************/
-    public val batteryInfo: BatteryStateInfo by lazy { BatteryStateInfo(context, batteryManager) }
+//    public val batteryInfo: BatteryStateInfo by lazy { BatteryStateInfo(context, batteryManager) }
 
-    public val displayInfo: DisplayInfo by lazy { DisplayInfo(context, windowManager) }
+//    public val displayInfo: DisplayInfo by lazy { DisplayInfo(context, windowManager) }
 
-    public val locationStateInfo : LocationStateInfo by lazy{ LocationStateInfo(context, locationManager) }
+//    public val locationStateInfo : LocationStateInfo by lazy{ LocationStateInfo(context, locationManager) }
 
-    public val networkInfo: NetworkStateInfo by lazy {
-        NetworkStateInfo(context, telephonyManager, subscriptionManager, connectivityManager, wifiManager, euiccManager)
-    }
+//    public val networkInfo: NetworkStateInfo by lazy {
+//        NetworkStateInfo(context, telephonyManager, subscriptionManager, connectivityManager, wifiManager, euiccManager)
+//    }
 }

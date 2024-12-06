@@ -5,16 +5,19 @@ import android.widget.TextView
 
 public fun EditText.getString(): String = this.text.toString()
 public fun EditText.isTextEmpty(): Boolean = this.getString().isEmpty()
+public fun EditText.isTextNullOrEmpty(): Boolean = this.getString().isNullOrEmpty()
+
+public fun EditText.textToInt(): Int? = this.text.toString().toIntOrNull()
+public fun EditText.textToFloat(): Float? = this.text.toString().toFloatOrNull()
+public fun EditText.textToDouble(): Double? = this.text.toString().toDoubleOrNull()
 
 public fun TextView.getString(): String = this.text.toString()
 public fun TextView.isTextEmpty(): Boolean = this.getString().isEmpty()
+public fun TextView.isTextNullOrEmpty(): Boolean = this.getString().isNullOrEmpty()
 
-public fun TextView.toInt(): Int? = this.text.toString().toIntOrNull()
-public fun TextView.toFloat(): Float? = this.text.toString().toFloatOrNull()
-public fun TextView.toDouble(): Double? = this.text.toString().toDoubleOrNull()
+public fun TextView.textToInt(): Int? = this.text.toString().toIntOrNull()
+public fun TextView.textToFloat(): Float? = this.text.toString().toFloatOrNull()
+public fun TextView.textToDouble(): Double? = this.text.toString().toDoubleOrNull()
 
-public fun EditText.toInt(): Int? = this.text.toString().toIntOrNull()
-public fun EditText.toFloat(): Float? = this.text.toString().toFloatOrNull()
-public fun EditText.toDouble(): Double? = this.text.toString().toDoubleOrNull()
 
 

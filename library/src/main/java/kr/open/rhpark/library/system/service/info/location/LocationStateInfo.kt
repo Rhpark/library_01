@@ -6,18 +6,50 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.location.Location
+import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Build
+import android.os.Bundle
 import androidx.annotation.RequiresApi
+import androidx.annotation.RequiresPermission
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import kr.open.rhpark.library.system.service.base.BaseSystemService
+import kr.open.rhpark.library.system.service.base.DataUpdate
 
 public class LocationStateInfo(
     context: Context,
-    public val locationManager: LocationManager
+    public val locationManager: LocationManager,
+    private val coroutineScope: CoroutineScope
 ) :
     BaseSystemService(context, listOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION)) {
 
-    private var onGpsChanged: ((isEnabled: Boolean) -> Unit)? = null
+    private val msfUpdate: MutableStateFlow<LocationStateEvent> = MutableStateFlow(LocationStateEvent.OnGpsEnabled(isGpsEnabled()))
+    public val sfUpdate: StateFlow<LocationStateEvent> = msfUpdate.asStateFlow()
+
+    private val locationChanged = DataUpdate<Location?>(getLocation()){ sendFlow(LocationStateEvent.OnLocationChanged(it))}
+    private val isGpsEnabled = DataUpdate<Boolean>(isGpsEnable()){ sendFlow(LocationStateEvent.OnGpsEnabled(it))}
+    private val isNetworkEnabled = DataUpdate<Boolean>(isNetworkEnable()){ sendFlow(LocationStateEvent.OnNetworkEnabled(it))}
+    private val isPassiveEnabled = DataUpdate<Boolean>(isPassiveEnable()){ sendFlow(LocationStateEvent.OnPassiveEnabled(it))}
+    private val isFusedEnabled = DataUpdate<Boolean>(isFusedEnable()){ sendFlow(LocationStateEvent.OnFusedEnabled(it))}
+
+    private val locationListener = object : LocationListener {
+        override fun onLocationChanged(location: Location) {
+            locationChanged.update(location)
+        }
+
+        override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {        }
+
+        override fun onProviderEnabled(provider: String) {        }
+
+        override fun onProviderDisabled(provider: String) {        }
+    }
+
+    private fun sendFlow(event: LocationStateEvent) = coroutineScope.launch { msfUpdate.emit(event) }
 
     /**
      * This is needed because of TelephonyCallback.CellInfoListener(Telephony.registerCallBack)
@@ -28,22 +60,52 @@ public class LocationStateInfo(
 
     private val intentFilter = IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION)
 
-    public fun registerGpsState(onGpsChanged: ((isEnabled: Boolean) -> Unit)? = null) {
+    public fun registerLocationOnOffState() {
         unregisterGpsState()
-        this.onGpsChanged = onGpsChanged
         gpsStateBroadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 if (intent.action.equals(LocationManager.PROVIDERS_CHANGED_ACTION)) {
-                    onGpsChanged?.let { it(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) }
+                    isGpsEnabled.update(isGpsEnable())
+                    isNetworkEnabled.update(isNetworkEnable())
+                    isPassiveEnabled.update(isPassiveEnable())
+                    isFusedEnabled.update(isFusedEnable())
                 }
             }
         }
         context.registerReceiver(gpsStateBroadcastReceiver, intentFilter)
     }
 
+    public fun isGpsEnable():Boolean = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+    public fun isNetworkEnable():Boolean = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+    public fun isPassiveEnable():Boolean = locationManager.isProviderEnabled(LocationManager.PASSIVE_PROVIDER)
+    public fun isFusedEnable():Boolean = locationManager.isProviderEnabled(LocationManager.FUSED_PROVIDER)
+
+    /**
+     *
+     */
+    @RequiresPermission(anyOf = [ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION])
+    public fun registerLocationUpdateListener(locationProvider: String, minTimeMs: Long, minDistanceM: Float) {
+        locationManager.requestLocationUpdates(locationProvider, minTimeMs, minDistanceM, locationListener)
+    }
+
+    public override fun onDestroy() {
+        unregisterGpsState()
+        unregisterLocationUpdateListener()
+    }
+
+    public fun unregisterLocationUpdateListener() {
+        try {
+            locationManager.removeUpdates(locationListener)
+        } catch (e:Exception) {
+
+        }
+    }
+
     public fun unregisterGpsState() {
         gpsStateBroadcastReceiver?.let {
-            context.unregisterReceiver(it)
+            try {
+                context.unregisterReceiver(it)
+            } catch (e:Exception) {}
         }
         gpsStateBroadcastReceiver = null
     }
@@ -76,6 +138,7 @@ public class LocationStateInfo(
         }
     }
 
-
-
+    public fun getLocation(): Location? {
+        return locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+    }
 }

@@ -94,6 +94,13 @@
                     android:text="Show Network Activity" />
 
                 <Button
+                    android:id="@+id/btnShowLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{(v)->vm.onClickShowLocationActivity(v)}"
+                    android:text="Show Location Activity" />
+
+                <Button
                     android:id="@+id/btnToastSnackbar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

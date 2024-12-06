@@ -1,7 +1,9 @@
 package kr.open.rhpark.app
 
 
+import android.os.Build
 import android.os.Bundle
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -11,6 +13,7 @@ import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.ui.activity.BaseBindingActivity
 import kr.open.rhpark.library.util.extensions.debug.logxD
 import kr.open.rhpark.library.util.extensions.debug.logxJ
+import kr.open.rhpark.library.util.extensions.debug.logxP
 
 class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_main) {
 
@@ -43,12 +46,18 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
     fun test() {
         Logx.d()
         Logx.d("msg")
-        Logx.d("Tag","mmssgg")
+        Logx.d("TagLogx","Logx Msg")
+        "".logxD()
+        "Msg Ext".logxD("")
+        "Msg Ext".logxD("TagLogx")
+
         Logx.p()
-        Logx.t()
-        "[[[{fase}]]]".logxJ()
-        "gfas".logxD()
-        "gfas".logxD("fsae")
-        "a".toIntOrNull()
+        Logx.p("Msg")
+        Logx.p("TagLogx","Msg")
+        "".logxP()
+        "Msg Ext".logxP("TagLogx")
+
+        Logx.j("{{{}}}")
+        "{{{}}}".logxJ("Hello")
     }
 }

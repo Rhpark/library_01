@@ -9,6 +9,7 @@ import kr.open.rhpark.app.R
 import kr.open.rhpark.app.databinding.ActivityRecyclerviewBinding
 import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.ui.activity.BaseBindingActivity
+import kr.open.rhpark.library.util.extensions.context.getSoftKeyboardController
 
 class RecyclerViewActivity : BaseBindingActivity<ActivityRecyclerviewBinding>(R.layout.activity_recyclerview) {
 
@@ -47,6 +48,6 @@ class RecyclerViewActivity : BaseBindingActivity<ActivityRecyclerviewBinding>(R.
                 }
             }
         }
-        systemServiceManagerInfo.softKeyboardController.show(binding.edtKey, 200L)
+        applicationContext.getSoftKeyboardController().showDelay(binding.edtKey, 200L)
     }
 }

@@ -43,7 +43,7 @@ internal class LogxWriter {
     fun writeExtensionsParent(tag: String, msg: Any?) {
         val type = LogxType.PARENT
         if (!isDebug(type)) { return }
-        try {log(parentExtensionsType(filter(tag, type)), msg, type)}
+        try {log(parentExtensionsType(filterExtensionsType(tag, type)), msg, type)}
         catch (e: IndexOutOfBoundsException) { e.printStackTrace() }
     }
 
@@ -65,7 +65,7 @@ internal class LogxWriter {
             filterExtensionsType(tag, LogxType.JSON)?.let {
                 val jsonTag = jsonType(it)
                 log(jsonTag, "=========JSON_START========", LogxType.JSON)
-                jsonMsgSort(it.first, msg)
+                jsonMsgSort(it.first, "${msg}")
                 log(jsonTag, "=========JSON_END==========", LogxType.JSON)
             }
         } catch (e: IndexOutOfBoundsException) { e.printStackTrace() }
@@ -131,46 +131,41 @@ internal class LogxWriter {
         return Pair("${Logx.appName} [$tag]${getTypeToString(type)}", it.getMsgFrontNormal())
     }
 
-    private fun jsonTag(): String = logxStackTrace.getParentStackTrace().getMsgFrontJson()
-
     private fun jsonMsgSort(tag:String, msg: String) {
-        val jsonTag = jsonTag()
+
         val space = "   "
         var cnt = 0
         var logMsg = ""
         val jsonMsgList = msg.replace("\\s+".toRegex(), "")
-
         for (sp in jsonMsgList) {
 
             when(sp) {
                 ',' -> {
                     var spaceLen = ""
                     for(j in 0 until cnt) spaceLen += space
-                    log(Pair(tag, "$jsonTag$spaceLen$logMsg"), sp, LogxType.JSON)
+                    log(Pair(tag, "$spaceLen$logMsg"), sp, LogxType.JSON)
                     logMsg = ""
                 }
 
-                '[',
-                '{' -> {
+                '[', '{' -> {
                     var spaceLen = ""
                     for(j in 0 until cnt) spaceLen += space
-                    log(Pair(tag, "$jsonTag$spaceLen$logMsg"), sp, LogxType.JSON)
+                    log(Pair(tag, "$spaceLen$logMsg"), sp, LogxType.JSON)
                     logMsg = ""
                     cnt++
                 }
 
-                ']',
-                '}' -> {
+                ']', '}' -> {
                     var spaceLen = ""
                     if(logMsg.isNotEmpty()) {
                         for(j in 0 until cnt) spaceLen += space
-                        log(Pair(tag, "$jsonTag$spaceLen"), logMsg, LogxType.JSON)
+                        log(Pair(tag, "$spaceLen"), logMsg, LogxType.JSON)
                     }
                     logMsg = ""
                     spaceLen = ""
                     cnt--
                     for(j in 0 until cnt) spaceLen += space
-                    log(Pair(tag, "$jsonTag$spaceLen$logMsg"), sp, LogxType.JSON)
+                    log(Pair(tag, "$spaceLen$logMsg"), sp, LogxType.JSON)
                 }
                 else -> logMsg += sp
             }
