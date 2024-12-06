@@ -1,4 +1,4 @@
-# Android Easy Development Library (v0.7.1)
+# Android Easy Development Library (v0.8.0)
 
 ![image](https://jitpack.io/v/rhpark/library_01.svg)
 <br>
@@ -111,11 +111,12 @@ class MainActivity : AppCompatActivity() {
 	}
 
 	fun test() {  
-		Logx.d()  
-		Logx.d("msg")  
-		Logx.d("Tag","mmssgg")  
-		Logx.p()  
-		Logx.t()
+		Logx.d() // or "".logxD()
+		Logx.d("msg")  // or "msg"logxD()
+		Logx.d("Tag","mmssgg")  // or "mmssgg".logxD()
+		Logx.p()  // or "".logxP()
+		Logx.t() // or "".logxT()
+                
 	}
 }
 ```
@@ -217,14 +218,8 @@ class MainActivity : AppCompatActivity() {
 </br>
 
 
-####  5 - 4 TelephonyStateInfo
-![image](https://github.com/Rhpark/library_01/blob/master/sample_img/Sample_Base_SystemManager_TelophonyStateInfo.png)
-
-<br>
-</br>
-
-####  5 - 5 UsimStateInfo
-![image](https://github.com/Rhpark/library_01/blob/master/sample_img/Sample_Base_SystemManager_UsimStateInfo.png)
+####  5 - 4 NetworkStateInfo
+![image](https://github.com/Rhpark/library_01/blob/master/sample_img/Sample_Base_SystemManager_NetworkStateInfo.png)
 
 
 
@@ -268,7 +263,7 @@ android {
 
 dependencies {
 	...
-	implementation("com.github.rhpark:library_01:0.7.1")
+	implementation("com.github.rhpark:library_01:0.8.0")
 	...
 }
 ```
