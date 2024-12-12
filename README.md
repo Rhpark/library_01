@@ -150,7 +150,7 @@ class MainActivity : AppCompatActivity() {
 </br>
 
 ####  2 - 4 Activity (Binding)
-![image](https://github.com/Rhpark/library_01/blob/master/sample_img/Sample_Base_Activity_Binding_MainActivity.png)
+![image](https://github.com/Rhpark/library_01/blob/master/sample_img/Sample_Base_Activity_Binding_MainActivity.PNG)
 <br>
 </br>
 
@@ -182,7 +182,7 @@ class MainActivity : AppCompatActivity() {
 ### 4. RecyclerScrollStateView(Custom RecyclerView)
 
 #### 4 - 1 RecyclerStateViewConfig (Activity)
-![image](https://github.com/Rhpark/library_01/blob/master/sample_img/Sample_Base_Binding_RecyclerScrollStateView.png)
+![image](https://github.com/Rhpark/library_01/blob/master/sample_img/Sample_Base_Binding_RecyclerStateView_XML.png)
 <br>
 </br>
 
@@ -204,7 +204,7 @@ class MainActivity : AppCompatActivity() {
 </br>
 
 ####  5 - 2 DisplayStateInfo
-![image](https://github.com/Rhpark/library_01/blob/master/sample_img/Sample_Base_SystemManager_Display.png)
+![image](https://github.com/Rhpark/library_01/blob/master/sample_img/Sample_Base_SystemManager_Display.PNG)
 
 
 
