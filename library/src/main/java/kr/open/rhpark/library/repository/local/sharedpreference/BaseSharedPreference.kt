@@ -10,22 +10,34 @@ public abstract class BaseSharedPreference(context: Context, groupKey: String, s
     private val sp: SharedPreferences by lazy { context.getSharedPreferences(groupKey, sharedPrivateMode) }
 
     /******** Load data ********/
-    protected fun load(key: String, defaultValue: String?): String? = sp.getString(key, defaultValue)
-    protected fun load(key: String, defaultValue: Int): Int = sp.getInt(key, defaultValue)
-    protected fun load(key: String, defaultValue: Float): Float = sp.getFloat(key, defaultValue)
-    protected fun load(key: String, defaultValue: Boolean): Boolean = sp.getBoolean(key, defaultValue)
-    protected fun load(key: String, defaultValue: Long): Long = sp.getLong(key, defaultValue)
-    protected fun load(key: String, defaultValue: Set<String>?): Set<String>? = sp.getStringSet(key, defaultValue)
+    protected fun getString(key: String, defaultValue: String?): String? = sp.getString(key, defaultValue)
+    protected fun getInt(key: String, defaultValue: Int): Int = sp.getInt(key, defaultValue)
+    protected fun getFloat(key: String, defaultValue: Float): Float = sp.getFloat(key, defaultValue)
+    protected fun getBoolean(key: String, defaultValue: Boolean): Boolean = sp.getBoolean(key, defaultValue)
+    protected fun getLong(key: String, defaultValue: Long): Long = sp.getLong(key, defaultValue)
+    protected fun getSet(key: String, defaultValue: Set<String>?): Set<String>? = sp.getStringSet(key, defaultValue)
+
+    protected fun getDouble(key: String, default:Double): Double {
+        return sp.getString(key, null)?.let {
+            try {
+                it.toDouble()
+            }catch (e:Exception) {
+                e.printStackTrace()
+                default
+            }
+        }?: default
+    }
 
     /**
      * Save Data
      * must be called after apply() or commit()
      */
-    private fun save(key: String, value: Any?): SharedPreferences.Editor = when (value) {
+    protected fun put(key: String, value: Any?): SharedPreferences.Editor = when (value) {
         is String -> sp.edit().putString(key, value)
         is Boolean -> sp.edit().putBoolean(key, value)
-        is Float -> sp.edit().putFloat(key, value)
+        is Float-> sp.edit().putFloat(key, value)
         is Int -> sp.edit().putInt(key, value)
+        is Double ->  sp.edit().putString(key, value.toString())
         is Long -> sp.edit().putLong(key, value)
         is Set<*> -> {
             try {
@@ -44,9 +56,11 @@ public abstract class BaseSharedPreference(context: Context, groupKey: String, s
         }
     }
 
-    protected fun saveApply(key: String, value: Any?) { save(key, value).apply() }
+    protected fun saveApply() { sp.edit().apply() }
+    protected fun saveApply(key: String, value: Any?) { put(key, value).apply() }
 
-    protected fun saveCommit(key: String, value: Any?) { save(key, value).commit() }
+    protected fun saveCommit() { sp.edit().commit() }
+    protected fun saveCommit(key: String, value: Any?) { put(key, value).commit() }
 
     /**
      * remove data

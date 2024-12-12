@@ -12,7 +12,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.view.WindowCompat
 import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.system.permission.PermissionManagerForActivity
-import kr.open.rhpark.library.system.service.SystemServiceManager
 import kr.open.rhpark.library.ui.view.snackbar.DefaultSnackBar
 import kr.open.rhpark.library.ui.view.toast.DefaultToast
 import kr.open.rhpark.library.util.extensions.context.hasPermission
@@ -52,12 +51,6 @@ public abstract class RootActivity : AppCompatActivity() {
      * 화면에 간단한 메시지를 표시하기 위한 스낵바 객체.
      */
     protected val snackBar: DefaultSnackBar by lazy { DefaultSnackBar(window.decorView.rootView) }
-
-    /**
-     * A system service manager info object for accessing system services.
-     * 시스템 서비스에 액세스하기 위한 시스템 서비스 관리자 정보 객체.
-     */
-    protected val systemServiceManagerInfo: SystemServiceManager by lazy { SystemServiceManager(this) }
 
     /**
      * The permission listener for handling permission request results.

@@ -7,6 +7,9 @@ import android.view.Window
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.RequiresApi
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.system.service.base.BaseSystemService
 
@@ -63,6 +66,13 @@ public class SoftKeyboardController(context: Context, public val imm: InputMetho
     public fun showDelay(v: View, delay: Long, flag: Int = InputMethodManager.SHOW_IMPLICIT): Boolean =
         v.postDelayed(Runnable { show(v, flag) }, delay)
 
+    public fun showDelay(v: View, delay: Long, flag: Int = InputMethodManager.SHOW_IMPLICIT, coroutineScope: CoroutineScope) {
+        coroutineScope.launch {
+            delay(delay)
+            show(v, flag)
+        }
+    }
+
     /**
      * View that can hide input text)  EditText, SearchView ... etc.
      * default flag 0,select flat 0, HIDE_IMPLICIT_ONLY, HIDE_NOT_ALWAYS
@@ -89,6 +99,12 @@ public class SoftKeyboardController(context: Context, public val imm: InputMetho
     public fun hideDelay(v: View, delay: Long, flag: Int = 0): Boolean =
         v.postDelayed(Runnable {    hide(v, flag)   }, delay)
 
+    public fun hideDelay(v: View, delay: Long, flag: Int = 0, coroutineScope: CoroutineScope) {
+        coroutineScope.launch {
+            delay(delay)
+            hide(v,flag)
+        }
+    }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     public fun startStylusHandwriting(v: View) {

@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment
 import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.system.permission.PermissionManagerBase
 import kr.open.rhpark.library.system.permission.PermissionManagerForFragment
-import kr.open.rhpark.library.system.service.SystemServiceManager
 import kr.open.rhpark.library.ui.view.snackbar.DefaultSnackBar
 import kr.open.rhpark.library.ui.view.toast.DefaultToast
 import kr.open.rhpark.library.util.extensions.context.hasPermission
@@ -42,12 +41,6 @@ public abstract class RootFragment : Fragment() {
      * 화면에 간단한 메시지를 표시하기 위한 스낵바 객체입니다.
      */
     protected val snackBar: DefaultSnackBar by lazy { DefaultSnackBar(requireView()) }
-
-    /**
-     * A system service manager info object for accessing system services.
-     * 시스템 서비스에 액세스하기 위한 시스템 서비스 관리자 정보 객체입.
-     */
-    protected val systemServiceManagerInfo: SystemServiceManager by lazy { SystemServiceManager(requireContext()) }
 
     /**
      * The PermissionCheck for handling permission request results.

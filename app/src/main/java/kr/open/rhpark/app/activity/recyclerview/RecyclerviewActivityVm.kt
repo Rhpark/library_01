@@ -38,17 +38,17 @@ class RecyclerviewActivityVm : BaseViewModelEventFlow<RecyclerviewActivityVmEven
     fun onClickAdd(v: View) {
         val key = _fEditKey.value
         if(key.isNullOrEmpty()) {
-            sendEvent(RecyclerviewActivityVmEvent.OnToastShow("key is null or Empty, key = $key"))
+            sendSharedFlowEvent(RecyclerviewActivityVmEvent.OnToastShow("key is null or Empty, key = $key"))
         } else if(key.toInt() == 0) {
-            sendEvent(RecyclerviewActivityVmEvent.OnToastShow("Over than 0"))
+            sendSharedFlowEvent(RecyclerviewActivityVmEvent.OnToastShow("Over than 0"))
         } else {
             val dataList = getItemList(key.toInt())
             if(adapterMode == ADAPTER) {
                 adapter.addItems(dataList)
-                sendEvent(RecyclerviewActivityVmEvent.OnUpdateAdapterMode(adapter))
+                sendSharedFlowEvent(RecyclerviewActivityVmEvent.OnUpdateAdapterMode(adapter))
             } else {
                 listAdapter.addItems(dataList)
-                sendEvent(RecyclerviewActivityVmEvent.OnUpdateListAdapterMode(listAdapter))
+                sendSharedFlowEvent(RecyclerviewActivityVmEvent.OnUpdateListAdapterMode(listAdapter))
             }
         }
     }
@@ -64,14 +64,14 @@ class RecyclerviewActivityVm : BaseViewModelEventFlow<RecyclerviewActivityVmEven
     fun onClickRemove(v: View) {
         val key = _fEditKey.value
         if(key.isEmpty()) {
-            sendEvent(RecyclerviewActivityVmEvent.OnToastShow("key is Empty, key = $key"))
+            sendSharedFlowEvent(RecyclerviewActivityVmEvent.OnToastShow("key is Empty, key = $key"))
         } else {
             if(adapterMode == ADAPTER) {
                 adapter.removeAt(key.toInt())
-                sendEvent(RecyclerviewActivityVmEvent.OnUpdateAdapterMode(adapter))
+                sendSharedFlowEvent(RecyclerviewActivityVmEvent.OnUpdateAdapterMode(adapter))
             } else {
                 listAdapter.removeAtItem(key.toInt())
-                sendEvent(RecyclerviewActivityVmEvent.OnUpdateListAdapterMode(listAdapter))
+                sendSharedFlowEvent(RecyclerviewActivityVmEvent.OnUpdateListAdapterMode(listAdapter))
             }
         }
     }
@@ -88,9 +88,9 @@ class RecyclerviewActivityVm : BaseViewModelEventFlow<RecyclerviewActivityVmEven
         else _fAdapterStr.value = ADAPTER_STR
         adapterMode = isChecked
         if(adapterMode == ADAPTER) {
-            sendEvent(RecyclerviewActivityVmEvent.OnUpdateAdapterMode(adapter))
+            sendSharedFlowEvent(RecyclerviewActivityVmEvent.OnUpdateAdapterMode(adapter))
         } else {
-            sendEvent(RecyclerviewActivityVmEvent.OnUpdateListAdapterMode(listAdapter))
+            sendSharedFlowEvent(RecyclerviewActivityVmEvent.OnUpdateListAdapterMode(listAdapter))
         }
     }
 }

@@ -2,6 +2,7 @@ package kr.open.rhpark.library.system.service.info.display
 
 import android.content.Context
 import android.content.res.Resources
+import android.graphics.Point
 import android.os.Build
 import android.util.DisplayMetrics
 import android.view.WindowInsets
@@ -29,16 +30,16 @@ public class DisplayInfo(context: Context, public val windowManager: WindowManag
      * @return  The full screen size (width, height).
      * @return 전체 화면 크기 (너비, 높이)
      */
-    public fun getFullScreenSize():Pair<Int,Int> = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+    public fun getFullScreenSize(): Point = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
         val metrics = getCurrentWindowMetrics().bounds
         val width = metrics.width()
         val height = metrics.height()
-        Pair(width, height)
+        Point(width, height)
     } else {
         val displayMetrics = DisplayMetrics()
         (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager)
             .defaultDisplay.getRealMetrics(displayMetrics)
-        Pair(displayMetrics.widthPixels, displayMetrics.heightPixels)
+        Point(displayMetrics.widthPixels, displayMetrics.heightPixels)
     }
 
     @RequiresApi(Build.VERSION_CODES.R)

@@ -116,8 +116,8 @@ public class BatteryStateInfo(
     }
 
     public var scope: Job? = null
-    public fun startUpdateScope(coroutineScope: CoroutineScope) {
-        scope = coroutineScope.launch {
+    public fun startUpdateScope(coroutine: CoroutineScope = coroutineScope) {
+        scope = coroutine.launch {
 
             while(isActive) {
                 sendBroadcast()

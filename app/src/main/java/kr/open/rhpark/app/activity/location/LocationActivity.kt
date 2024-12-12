@@ -4,6 +4,7 @@ import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.annotation.SuppressLint
 import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
@@ -13,6 +14,7 @@ import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.system.service.info.location.LocationStateEvent
 import kr.open.rhpark.library.ui.activity.BaseBindingActivity
 import kr.open.rhpark.library.util.extensions.context.getLocationStateInfo
+import kr.open.rhpark.library.util.inline.sdk_version.checkSdkVersion
 
 
 class LocationActivity : BaseBindingActivity<ActivityLocationBinding>(R.layout.activity_location) {
@@ -28,7 +30,14 @@ class LocationActivity : BaseBindingActivity<ActivityLocationBinding>(R.layout.a
 
     @SuppressLint("MissingPermission")
     private fun initListener() {
-         Logx.d()
+
+        binding.btnGetLocationData.setOnClickListener {
+            checkSdkVersion(Build.VERSION_CODES.S){
+                binding.tvLocationFusedTurnOnOff.text = "OnFusedEnabled ${locationStateInfo.isFusedEnabled()}"
+            }
+            binding.tvLocationChange.text = "OnLocationChanged ${locationStateInfo.getLocation()}"
+            Logx.d("${locationStateInfo.locationManager.allProviders}")
+        }
         binding.btnLocationTurnOnOff.setOnClickListener {
             binding.tvLocationTurnOnOff.text = "Location Turn On ? ${locationStateInfo.isLocationEnabled()}"
             locationStateInfo.registerLocationOnOffState()

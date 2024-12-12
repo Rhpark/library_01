@@ -12,15 +12,23 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/btnAddView"
+            android:id="@+id/btnAddDragView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add Floating View" />
+            android:text="Add Floating Drag View" />
+
+
+        <Button
+            android:id="@+id/btnAddFixedView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Floating Fixed View" />
 
         <Button
             android:id="@+id/btnRemoveView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Remove All Floating View" />
+
     </LinearLayout>
 </layout>

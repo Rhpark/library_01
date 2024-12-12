@@ -21,23 +21,21 @@ class FirstFragment:BaseBindingFragment<FragmentFirstBinding>(R.layout.fragment_
         binding.vm = vm
 
         lifecycleScope.launch {
-//            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                vm.eventVm.collect{
-                    when (it) {
-                        is FirstFragmentVmEvent.OnPermissionCheck -> {
-                            requestPermissions(12313, it.permissionList) { requestCode, deniedPermissions ->
-                                Logx.d("requestCode $requestCode, \n deniedPermissions $deniedPermissions")
-                            }
-                        }
-                        is FirstFragmentVmEvent.OnShowSnackBar -> {
-                            snackBar.showMsgShort(binding.btnTestToastShow, it.msg)
-                        }
-                        is FirstFragmentVmEvent.OnShowToast -> {
-                            toast.showMsgShort(it.msg)
+            vm.sharedFlowEventVm.collect{
+                when (it) {
+                    is FirstFragmentVmEvent.OnPermissionCheck -> {
+                        requestPermissions(12313, it.permissionList) { requestCode, deniedPermissions ->
+                            Logx.d("requestCode $requestCode, \n deniedPermissions $deniedPermissions")
                         }
                     }
+                    is FirstFragmentVmEvent.OnShowSnackBar -> {
+                        snackBar.showMsgShort(binding.btnTestToastShow, it.msg)
+                    }
+                    is FirstFragmentVmEvent.OnShowToast -> {
+                        toast.showMsgShort(it.msg)
+                    }
                 }
-//            }
+            }
         }
     }
 }

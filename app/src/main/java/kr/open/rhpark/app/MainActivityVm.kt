@@ -2,8 +2,6 @@ package kr.open.rhpark.app
 
 import android.Manifest
 import android.view.View
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
 import kr.open.rhpark.app.activity.battery.BatteryActivity
 import kr.open.rhpark.app.activity.display.DisplayActivity
 import kr.open.rhpark.app.activity.location.LocationActivity
@@ -16,14 +14,9 @@ import kr.open.rhpark.app.activity.window.WindowActivity
 import kr.open.rhpark.library.viewmodels.BaseViewModelEventFlow
 
 class MainActivityVm : BaseViewModelEventFlow<MainActivityVmEvent>() {
-    init {
-        viewModelScope.launch {
-
-        }
-    }
 
     fun onClickPermission(v: View) {
-        sendEvent(
+        sendSharedFlowEvent(
             MainActivityVmEvent.OnPermissionCheck(
                 listOf(
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -37,7 +30,8 @@ class MainActivityVm : BaseViewModelEventFlow<MainActivityVmEvent>() {
 
 
     private fun showActivity(activity: Class<*>) {
-        sendEvent(MainActivityVmEvent.OnShowActivity(activity))
+        sendSharedFlowEvent(MainActivityVmEvent.OnShowActivity(activity))
+    // or sendStateFlowEvent(MainActivityVmEvent.OnShowActivity(activity))
     }
 
     fun onClickNetworkActivity(v:View) {

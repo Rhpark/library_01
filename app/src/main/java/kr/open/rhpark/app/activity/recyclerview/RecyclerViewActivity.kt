@@ -31,7 +31,7 @@ class RecyclerViewActivity : BaseBindingActivity<ActivityRecyclerviewBinding>(R.
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                vm.eventVm.collect {
+                vm.sharedFlowEventVm.collect {
                     when (it) {
                         is RecyclerviewActivityVmEvent.OnUpdateAdapterMode -> {
                             binding.rcvList.adapter = it.adapter

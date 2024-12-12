@@ -16,7 +16,7 @@ class FirstFragmentVm : BaseViewModelEventFlow<FirstFragmentVmEvent>() {
 
     fun onClickPermission(v: View) {
         Logx.d()
-        sendEvent(
+        sendSharedFlowEvent(
             FirstFragmentVmEvent.OnPermissionCheck(
                 listOf(
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -30,10 +30,10 @@ class FirstFragmentVm : BaseViewModelEventFlow<FirstFragmentVmEvent>() {
 
 
     fun onClickSnackBar(v: View) {
-        sendEvent(FirstFragmentVmEvent.OnShowSnackBar("Hello SnackBar"))
+        sendSharedFlowEvent(FirstFragmentVmEvent.OnShowSnackBar("Hello SnackBar"))
     }
 
     fun onClickToast(v: View) {
-        sendEvent(FirstFragmentVmEvent.OnShowToast("Hello Toast"))
+        sendSharedFlowEvent(FirstFragmentVmEvent.OnShowToast("Hello Toast"))
     }
 }

@@ -1,12 +1,8 @@
 package kr.open.rhpark.app
 
 
-import android.os.Build
 import android.os.Bundle
-import androidx.annotation.RequiresApi
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.launch
 import kr.open.rhpark.app.databinding.ActivityMainBinding
 import kr.open.rhpark.library.debug.logcat.Logx
@@ -25,10 +21,8 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
         test()
 
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                vm.eventVm.collect {
-                    eventVM(it)
-                }
+            vm.sharedFlowEventVm.collect {
+                eventVM(it)
             }
         }
     }

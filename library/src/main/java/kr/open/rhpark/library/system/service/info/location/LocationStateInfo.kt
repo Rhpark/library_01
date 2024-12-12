@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kr.open.rhpark.library.repository.local.sharedpreference.LocationSharedPreference
 import kr.open.rhpark.library.system.service.base.BaseSystemService
 import kr.open.rhpark.library.system.service.base.DataUpdate
 
@@ -96,9 +97,7 @@ public class LocationStateInfo(
     public fun unregisterLocationUpdateListener() {
         try {
             locationManager.removeUpdates(locationListener)
-        } catch (e:Exception) {
-
-        }
+        } catch (e:Exception) {        }
     }
 
     public fun unregisterGpsState() {
@@ -138,7 +137,27 @@ public class LocationStateInfo(
         }
     }
 
+    @RequiresPermission(anyOf = [ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION])
     public fun getLocation(): Location? {
         return locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
     }
+
+    public fun calculateDistance(fromLocation: Location, toLocation: Location): Float =
+        fromLocation.distanceTo(toLocation)
+
+    public fun calculateBearing(fromLocation: Location, toLocation: Location): Float =
+        fromLocation.bearingTo(toLocation)
+
+    public fun isLocationWithRadius(fromLocation: Location, toLocation: Location, radius: Float): Boolean =
+        calculateDistance(fromLocation, toLocation) <= radius
+
+    public fun saveApplyLocation(key: String, location: Location) {
+        LocationSharedPreference(context).saveApplyLocation(key,location)
+    }
+
+    public fun saveCommitLocation(key:String, location: Location) {
+        LocationSharedPreference(context).saveCommitLocation(key,location)
+    }
+
+    public fun loadLocation(key: String): Location? = LocationSharedPreference(context).loadLocation(key)
 }

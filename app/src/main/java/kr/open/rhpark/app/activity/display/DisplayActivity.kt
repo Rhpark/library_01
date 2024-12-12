@@ -14,6 +14,8 @@ import kr.open.rhpark.library.util.inline.display.spToPx
 
 class DisplayActivity : BaseBindingActivity<ActivityDisplayBinding>(R.layout.activity_display) {
 
+    private val getDisplayInfo by lazy { getDisplayInfo() }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initListener()
@@ -47,9 +49,9 @@ class DisplayActivity : BaseBindingActivity<ActivityDisplayBinding>(R.layout.act
 
             btbScreenInfo.setOnClickListener {
                 val getFullScreen =
-                    "FullScreen = ${getDisplayInfo().getFullScreenSize()}\n" +
-                            "ScreenWithStatusBar = ${getDisplayInfo().getScreenWithStatusBar()}\n" +
-                            "Screen = ${getDisplayInfo().getScreen()}\n" +
+                    "FullScreen = ${getDisplayInfo.getFullScreenSize()}\n" +
+                            "ScreenWithStatusBar = ${getDisplayInfo.getScreenWithStatusBar()}\n" +
+                            "Screen = ${getDisplayInfo.getScreen()}\n" +
                             "StatusBar height = ${getStatusBarHeight()}\n" +
                             "NavigationBar height = ${getNavigationBarHeight()}\n" +
                             "getStatusBarHeight = ${this@DisplayActivity.getStatusBarHeight()}\n" +
@@ -59,8 +61,6 @@ class DisplayActivity : BaseBindingActivity<ActivityDisplayBinding>(R.layout.act
             }
         }
     }
-
-    private fun getDisplayInfo() = applicationContext.getDisplayInfo()
 
     private fun editNumberIsEmpty(): Boolean = if (binding.edtNumber.text.isEmpty()) {
         toast.showMsgShort("Input Number")
