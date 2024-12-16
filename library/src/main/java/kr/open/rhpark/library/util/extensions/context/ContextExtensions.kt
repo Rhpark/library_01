@@ -18,7 +18,7 @@ import androidx.core.content.ContextCompat
 import kotlinx.coroutines.CoroutineScope
 import kr.open.rhpark.library.system.service.controller.SoftKeyboardController
 import kr.open.rhpark.library.system.service.controller.VibratorController
-import kr.open.rhpark.library.system.service.controller.windowmanager.WindowManagerController
+import kr.open.rhpark.library.system.service.controller.windowmanager.FloatingViewController
 import kr.open.rhpark.library.system.service.info.battery.BatteryStateInfo
 import kr.open.rhpark.library.system.service.info.display.DisplayInfo
 import kr.open.rhpark.library.system.service.info.location.LocationStateInfo
@@ -69,8 +69,8 @@ public fun Context.getSoftKeyboardController(): SoftKeyboardController =
 
 public fun Context.getVibratorController():VibratorController = VibratorController(this)
 
-public fun Context.getWindowManagerController(): WindowManagerController =
-    WindowManagerController(this, getSystemWindowManager())
+public fun Context.getFloatingViewControllerController(): FloatingViewController =
+    FloatingViewController(this, getSystemWindowManager())
 
 
 

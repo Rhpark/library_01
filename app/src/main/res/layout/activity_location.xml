@@ -34,17 +34,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <Button
-            android:id="@+id/btnLocationTurnOnOff"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Location Turn On/Off Check Start" />
-
         <TextView
             android:text="Location Change"
             android:id="@+id/tvLocationChange"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/btnGetLocationData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="GetLocationData" />
+
+        <Button
+            android:id="@+id/btnLocationTurnOnOff"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Location Turn On/Off Check Start" />
 
         <Button
             android:id="@+id/btnLocationChange"
