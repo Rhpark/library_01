@@ -9,13 +9,13 @@ public class FloatingDragView(
     view: View,
     startX: Int,
     startY: Int,
+    public var collisionsWhileTouchDown: ((FloatingDragView, FloatingViewCollisionsType) -> Unit)? = null,
     public var collisionsWhileDrag: ((FloatingDragView, FloatingViewCollisionsType) -> Unit)? = null,
-    public var collisionsWhileTouchUp: ((FloatingDragView, FloatingViewCollisionsType) -> Unit)? = null,
-    public var collisionsWhileTouchDown: ((FloatingDragView, FloatingViewCollisionsType) -> Unit)? = null
+    public var collisionsWhileTouchUp: ((FloatingDragView, FloatingViewCollisionsType) -> Unit)? = null
 ) : FloatingFixedView(view, startX, startY) {
 
-    private val updateCollisionWhileDrag = DataUpdate(FloatingViewCollisionsType.UNCOLLISIONS) { type1 ->
-            collisionsWhileDrag?.invoke(this, type1)
+    private val updateCollisionWhileDrag = DataUpdate(FloatingViewCollisionsType.UNCOLLISIONS) { type ->
+            collisionsWhileDrag?.invoke(this, type)
         }
 
     public fun updateCollisionWhileDrag(floatingViewCollisionsType: FloatingViewCollisionsType) {

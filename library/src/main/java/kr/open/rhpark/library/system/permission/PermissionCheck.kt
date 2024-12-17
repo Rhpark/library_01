@@ -69,7 +69,15 @@ public class PermissionCheck(
     public fun resultPermissionsFromActivity(permissions: Array<out String>, grantResults: IntArray) {
         val deniedList = mutableListOf<String>()
         permissions.forEachIndexed { index, s ->
-            if (grantResults[index] == PackageManager.PERMISSION_DENIED) deniedList.add(s)
+            if (grantResults[index] == PackageManager.PERMISSION_DENIED) {
+                if(s == Manifest.permission.SYSTEM_ALERT_WINDOW) {
+                    if(!Settings.canDrawOverlays(context)) {
+                        deniedList.add(s)
+                    }
+                } else {
+                    deniedList.add(s)
+                }
+            }
         }
         result(deniedList)
     }
