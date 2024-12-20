@@ -7,7 +7,7 @@ import android.view.WindowManager
 import android.view.WindowManager.LayoutParams
 import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.system.service.base.BaseSystemService
-import kr.open.rhpark.library.system.service.controller.windowmanager.floating.data.FloatingViewCollisionsType
+import kr.open.rhpark.library.system.service.controller.windowmanager.floating.vo.FloatingViewCollisionsType
 import kr.open.rhpark.library.system.service.controller.windowmanager.floating.drag.FloatingDragViewConfig
 import kr.open.rhpark.library.system.service.controller.windowmanager.floating.drag.FloatingDragView
 import kr.open.rhpark.library.system.service.controller.windowmanager.floating.fixed.FloatingFixedView

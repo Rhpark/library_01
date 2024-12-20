@@ -2,10 +2,12 @@ package kr.open.rhpark.app
 
 import android.Manifest
 import android.view.View
+import kr.open.rhpark.app.activity.alarm.AlarmActivity
 import kr.open.rhpark.app.activity.battery.BatteryActivity
 import kr.open.rhpark.app.activity.display.DisplayActivity
 import kr.open.rhpark.app.activity.location.LocationActivity
 import kr.open.rhpark.app.activity.network.NetworkActivity
+import kr.open.rhpark.app.activity.notification.NotificationActivity
 import kr.open.rhpark.app.activity.recyclerview.RecyclerViewActivity
 import kr.open.rhpark.app.activity.second.FragmentShowActivity
 import kr.open.rhpark.app.activity.toast_snackbar.ToastSnackBarActivity
@@ -68,5 +70,13 @@ class MainActivityVm : BaseViewModelEventFlow<MainActivityVmEvent>() {
 
     fun onClickShowLocationActivity(v:View) {
         showActivity(LocationActivity::class.java)
+    }
+
+    fun onClickShowNotificationActivity(v:View) {
+        showActivity(NotificationActivity::class.java)
+    }
+
+    fun onClickShowAlarmActivity(v:View) {
+        showActivity(AlarmActivity::class.java)
     }
 }

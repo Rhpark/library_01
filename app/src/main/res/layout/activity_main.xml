@@ -101,6 +101,20 @@
                     android:text="Show Location Activity" />
 
                 <Button
+                    android:id="@+id/btnShowNotification"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{(v)->vm.onClickShowNotificationActivity(v)}"
+                    android:text="Show Notification Activity" />
+
+                <Button
+                    android:id="@+id/btnShowAlarm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{(v)->vm.onClickShowAlarmActivity(v)}"
+                    android:text="Show Alarm Activity" />
+
+                <Button
                     android:id="@+id/btnToastSnackbar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

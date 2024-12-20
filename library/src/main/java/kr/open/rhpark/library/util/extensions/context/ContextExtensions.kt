@@ -1,6 +1,7 @@
 package kr.open.rhpark.library.util.extensions.context
 
 import android.Manifest
+import android.app.AlarmManager
 import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.PackageManager
@@ -8,6 +9,7 @@ import android.location.LocationManager
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import android.os.BatteryManager
+import android.os.PowerManager
 import android.provider.Settings
 import android.telephony.SubscriptionManager
 import android.telephony.TelephonyManager
@@ -16,6 +18,8 @@ import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
 import kotlinx.coroutines.CoroutineScope
+import kr.open.rhpark.library.system.service.controller.NotificationController
+import kr.open.rhpark.library.system.service.controller.alarm.AlarmController
 import kr.open.rhpark.library.system.service.controller.SoftKeyboardController
 import kr.open.rhpark.library.system.service.controller.VibratorController
 import kr.open.rhpark.library.system.service.controller.windowmanager.FloatingViewController
@@ -52,12 +56,17 @@ public fun Context.getSystemEuiccManager(): EuiccManager =
 public fun Context.getSystemConnectivityManager(): ConnectivityManager =
     getSystemService(ConnectivityManager::class.java)
 
-public fun Context.getSystemWifiManager(): WifiManager =
-    getSystemService(WifiManager::class.java)
+public fun Context.getSystemWifiManager(): WifiManager = getSystemService(WifiManager::class.java)
 
 public fun Context.getSystemLocationManager(): LocationManager =
     getSystemService(LocationManager::class.java)
 
+public fun Context.getAlarmManager(): AlarmManager = getSystemService(AlarmManager::class.java)
+
+public fun Context.getNotificationManager(): NotificationManager =
+    getSystemService(NotificationManager::class.java)
+
+public fun Context.getPowerManager(): PowerManager = getSystemService(PowerManager::class.java)
 
 
 /****************************
@@ -67,19 +76,22 @@ public fun Context.getSystemLocationManager(): LocationManager =
 public fun Context.getSoftKeyboardController(): SoftKeyboardController =
     SoftKeyboardController(this, getSystemInputMethodManager())
 
-public fun Context.getVibratorController():VibratorController = VibratorController(this)
+public fun Context.getVibratorController(): VibratorController = VibratorController(this)
 
 public fun Context.getFloatingViewControllerController(): FloatingViewController =
     FloatingViewController(this, getSystemWindowManager())
 
+public fun Context.getAlarmController(): AlarmController = AlarmController(this, getAlarmManager())
+
+public fun Context.getNotificationController(): NotificationController =
+    NotificationController(this, getNotificationManager())
 
 
 /*****************************
  * SystemService Access Info *
  *****************************/
 
-
-public fun Context.getNetworkStateInfo():NetworkStateInfo =
+public fun Context.getNetworkStateInfo(): NetworkStateInfo =
     NetworkStateInfo(this,
         getSystemTelephonyManager(), getSystemSubscriptionManager(),
         getSystemConnectivityManager(), getSystemWifiManager(), getSystemEuiccManager())
