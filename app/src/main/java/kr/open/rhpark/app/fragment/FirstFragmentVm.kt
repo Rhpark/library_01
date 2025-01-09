@@ -1,7 +1,6 @@
 package kr.open.rhpark.app.fragment
 
 import android.Manifest
-import android.view.View
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import kr.open.rhpark.library.debug.logcat.Logx
@@ -14,9 +13,9 @@ class FirstFragmentVm : BaseViewModelEventFlow<FirstFragmentVmEvent>() {
         }
     }
 
-    fun onClickPermission(v: View) {
+    fun onClickPermission() {
         Logx.d()
-        sendSharedFlowEvent(
+        sendEventVm(
             FirstFragmentVmEvent.OnPermissionCheck(
                 listOf(
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -29,11 +28,11 @@ class FirstFragmentVm : BaseViewModelEventFlow<FirstFragmentVmEvent>() {
     }
 
 
-    fun onClickSnackBar(v: View) {
-        sendSharedFlowEvent(FirstFragmentVmEvent.OnShowSnackBar("Hello SnackBar"))
+    fun onClickSnackBar() {
+        sendEventVm(FirstFragmentVmEvent.OnShowSnackBar("Hello SnackBar"))
     }
 
-    fun onClickToast(v: View) {
-        sendSharedFlowEvent(FirstFragmentVmEvent.OnShowToast("Hello Toast"))
+    fun onClickToast() {
+        sendEventVm(FirstFragmentVmEvent.OnShowToast("Hello Toast"))
     }
 }

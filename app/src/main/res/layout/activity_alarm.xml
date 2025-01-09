@@ -15,12 +15,21 @@
         <TextView
             android:id="@+id/tvReceiveIntentData"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/edtTimer"
+            android:text="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Input Number Timer Min"
+            android:inputType="numberDecimal" />
+
         <Button
             android:id="@+id/btnAlarmRegister"
-            android:text="Alarm Register"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:text="Alarm Register" />
 
     </LinearLayout>
 </layout>

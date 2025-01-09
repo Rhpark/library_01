@@ -60,7 +60,7 @@ public object Logx {
 
     private val logWriter = LogxWriter()
 
-    internal var debugTagCheckList = listOf<String>()
+    internal var debugFilterList = listOf<String>()
 
     internal var debugLogTypeList = listOf(
         LogxType.VERBOSE,
@@ -90,7 +90,7 @@ public object Logx {
      *
      * @param tagList : LogxType List
      */
-    public fun setDebugTagCheckList(tagList:List<String>) { debugTagCheckList = tagList.toList() }
+    public fun setDebugFilterList(tagList:List<String>) { debugFilterList = tagList.toList() }
 
     /**
      * AppName include the Logcat Tag

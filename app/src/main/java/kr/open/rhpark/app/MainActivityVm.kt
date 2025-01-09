@@ -1,7 +1,6 @@
 package kr.open.rhpark.app
 
 import android.Manifest
-import android.view.View
 import kr.open.rhpark.app.activity.alarm.AlarmActivity
 import kr.open.rhpark.app.activity.battery.BatteryActivity
 import kr.open.rhpark.app.activity.display.DisplayActivity
@@ -17,8 +16,8 @@ import kr.open.rhpark.library.viewmodels.BaseViewModelEventFlow
 
 class MainActivityVm : BaseViewModelEventFlow<MainActivityVmEvent>() {
 
-    fun onClickPermission(v: View) {
-        sendSharedFlowEvent(
+    fun onClickPermission() {
+        sendEventVm(
             MainActivityVmEvent.OnPermissionCheck(
                 listOf(
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -32,51 +31,50 @@ class MainActivityVm : BaseViewModelEventFlow<MainActivityVmEvent>() {
 
 
     private fun showActivity(activity: Class<*>) {
-        sendSharedFlowEvent(MainActivityVmEvent.OnShowActivity(activity))
-    // or sendStateFlowEvent(MainActivityVmEvent.OnShowActivity(activity))
+        sendEventVm(MainActivityVmEvent.OnShowActivity(activity))
     }
 
-    fun onClickNetworkActivity(v:View) {
+    fun onClickNetworkActivity() {
         showActivity(NetworkActivity::class.java)
     }
 
-    fun onClickToastSnackBar(v: View) {
+    fun onClickToastSnackBar() {
         showActivity(ToastSnackBarActivity::class.java)
     }
 
-    fun onClickShowRecyclerviewActivity(v: View) {
+    fun onClickShowRecyclerviewActivity() {
         showActivity(RecyclerViewActivity::class.java)
     }
 
-    fun onClickShowVibratorActivity(v:View) {
+    fun onClickShowVibratorActivity() {
         showActivity(VibratorActivity::class.java)
     }
 
-    fun onClickShowWindowActivity(v:View) {
+    fun onClickShowWindowActivity() {
         showActivity(WindowActivity::class.java)
     }
 
-    fun onClickShowFragment(v:View) {
+    fun onClickShowFragment() {
         showActivity(FragmentShowActivity::class.java)
     }
 
-    fun onClickShowDisplayActivity(v:View) {
+    fun onClickShowDisplayActivity() {
         showActivity(DisplayActivity::class.java)
     }
 
-    fun onClickShowBatteryActivity(v:View) {
+    fun onClickShowBatteryActivity() {
         showActivity(BatteryActivity::class.java)
     }
 
-    fun onClickShowLocationActivity(v:View) {
+    fun onClickShowLocationActivity() {
         showActivity(LocationActivity::class.java)
     }
 
-    fun onClickShowNotificationActivity(v:View) {
+    fun onClickShowNotificationActivity() {
         showActivity(NotificationActivity::class.java)
     }
 
-    fun onClickShowAlarmActivity(v:View) {
+    fun onClickShowAlarmActivity() {
         showActivity(AlarmActivity::class.java)
     }
 }

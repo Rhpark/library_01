@@ -13,6 +13,7 @@ public class AlarmDTO(
     public val sound: Int = 100,
     public val hour: Int,
     public val minute: Int,
-    public val second: Int
+    public val second: Int,
+    public val acquireTime: Long = 3000
 ) {
 }

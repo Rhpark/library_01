@@ -1,40 +1,47 @@
 package kr.open.rhpark.library.system.service.controller.alarm.receiver
 
 import android.annotation.SuppressLint
-import android.app.NotificationChannel
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.PowerManager
 import kr.open.rhpark.library.debug.logcat.Logx
-import kr.open.rhpark.library.system.service.controller.NotificationController
+import kr.open.rhpark.library.system.service.controller.SimpleNotificationController
 import kr.open.rhpark.library.system.service.controller.alarm.AlarmController
+import kr.open.rhpark.library.system.service.controller.alarm.vo.AlarmVO.ALARM_KEY
 import kr.open.rhpark.library.system.service.controller.alarm.dto.AlarmDTO
+import kr.open.rhpark.library.system.service.controller.alarm.vo.AlarmVO.ALARM_KEY_DEFAULT_VALUE
 import kr.open.rhpark.library.util.extensions.context.getAlarmController
 import kr.open.rhpark.library.util.extensions.context.getPowerManager
 
-public abstract class BaseAlarmReceiver : BroadcastReceiver() {
+public abstract class BaseAlarmReceiver(
+) : BroadcastReceiver() {
 
-    protected lateinit var notificationController: NotificationController
-    protected abstract val notificationId: Int
+    protected lateinit var notificationController: SimpleNotificationController
 
     protected abstract val registerType: RegisterType
     protected abstract val classType: Class<*>
 
-    protected abstract fun getNotificationChannel(): NotificationChannel
+    protected abstract fun createNotificationChannel(context: Context, alarmDTO: AlarmDTO)
 
     protected abstract fun showNotification(context: Context, alarmDTO: AlarmDTO)
 
     protected abstract fun loadAllAlarmDtoList(): List<AlarmDTO>
-    protected abstract fun loadAlarmDtoList(intent: Intent): AlarmDTO?
+    protected abstract fun loadAlarmDtoList(intent: Intent, key:Int): AlarmDTO?
+
+    protected abstract val powerManagerAcquireTime: Long
 
     @SuppressLint("InvalidWakeLockTag")
     override fun onReceive(context: Context?, intent: Intent?) {
         Logx.d()
         context?.let { context ->
+
+            Logx.d("BaseAlarmReceiver onReceive")
             val pm = context.getPowerManager()
-            val wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AlarmReceiver").apply {
-                acquire(10 * 60 * 1000L /*10 minutes*/)
+            val wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK or
+                    PowerManager.ACQUIRE_CAUSES_WAKEUP or
+                    PowerManager.ON_AFTER_RELEASE, "AlarmReceiver").apply {
+                acquire(powerManagerAcquireTime)
             }
             val alarmController = context.getAlarmController()
 
@@ -46,10 +53,10 @@ public abstract class BaseAlarmReceiver : BroadcastReceiver() {
                         registerAlarm(alarmController, it)
                     }
                 } else {
-                    // intent를 통한 알람 리스트 유무 확인
                     // alarmDto Load
-                    loadAlarmDtoList(intent)?.let {
-                        getNotificationChannel()
+                    val key = intent.getIntExtra(ALARM_KEY, ALARM_KEY_DEFAULT_VALUE)
+                    loadAlarmDtoList(intent, key)?.let {
+                        createNotificationChannel(context, it)
                         showNotification(context, it)
                     } ?: Logx.e("")
                 }

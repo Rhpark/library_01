@@ -34,10 +34,13 @@ public class AlarmController(context: Context, public val alarmManager: AlarmMan
         alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
     }
 
-    private fun getAlarmPendingIntent(receiver: Class<*>, key: Int): PendingIntent = PendingIntent.getBroadcast(
-        context, key, Intent(context, receiver),
-        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-    )
+    private fun getAlarmPendingIntent(receiver: Class<*>, key: Int): PendingIntent =
+        PendingIntent.getBroadcast(
+            context,
+            key,
+            Intent(context, receiver).apply { putExtra("AlarmKey", key) },
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
 
     private fun getCalendar(alarmDto: AlarmDTO): Calendar = Calendar.getInstance().apply {
 //        timeInMillis = System.currentTimeMillis()
@@ -45,14 +48,10 @@ public class AlarmController(context: Context, public val alarmManager: AlarmMan
         set(Calendar.MINUTE, alarmDto.minute)
         set(Calendar.SECOND, alarmDto.second)
 //        set(Calendar.SECOND, 10)
-        if (before(this@AlarmController)) {
+        if (before(this@apply)) {
             add(Calendar.DATE, 1)
         }
     }
-
-//    public fun addAlarm(calendar: Calendar) {
-//
-//    }
 
     public fun remove(key: Int) {
         val intent = Intent(context, BaseAlarmReceiver::class.java)

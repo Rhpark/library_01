@@ -92,12 +92,12 @@ internal class LogxWriter {
         val logTag = pair.first
         val logMsg = "${pair.second}$msg"
         when (logType) {
-            LogxType.JSON ->        Log.v(logTag, logMsg)
             LogxType.VERBOSE ->     Log.v(logTag, logMsg)
-            LogxType.THREAD_ID ->   Log.d(logTag, logMsg)
-            LogxType.DEBUG ->       Log.d(logTag, logMsg)
-            LogxType.PARENT ->      Log.i(logTag, logMsg)
             LogxType.INFO ->        Log.i(logTag, logMsg)
+            LogxType.JSON ->        Log.i(logTag, logMsg)
+            LogxType.DEBUG ->       Log.d(logTag, logMsg)
+            LogxType.THREAD_ID ->   Log.d(logTag, logMsg)
+            LogxType.PARENT ->      Log.d(logTag, logMsg)
             LogxType.WARN ->        Log.w(logTag, logMsg)
             LogxType.ERROR ->       Log.e(logTag, logMsg)
         }
@@ -176,7 +176,7 @@ internal class LogxWriter {
     else Logx.debugLogTypeList.contains(logType)
 
     private fun isDebugFilter(logTag: String) = if (!Logx.isDebugFilter) true
-    else Logx.debugTagCheckList.contains(logTag)
+    else Logx.debugFilterList.contains(logTag)
 
     private fun isLogFilter(tag: String, fileName: String): Boolean =
         if (tag.isNotEmpty() && (!isDebugFilter(tag) && !isDebugFilter(fileName))) {

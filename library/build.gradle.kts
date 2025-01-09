@@ -20,7 +20,7 @@ publishing {
         register<MavenPublication>("debug") {
             groupId = "com.github.Rhpark"
             artifactId = "library_01"
-            version = "0.9.1"
+            version = "0.10.0"
 
             afterEvaluate {
                 from(components["debug"])

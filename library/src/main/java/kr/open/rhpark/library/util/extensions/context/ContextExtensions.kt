@@ -18,7 +18,7 @@ import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
 import kotlinx.coroutines.CoroutineScope
-import kr.open.rhpark.library.system.service.controller.NotificationController
+import kr.open.rhpark.library.system.service.controller.SimpleNotificationController
 import kr.open.rhpark.library.system.service.controller.alarm.AlarmController
 import kr.open.rhpark.library.system.service.controller.SoftKeyboardController
 import kr.open.rhpark.library.system.service.controller.VibratorController
@@ -83,8 +83,8 @@ public fun Context.getFloatingViewControllerController(): FloatingViewController
 
 public fun Context.getAlarmController(): AlarmController = AlarmController(this, getAlarmManager())
 
-public fun Context.getNotificationController(): NotificationController =
-    NotificationController(this, getNotificationManager())
+public fun Context.getNotificationController(): SimpleNotificationController =
+    SimpleNotificationController(this, getNotificationManager())
 
 
 /*****************************

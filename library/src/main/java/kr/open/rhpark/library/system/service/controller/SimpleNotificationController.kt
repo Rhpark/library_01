@@ -21,7 +21,7 @@ import kr.open.rhpark.library.system.service.base.BaseSystemService
  * NotificationManager.IMPORTANCE_LOW	중간 중요도이며 알림음이 울리지 않음
  * NotificationManager.IMPORTANCE_MIN   낮은 중요도이며 알림음이 없고 상태표시줄에 표시되지 않음
  */
-public class NotificationController(
+public class SimpleNotificationController(
     context: Context,
     public val notificationManager: NotificationManager,
 
@@ -92,7 +92,9 @@ public class NotificationController(
     ) {
         val builder = getBuilder(title, content, isAutoCancel, smallIcon, largeIcon).apply {
             clickIntent?.let {
-                setContentIntent(getClickShowBroadcastPendingIntent(notificationId, it))
+                val pendingIntent = getClickShowBroadcastPendingIntent(notificationId, it)
+                setContentIntent(pendingIntent)
+//                setFullScreenIntent(pendingIntent, true)
             }
             actions?.forEach { addAction(it) }
         }
@@ -113,9 +115,8 @@ public class NotificationController(
             clickIntent?.let {
                 setContentIntent(getClickShowActivityPendingIntent(notificationId, it))
             }
-            largeIcon?.let {
-                setStyle(NotificationCompat.BigPictureStyle().bigPicture(it))
-            }
+            setStyle(NotificationCompat.BigPictureStyle().bigPicture(largeIcon))
+
             actions?.forEach { addAction(it) }
         }
         notificationManager.notify(notificationId, builder.build())
@@ -136,9 +137,7 @@ public class NotificationController(
             clickIntent?.let {
                 setContentIntent(getClickShowActivityPendingIntent(notificationId, it))
             }
-            snippet?.let {
-                setStyle(NotificationCompat.BigTextStyle().bigText(snippet))
-            }
+            setStyle(NotificationCompat.BigTextStyle().bigText(snippet))
             actions?.forEach { addAction(it) }
         }
         notificationManager.notify(notificationId, builder.build())
@@ -158,7 +157,7 @@ public class NotificationController(
             clickIntent?.let {
                 setContentIntent(getClickShowActivityPendingIntent(notificationId, it))
             }
-            actions?.forEach { addAction(it) }
+            actions.forEach { addAction(it) }
         }
         notificationManager.notify(notificationId, builder.build())
 

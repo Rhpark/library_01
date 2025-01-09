@@ -4,7 +4,9 @@ package kr.open.rhpark.app.activity.alarm
 import android.Manifest.permission.POST_NOTIFICATIONS
 import android.Manifest.permission.RECEIVE_BOOT_COMPLETED
 import android.Manifest.permission.SCHEDULE_EXACT_ALARM
+import android.Manifest.permission.USE_EXACT_ALARM
 import android.Manifest.permission.WAKE_LOCK
+import android.os.Build
 import android.os.Bundle
 import kr.open.rhpark.app.R
 import kr.open.rhpark.app.activity.alarm.receiver.AlarmReceiver
@@ -13,54 +15,67 @@ import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.system.service.controller.alarm.dto.AlarmDTO
 import kr.open.rhpark.library.ui.activity.BaseBindingActivity
 import kr.open.rhpark.library.util.extensions.context.getAlarmController
-import kr.open.rhpark.library.util.extensions.context.getNotificationController
+import kr.open.rhpark.library.util.inline.sdk_version.checkSdkVersion
+import java.time.LocalDateTime
 
 class AlarmActivity :
     BaseBindingActivity<ActivityAlarmBinding>(R.layout.activity_alarm) {
 
-
-    private val notificationController by lazy { getNotificationController() }
     private val alarmController by lazy { getAlarmController() }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestPermissions(
-            listOf(
-                POST_NOTIFICATIONS,
-                RECEIVE_BOOT_COMPLETED,
-                SCHEDULE_EXACT_ALARM,
-                WAKE_LOCK
-            )
-        ) { requestCode, deniedPermissions ->
+        requestPermissions(getPermissionList()) { requestCode, deniedPermissions ->
             Logx.d("requestCode $requestCode, deniedPermissions $deniedPermissions")
             if (deniedPermissions.isEmpty()) {
 
             }
             initListener()
         }
-
     }
 
     private fun initListener() {
         binding.run {
             btnAlarmRegister.setOnClickListener {
-                Logx.d()
-                val a = AlarmDTO(
-                    1,
-                    "test002",
-                    "msg002",
-                    true,
-                    true,
-                    true,
-                    100,
-                    15,
-                    30,
-                    0
-                )
-                alarmController.registerAlarmAndAllowWhileIdle(AlarmReceiver::class.java, a)
+                val edit = edtTimer.text
+                if (edit.isNullOrEmpty()) {
+                    toast.showMsgShort("input Min timer")
+                } else if (edit.toString().toInt() < 1) {
+                    toast.showMsgShort("over than 0")
+                }else {
+                    Logx.d()
+                    val min = edtTimer.text.toString().toInt()
+                    val localDataTime = LocalDateTime.now()
+                    val a = AlarmDTO(
+                        1,
+                        "test002",
+                        "msg002",
+                        true,
+                        true,
+                        true,
+                        100,
+                        localDataTime.hour,
+                        localDataTime.minute + min ,
+                        0
+                    )
+                    alarmController.registerAlarmClock(AlarmReceiver::class.java, a)
+                }
             }
         }
+    }
+
+    private fun getPermissionList(): List<String> {
+        val list = mutableListOf<String>()
+        list.add(RECEIVE_BOOT_COMPLETED)
+        list.add(WAKE_LOCK)
+        checkSdkVersion(Build.VERSION_CODES.TIRAMISU) {
+            list.add(USE_EXACT_ALARM)
+            list.add(POST_NOTIFICATIONS)
+        }
+        checkSdkVersion(Build.VERSION_CODES.S) {
+            list.add(SCHEDULE_EXACT_ALARM)
+        }
+        return list.toList()
     }
 
 }

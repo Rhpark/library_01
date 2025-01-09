@@ -21,7 +21,7 @@ class FirstFragment:BaseBindingFragment<FragmentFirstBinding>(R.layout.fragment_
         binding.vm = vm
 
         lifecycleScope.launch {
-            vm.sharedFlowEventVm.collect{
+            vm.mEventVm.collect{
                 when (it) {
                     is FirstFragmentVmEvent.OnPermissionCheck -> {
                         requestPermissions(12313, it.permissionList) { requestCode, deniedPermissions ->

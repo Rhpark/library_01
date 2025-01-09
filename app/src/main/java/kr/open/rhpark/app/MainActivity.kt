@@ -21,7 +21,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
         test()
 
         lifecycleScope.launch {
-            vm.sharedFlowEventVm.collect {
+            vm.mEventVm.collect {
                 eventVM(it)
             }
         }
