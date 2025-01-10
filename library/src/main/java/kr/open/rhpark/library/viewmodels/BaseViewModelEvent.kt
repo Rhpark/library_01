@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
-public abstract class BaseViewModelEventFlow<EVENT_TYPE> : BaseViewModel() {
+public abstract class BaseViewModelEvent<EVENT_TYPE> : BaseViewModel() {
 
     /****************************************************************
      *                                                              *
@@ -18,4 +18,6 @@ public abstract class BaseViewModelEventFlow<EVENT_TYPE> : BaseViewModel() {
     public val mEventVm: Flow<EVENT_TYPE> = eventVm.receiveAsFlow()
 
     protected fun sendEventVm(event: EVENT_TYPE) { viewModelScope.launch { eventVm.send(event) } }
+
+
 }

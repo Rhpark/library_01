@@ -1,8 +1,8 @@
 package kr.open.rhpark.library.viewmodels
 
-import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.ViewModel
 
-public abstract class BaseViewModel : ViewModel(), LifecycleObserver {
+public abstract class BaseViewModel : ViewModel(), DefaultLifecycleObserver {
 
 }

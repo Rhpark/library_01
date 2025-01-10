@@ -8,9 +8,9 @@ import kr.open.rhpark.app.activity.recyclerview.adapter.RcvAdapter
 import kr.open.rhpark.app.activity.recyclerview.adapter.RcvListAdapter
 import kr.open.rhpark.app.activity.recyclerview.adapter.item.RcvItem
 import kr.open.rhpark.library.debug.logcat.Logx
-import kr.open.rhpark.library.viewmodels.BaseViewModelEventFlow
+import kr.open.rhpark.library.viewmodels.BaseViewModelEvent
 
-class RecyclerviewActivityVm : BaseViewModelEventFlow<RecyclerviewActivityVmEvent>() {
+class RecyclerviewActivityVm : BaseViewModelEvent<RecyclerviewActivityVmEvent>() {
 
     val ADAPTER = false
     val ADAPTER_STR = "Adapter Mode"

@@ -12,9 +12,9 @@ import kr.open.rhpark.app.activity.second.FragmentShowActivity
 import kr.open.rhpark.app.activity.toast_snackbar.ToastSnackBarActivity
 import kr.open.rhpark.app.activity.vibrator.VibratorActivity
 import kr.open.rhpark.app.activity.window.WindowActivity
-import kr.open.rhpark.library.viewmodels.BaseViewModelEventFlow
+import kr.open.rhpark.library.viewmodels.BaseViewModelEvent
 
-class MainActivityVm : BaseViewModelEventFlow<MainActivityVmEvent>() {
+class MainActivityVm : BaseViewModelEvent<MainActivityVmEvent>() {
 
     fun onClickPermission() {
         sendEventVm(
@@ -28,7 +28,6 @@ class MainActivityVm : BaseViewModelEventFlow<MainActivityVmEvent>() {
             )
         )
     }
-
 
     private fun showActivity(activity: Class<*>) {
         sendEventVm(MainActivityVmEvent.OnShowActivity(activity))

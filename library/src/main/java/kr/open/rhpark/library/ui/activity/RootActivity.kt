@@ -152,18 +152,6 @@ public abstract class RootActivity : AppCompatActivity() {
             rectangle.top
         })
 
-    public fun getStatusBarHeight1(): Int = checkSdkVersion(
-        Build.VERSION_CODES.R,
-        positiveWork = {
-            window.decorView.getRootWindowInsets().getInsets(WindowInsets.Type.statusBars()).top
-        },
-        negativeWork = {
-            val rectangle = Rect()
-            window.decorView.getWindowVisibleDisplayFrame(rectangle)
-            rectangle.top
-        })
-
-
     public fun getNavigationBarHeight(): Int = checkSdkVersion(
         Build.VERSION_CODES.R,
         positiveWork = {

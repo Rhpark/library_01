@@ -4,9 +4,9 @@ import android.Manifest
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import kr.open.rhpark.library.debug.logcat.Logx
-import kr.open.rhpark.library.viewmodels.BaseViewModelEventFlow
+import kr.open.rhpark.library.viewmodels.BaseViewModelEvent
 
-class FirstFragmentVm : BaseViewModelEventFlow<FirstFragmentVmEvent>() {
+class FirstFragmentVm : BaseViewModelEvent<FirstFragmentVmEvent>() {
     init {
         viewModelScope.launch {
 
