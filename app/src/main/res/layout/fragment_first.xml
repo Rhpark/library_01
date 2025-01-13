@@ -30,7 +30,7 @@
             android:id="@+id/btnTestPermission"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="@{(v)->vm.onClickPermission(v)}"
+            android:onClick="@{()->vm.onClickPermission()}"
             android:text="permission"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -40,7 +40,7 @@
             android:id="@+id/btnToastSnackbar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="@{(v)->vm.onClickSnackBar(v)}"
+            android:onClick="@{()->vm.onClickSnackBar()}"
             android:text="SnackBar"
             app:layout_constraintTop_toBottomOf="@+id/btnTestPermission"
             app:layout_constraintLeft_toLeftOf="parent" />
@@ -49,7 +49,7 @@
             android:id="@+id/btnTestToastShow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="@{(v)->vm.onClickToast(v)}"
+            android:onClick="@{()->vm.onClickToast()}"
             android:text="Toast"
             app:layout_constraintTop_toBottomOf="@+id/btnToastSnackbar"
             app:layout_constraintLeft_toLeftOf="parent" />

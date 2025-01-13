@@ -10,11 +10,13 @@ import androidx.recyclerview.widget.RecyclerView
 public open class BaseRcvViewHolder<ITEM, BINDING : ViewDataBinding>(
     @LayoutRes xmlRes: Int,
     parent: ViewGroup,
-    attachToRoot: Boolean = false,
+    attachToRoot: Boolean = false
 ) : RecyclerView.ViewHolder(
     LayoutInflater.from(parent.context).inflate(xmlRes, parent, attachToRoot)
 ) {
-    public val binding: BINDING = DataBindingUtil.bind<BINDING>(itemView) ?: throw IllegalStateException("Exception Binding is null!!")
+    public val binding: BINDING by lazy {
+        DataBindingUtil.bind<BINDING>(itemView) ?: throw IllegalStateException("Exception Binding is null!!")
+    }
 
     /**
      * Verification of the existence of an item

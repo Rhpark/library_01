@@ -12,18 +12,6 @@ import kr.open.rhpark.library.ui.recyclerview.list_adapter.BaseRcvListAdapter
 class RcvListAdapter :
     BaseRcvListAdapter<RcvItem, BaseRcvViewHolder<RcvItem, ItemRecyclerviewBinding>>(DifUtilCallBack()) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):
-            BaseRcvViewHolder<RcvItem, ItemRecyclerviewBinding> =
-        BaseRcvViewHolder(R.layout.item_recyclerview, parent)
-
-    override fun onBindViewHolder(
-        holder: BaseRcvViewHolder<RcvItem, ItemRecyclerviewBinding>, position: Int, item: RcvItem
-    ) {
-        holder.binding.item = getItem(position)
-//        holder.binding.rcvKey.text = getItem(position).key
-//        holder.binding.rcvMsg.text = getItem(position).msg
-    }
-
     class DifUtilCallBack : DiffUtil.ItemCallback<RcvItem>() {
 
         override fun areItemsTheSame(oldItem: RcvItem, newItem: RcvItem) = oldItem.key == newItem.key
@@ -31,5 +19,17 @@ class RcvListAdapter :
         @SuppressLint("DiffUtilEquals")
         override fun areContentsTheSame(oldItem: RcvItem, newItem: RcvItem) =
             oldItem.key === newItem.key
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):
+            BaseRcvViewHolder<RcvItem, ItemRecyclerviewBinding> =
+        BaseRcvViewHolder(R.layout.item_recyclerview, parent)
+
+    override fun onBindViewHolder(
+        holder: BaseRcvViewHolder<RcvItem, ItemRecyclerviewBinding>, position: Int, item: RcvItem
+    ) {
+        holder.binding.item = item
+//        holder.binding.rcvKey.text = getItem(position).key
+//        holder.binding.rcvMsg.text = getItem(position).msg
     }
 }

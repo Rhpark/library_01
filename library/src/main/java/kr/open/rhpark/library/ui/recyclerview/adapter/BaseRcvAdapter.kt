@@ -39,12 +39,9 @@ public abstract class BaseRcvAdapter<ITEM, VH : RecyclerView.ViewHolder>() : Rec
 
     public fun getItems(): List<ITEM> = itemList
 
-    public fun setItems(items: List<ITEM>) {
-        update(items)
-    }
+    public fun setItems(items: List<ITEM>): Unit = update(items)
 
     public open fun addItems(items: List<ITEM>) {
-
         val fromSize = itemList.size
         val mutableList = getMutableItemList()
         mutableList.addAll(items)
@@ -89,10 +86,13 @@ public abstract class BaseRcvAdapter<ITEM, VH : RecyclerView.ViewHolder>() : Rec
         val item = getItem(position)
         holder.itemView.setOnClickListener { onItemClickListener?.invoke(position, item, it) }
         holder.itemView.setOnLongClickListener {
-            onItemLongClickListener?.invoke(position, item, it)
-            true
+            if(onItemLongClickListener == null) {
+                false
+            } else {
+                onItemLongClickListener?.invoke(position, item, it)
+                true
+            }
         }
-
         onBindViewHolder(holder, position, item)
     }
 
@@ -136,6 +136,4 @@ public abstract class BaseRcvAdapter<ITEM, VH : RecyclerView.ViewHolder>() : Rec
     public fun setOnItemLongClickListener(listener: (Int, ITEM, View) -> Unit) {
         onItemLongClickListener = listener
     }
-
-
 }

@@ -19,15 +19,14 @@ class RcvAdapter : BaseRcvAdapter<RcvItem, BaseRcvViewHolder<RcvItem, ItemRecycl
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int)
-            : BaseRcvViewHolder<RcvItem, ItemRecyclerviewBinding> =
-        BaseRcvViewHolder(R.layout.item_recyclerview, parent)
+            : BaseRcvViewHolder<RcvItem, ItemRecyclerviewBinding> = BaseRcvViewHolder(R.layout.item_recyclerview, parent)
 
     override fun onBindViewHolder(
         holder: BaseRcvViewHolder<RcvItem, ItemRecyclerviewBinding>,
         position: Int,
         item: RcvItem
     ) {
-        holder.binding.item = getItem(position)
+        holder.binding.item = item
 //        holder.binding.rcvKey.text = getItem(position).key
 //        holder.binding.rcvMsg.text = getItem(position).msg
     }
