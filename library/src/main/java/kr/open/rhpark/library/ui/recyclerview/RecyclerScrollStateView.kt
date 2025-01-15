@@ -21,7 +21,7 @@ public class RecyclerScrollStateView : RecyclerView {
 
     private val defaultEdgeReachThreshold = 10
     private var edgeReachThreshold = defaultEdgeReachThreshold // Threshold for edge reach detection
-    private var defaultScrollDirectionThreshold = 20
+    private val defaultScrollDirectionThreshold = 20
     private var scrollDirectionThreshold = defaultScrollDirectionThreshold // Threshold for scroll direction detection
 
     private var accumulatedDx = 0
@@ -44,7 +44,6 @@ public class RecyclerScrollStateView : RecyclerView {
     private fun initTypeArray(attrs: AttributeSet?) {
 
         attrs?.let {
-
             context.obtainStyledAttributes(it, R.styleable.Rhpark_RecyclerScrollStateView).apply {
                 getString(R.styleable.Rhpark_RecyclerScrollStateView_rhpark_scrollDirectionThreshold).also {
                     setScrollDirectionThreshold(it?.toInt() ?: defaultScrollDirectionThreshold)

@@ -10,7 +10,7 @@ import kr.open.rhpark.library.ui.recyclerview.viewholder.BaseRcvViewHolder
 import kr.open.rhpark.library.ui.recyclerview.list_adapter.BaseRcvListAdapter
 
 class RcvListAdapter :
-    BaseRcvListAdapter<RcvItem, BaseRcvViewHolder<RcvItem, ItemRecyclerviewBinding>>(DifUtilCallBack()) {
+    BaseRcvListAdapter<RcvItem, BaseRcvViewHolder<ItemRecyclerviewBinding>>(DifUtilCallBack()) {
 
     class DifUtilCallBack : DiffUtil.ItemCallback<RcvItem>() {
 
@@ -22,11 +22,11 @@ class RcvListAdapter :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):
-            BaseRcvViewHolder<RcvItem, ItemRecyclerviewBinding> =
+            BaseRcvViewHolder<ItemRecyclerviewBinding> =
         BaseRcvViewHolder(R.layout.item_recyclerview, parent)
 
     override fun onBindViewHolder(
-        holder: BaseRcvViewHolder<RcvItem, ItemRecyclerviewBinding>, position: Int, item: RcvItem
+        holder: BaseRcvViewHolder<ItemRecyclerviewBinding>, position: Int, item: RcvItem
     ) {
         holder.binding.item = item
 //        holder.binding.rcvKey.text = getItem(position).key

@@ -7,7 +7,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 
-public open class BaseRcvViewHolder<ITEM, BINDING : ViewDataBinding>(
+public open class BaseRcvViewHolder<BINDING : ViewDataBinding>(
     @LayoutRes xmlRes: Int,
     parent: ViewGroup,
     attachToRoot: Boolean = false
@@ -24,5 +24,5 @@ public open class BaseRcvViewHolder<ITEM, BINDING : ViewDataBinding>(
      */
     protected fun isValidPosition(): Boolean = (adapterPosition > RecyclerView.NO_POSITION)
 
-    public open fun bind(type: ITEM) {    }
+//    public open fun bind(type: ITEM) {    }
 }
