@@ -78,7 +78,7 @@ android {
         dataBinding = true
 //        viewBinding = true
     }
-    resourcePrefix = "rhpark_"
+//    resourcePrefix = "rhpark_"
 }
 
 dependencies {

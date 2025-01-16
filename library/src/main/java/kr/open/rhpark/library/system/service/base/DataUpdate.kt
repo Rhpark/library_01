@@ -1,6 +1,6 @@
 package kr.open.rhpark.library.system.service.base
 
-public class DataUpdate<TYPE>(
+internal class DataUpdate<TYPE>(
     private var typeOrigin: TYPE,
     private var updateListener: ((res: TYPE) -> Unit)? = null
 ) {

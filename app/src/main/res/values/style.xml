@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+
+    <style name="MainActivity" />
+
+    <style name="MainActivity.Root" parent="View.AllMatch">
+        <item name="android:layout_marginLeft">16dp</item>
+        <item name="android:layout_marginRight">16dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+    </style>
+
+    <style name="MainActivity.Button" parent="View.MatchWarp">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+
+    <style name="RecyclerViewActivity" />
+
+    <style name="RecyclerViewActivity.Root" parent="View.AllMatch">
+        <item name="android:layout_marginLeft">12dp</item>
+        <item name="android:layout_marginRight">12dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+    </style>
+
+    <style name="RecyclerViewActivity.Button" parent="View.AllWarp">
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="RecyclerViewActivity.RadioButton" parent="View.AllWarp">
+        <item name="android:textSize">12sp</item>
+    </style>
+
+</resources>

@@ -26,8 +26,7 @@ class BatteryActivity : BaseBindingActivity<ActivityBatteryBinding>(R.layout.act
 
     private fun initListener() {
         binding.btnBatteryStatusStart.setOnClickListener {
-            batteryStateInfo.registerBatteryReceiver()
-            batteryStateInfo.startUpdateScope()
+            batteryStateInfo.registerBatteryUpdate(updateCycleTime = 1000)
             collectBatteryInfo()
         }
     }

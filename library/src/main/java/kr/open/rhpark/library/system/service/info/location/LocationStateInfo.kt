@@ -18,11 +18,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.repository.local.sharedpreference.LocationSharedPreference
 import kr.open.rhpark.library.system.service.base.BaseSystemService
 import kr.open.rhpark.library.system.service.base.DataUpdate
+import kr.open.rhpark.library.util.extensions.context.hasPermissions
 
-public class LocationStateInfo(
+public open class LocationStateInfo(
     context: Context,
     public val locationManager: LocationManager,
     private val coroutineScope: CoroutineScope
@@ -33,10 +35,15 @@ public class LocationStateInfo(
     public val sfUpdate: StateFlow<LocationStateEvent> = msfUpdate.asStateFlow()
 
     private val locationChanged = DataUpdate<Location?>(getLocation()){ sendFlow(LocationStateEvent.OnLocationChanged(it))}
+
     private val isGpsEnabled = DataUpdate<Boolean>(isGpsEnable()){ sendFlow(LocationStateEvent.OnGpsEnabled(it))}
+
     private val isNetworkEnabled = DataUpdate<Boolean>(isNetworkEnable()){ sendFlow(LocationStateEvent.OnNetworkEnabled(it))}
+
     private val isPassiveEnabled = DataUpdate<Boolean>(isPassiveEnable()){ sendFlow(LocationStateEvent.OnPassiveEnabled(it))}
+
     private val isFusedEnabled = DataUpdate<Boolean>(isFusedEnable()){ sendFlow(LocationStateEvent.OnFusedEnabled(it))}
+
 
     private val locationListener = object : LocationListener {
         override fun onLocationChanged(location: Location) {
@@ -85,7 +92,7 @@ public class LocationStateInfo(
      *
      */
     @RequiresPermission(anyOf = [ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION])
-    public fun registerLocationUpdateListener(locationProvider: String, minTimeMs: Long, minDistanceM: Float) {
+    public fun registerLocationUpdateStart(locationProvider: String, minTimeMs: Long, minDistanceM: Float) {
         locationManager.requestLocationUpdates(locationProvider, minTimeMs, minDistanceM, locationListener)
     }
 
@@ -137,9 +144,22 @@ public class LocationStateInfo(
         }
     }
 
-    @RequiresPermission(anyOf = [ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION])
     public fun getLocation(): Location? {
-        return locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+
+        return if (!isAnyEnabled()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                Logx.e("can not find location!, isLocationEnabled ${isLocationEnabled()}, isGpsEnabled ${isGpsEnabled()}, isNetworkEnabled ${isNetworkEnabled()}, isPassiveEnabled ${isPassiveEnabled()}, isFusedEnabled ${isFusedEnabled()}")
+            } else {
+                Logx.e("can not find location!, isLocationEnabled ${isLocationEnabled()}, isGpsEnabled ${isGpsEnabled()}, isNetworkEnabled ${isNetworkEnabled()}, isPassiveEnabled ${isPassiveEnabled()}")
+            }
+            null
+        } else if (context.hasPermissions(ACCESS_COARSE_LOCATION)
+            || context.hasPermissions(ACCESS_FINE_LOCATION)) {
+             locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+        } else {
+            Logx.e("can not find location!, ACCESS_COARSE_LOCATION ${context.hasPermissions(ACCESS_COARSE_LOCATION)}, ACCESS_FINE_LOCATION  ${context.hasPermissions(ACCESS_FINE_LOCATION)}")
+            null
+        }
     }
 
     public fun calculateDistance(fromLocation: Location, toLocation: Location): Float =

@@ -43,7 +43,7 @@ class LocationActivity : BaseBindingActivity<ActivityLocationBinding>(R.layout.a
             locationStateInfo.registerLocationOnOffState()
         }
         binding.btnLocationChange.setOnClickListener {
-            locationStateInfo.registerLocationUpdateListener(
+            locationStateInfo.registerLocationUpdateStart(
                 LocationManager.GPS_PROVIDER, 1000L, 0.1f)
         }
 

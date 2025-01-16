@@ -16,8 +16,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kr.open.rhpark.library.system.service.info.power.PowerProfile
-import kr.open.rhpark.library.system.service.info.power.PowerProfileVO
+import kr.open.rhpark.library.system.service.info.battery.power.PowerProfile
+import kr.open.rhpark.library.system.service.info.battery.power.PowerProfileVO
 import kr.open.rhpark.library.system.service.base.BaseSystemService
 import kr.open.rhpark.library.system.service.base.DataUpdate
 
@@ -116,18 +116,22 @@ public class BatteryStateInfo(
     }
 
     public var scope: Job? = null
-    public fun startUpdateScope(coroutine: CoroutineScope = coroutineScope) {
+    public fun registerBatteryUpdate(
+        coroutine: CoroutineScope = coroutineScope,
+        updateCycleTime: Long = 1000
+    ) {
+        registerBatteryReceiver()
         scope = coroutine.launch {
 
             while(isActive) {
                 sendBroadcast()
-                delay(1000)
+                delay(updateCycleTime)
             }
             stopUpdateScope()
         }
     }
 
-    public fun startUpdate() {
+    public fun updateBatteryState() {
         sendBroadcast()
     }
 

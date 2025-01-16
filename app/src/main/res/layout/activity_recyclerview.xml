@@ -14,60 +14,83 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        style="@style/RecyclerViewActivity.Root">
 
         <EditText
-            android:hint="Input Size or Remove Position"
             android:id="@+id/edtKey"
-            android:layout_width="match_parent"
+            android:layout_width="140dp"
             android:layout_height="wrap_content"
+            android:hint="Input Size or Remove Position"
             android:inputType="number"
             android:onTextChanged="@{(s,start,before,count)->vm.updateText(s)}"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/btbRcvAdd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/RecyclerViewActivity.Button"
             android:onClick="@{() -> vm.onClickAdd()}"
             android:text="Set Item"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edtKey" />
+            app:layout_constraintLeft_toRightOf="@id/edtKey"
+            app:layout_constraintRight_toLeftOf="@+id/btnRcvRemove"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/btnRcvRemove"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/RecyclerViewActivity.Button"
             android:onClick="@{() -> vm.onClickRemove()}"
             android:text="Remove Position"
             app:layout_constraintLeft_toRightOf="@id/btbRcvAdd"
-            app:layout_constraintTop_toBottomOf="@id/edtKey" />
-
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/scRcvAdapterType"
-            android:layout_width="wrap_content"
-            android:onCheckedChanged="@{(btn,checked)->vm.change(checked)}"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toRightOf="@+id/btnRcvRemove"
-            app:layout_constraintTop_toTopOf="@+id/btnRcvRemove"
             app:layout_constraintRight_toRightOf="parent"
-            android:text="@{vm.fAdapterStr}"
-            />
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <RadioGroup
+            android:id="@+id/rgRcvAdapterType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edtKey">
+
+            <RadioButton
+                android:id="@+id/rbRcvAdapter"
+                style="@style/RecyclerViewActivity.RadioButton"
+                android:onCheckedChanged="@{(_,checked)->vm.onCheckRcvAdapter(checked)}"
+                android:checked="true"
+                android:text="Base" />
+
+            <RadioButton
+                android:id="@+id/rbRcvSimpleAdapter"
+                style="@style/RecyclerViewActivity.RadioButton"
+                android:onCheckedChanged="@{(_,checked)->vm.onCheckRcvSimpleAdapter(checked)}"
+                android:text="Simple" />
+
+            <RadioButton
+                android:id="@+id/rbRcvListAdapter"
+                android:onCheckedChanged="@{(_,checked)->vm.onCheckRcvListAdapter(checked)}"
+                style="@style/RecyclerViewActivity.RadioButton"
+                android:text="List" />
+
+            <RadioButton
+                android:id="@+id/rbRcvSimpleListAdapter"
+                style="@style/RecyclerViewActivity.RadioButton"
+                android:text="SimpleList" />
+
+
+        </RadioGroup>
 
         <kr.open.rhpark.library.ui.recyclerview.RecyclerScrollStateView
             android:id="@+id/rcvList"
             android:layout_width="match_parent"
-            app:rhpark_edgeReachThreshold="10"
-            app:rhpark_scrollDirectionThreshold="30"
             android:layout_height="0dp"
+            app:edgeReachThreshold="10"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btbRcvAdd" />
+            app:layout_constraintTop_toBottomOf="@id/rgRcvAdapterType"
+            app:scrollDirectionThreshold="30" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

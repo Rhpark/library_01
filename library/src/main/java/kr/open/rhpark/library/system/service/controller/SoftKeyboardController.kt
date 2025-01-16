@@ -66,7 +66,12 @@ public class SoftKeyboardController(context: Context, public val imm: InputMetho
     public fun showDelay(v: View, delay: Long, flag: Int = InputMethodManager.SHOW_IMPLICIT): Boolean =
         v.postDelayed(Runnable { show(v, flag) }, delay)
 
-    public fun showDelay(v: View, delay: Long, flag: Int = InputMethodManager.SHOW_IMPLICIT, coroutineScope: CoroutineScope) {
+    public fun showDelay(
+        v: View,
+        delay: Long,
+        flag: Int = InputMethodManager.SHOW_IMPLICIT,
+        coroutineScope: CoroutineScope
+    ) {
         coroutineScope.launch {
             delay(delay)
             show(v, flag)

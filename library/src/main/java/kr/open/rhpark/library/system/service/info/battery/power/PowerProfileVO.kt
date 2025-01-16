@@ -1,4 +1,4 @@
-package kr.open.rhpark.library.system.service.info.power
+package kr.open.rhpark.library.system.service.info.battery.power
 
 public enum class PowerProfileVO(public val  res: String) {
     /*

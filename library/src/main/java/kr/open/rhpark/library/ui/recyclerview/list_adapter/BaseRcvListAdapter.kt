@@ -47,15 +47,15 @@ public abstract class BaseRcvListAdapter<ITEM, VH : RecyclerView.ViewHolder>(lis
     protected fun isPositionValid(position: Int): Boolean = (position > RecyclerView.NO_POSITION && position < itemCount)
 
     /** Remove Item **/
-    public fun removeAtItem(item: ITEM) {
+    public fun removeAt(item: ITEM) {
         val position = getItems().indexOf(item)
         if (!isPositionValid(position)) {
             Logx.e("Can not remove item, position is $position")
         }
-        removeAtItem(position)
+        removeAt(position)
     }
 
-    public fun removeAtItem(position: Int) {
+    public fun removeAt(position: Int) {
         if (!isPositionValid(position)) {
             Logx.e("Can not remove item, position is $position")
             return

@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- View Base Style -->
+    <!-- ex) View.(width,height)-->
+    <style name="View" />
+
+    <style name="View.MatchWarp">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="View.WarpMatch">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="View.WeightWarp">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">10</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="View.WeightMatch">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">10</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="View.WarpWeight">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_weight">10</item>
+    </style>
+
+    <style name="View.MatchWeight">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_weight">10</item>
+    </style>
+
+    <style name="View.AllMatch">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="View.AllWarp">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+
+    <!-- Base Layout Style -->
+    <!-- ex) Layout.(width,height).(orientation) -->
+    <style name="Layout" />
+
+    <style name="Layout.MatchWarp" parent="View.MatchWarp" />
+
+    <style name="Layout.MatchWarp.Vertical">
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="Layout.MatchWarp.Horizontal">
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="Layout.WarpMatch" parent="View.WarpMatch" />
+
+    <style name="Layout.WarpMatch.Vertical">
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="Layout.WarpMatch.Horizontal">
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="Layout.MatchWeight" parent="View.MatchWeight" />
+
+    <style name="Layout.MatchWeight.Vertical">
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="Layout.MatchWeight.Horizontal">
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="Layout.WarpWeight" parent="View.WarpWeight" />
+
+    <style name="Layout.WarpWeight.Vertical">
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="Layout.WarpWeight.Horizontal">
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="Layout.WeightMatch" parent="View.WeightMatch" />
+
+    <style name="Layout.WeightMatch.Vertical">
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="Layout.WeightMatch.Horizontal">
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="Layout.WeightWarp" parent="View.WeightWarp" />
+
+    <style name="Layout.WeightWarp.Vertical">
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="Layout.WeightWarp.Horizontal">
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="Layout.AllMatch" parent="View.AllMatch" />
+
+    <style name="Layout.AllMatch.Vertical">
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="Layout.AllMatch.Horizontal">
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="Layout.AllWarp" parent="View.AllWarp" />
+
+    <style name="Layout.AllWarp.Vertical">
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="Layout.AllWarp.Horizontal">
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+
+    <!-- Base TextView Setting -->
+    <!-- ex) TextView.(width,height).(TextStyle) -->
+    <style name="TextView" parent="Widget.AppCompat.TextView" />
+
+    <style name="TextView.MatchWarp" parent="View.MatchWarp" />
+
+    <style name="TextView.MatchWarp.Bold">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextView.MatchWarp.Italic">
+        <item name="android:textStyle">italic</item>
+    </style>
+
+    <style name="TextView.MatchWarp.Normal">
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="TextView.MatchWeight" parent="View.MatchWeight" />
+
+    <style name="TextView.MatchWeight.Bold">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextView.MatchWeight.Italic">
+        <item name="android:textStyle">italic</item>
+    </style>
+
+    <style name="TextView.MatchWeight.Normal">
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="TextView.WarpMatch" parent="View.WarpMatch" />
+
+    <style name="TextView.WarpMatch.Bold">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextView.WarpMatch.Italic">
+        <item name="android:textStyle">italic</item>
+    </style>
+
+    <style name="TextView.WarpMatch.Normal">
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="TextView.WarpWeight" parent="View.WarpWeight" />
+
+    <style name="TextView.WarpWeight.Bold">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextView.WarpWeight.Italic">
+        <item name="android:textStyle">italic</item>
+    </style>
+
+    <style name="TextView.WarpWeight.Normal">
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="TextView.AllMatch" parent="View.AllWarp" />
+
+    <style name="TextView.AllMatch.Bold">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextView.AllMatch.Italic">
+        <item name="android:textStyle">italic</item>
+    </style>
+
+    <style name="TextView.AllMatch.Normal">
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="TextView.AllWarp" parent="View.AllWarp" />
+
+    <style name="TextView.AllWarp.Bold">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextView.AllWarp.Italic">
+        <item name="android:textStyle">italic</item>
+    </style>
+
+    <style name="TextView.AllWarp.Normal">
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="TextView.WeightMatch" parent="View.WeightMatch" />
+
+    <style name="TextView.WeightMatch.Bold">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextView.WeightMatch.Italic">
+        <item name="android:textStyle">italic</item>
+    </style>
+
+    <style name="TextView.WeightMatch.Normal">
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="TextView.WeightWarp" parent="View.WeightWarp" />
+
+    <style name="TextView.WeightWarp.Bold">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextView.WeightWarp.Italic">
+        <item name="android:textStyle">italic</item>
+    </style>
+
+    <style name="TextView.WeightWarp.Normal">
+        <item name="android:textStyle">normal</item>
+    </style>
+
+</resources>

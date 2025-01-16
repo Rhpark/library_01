@@ -1,4 +1,4 @@
-package kr.open.rhpark.library.system.service.info.power
+package kr.open.rhpark.library.system.service.info.battery.power
 
 import android.content.Context
 import kr.open.rhpark.library.debug.logcat.Logx

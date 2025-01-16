@@ -12,7 +12,10 @@ import kr.open.rhpark.library.system.service.controller.alarm.receiver.BaseAlarm
 /**
  *
  */
-public class AlarmController(context: Context, public val alarmManager: AlarmManager) :
+public open class AlarmController(
+    context: Context,
+    public val alarmManager: AlarmManager
+) :
     BaseSystemService(context) {
 
     public fun registerAlarmClock(receiver: Class<*>, alarmDto: AlarmDTO) {

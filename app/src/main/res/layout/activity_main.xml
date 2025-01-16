@@ -12,14 +12,7 @@
 
     </data>
 
-    <FrameLayout
-        android:id="@+id/main"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="8dp">
+    <FrameLayout style="@style/MainActivity.Root">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -37,87 +30,63 @@
                     android:text="Hello World!" />
 
                 <Button
-                    android:id="@+id/btnTestPermission"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/MainActivity.Button"
                     android:onClick="@{()->vm.onClickPermission()}"
                     android:text="permission" />
 
                 <Button
-                    android:id="@+id/btnShowFragment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/MainActivity.Button"
                     android:onClick="@{()->vm.onClickShowFragment()}"
                     android:text="Show Fragment" />
 
                 <Button
-                    android:id="@+id/btnShowRecyclerview"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/MainActivity.Button"
                     android:onClick="@{()->vm.onClickShowRecyclerviewActivity()}"
                     android:text="Show RecyclerView Activity" />
 
                 <Button
-                    android:id="@+id/btnShowVibrator"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/MainActivity.Button"
                     android:onClick="@{()->vm.onClickShowVibratorActivity()}"
                     android:text="Show Vibrator Activity" />
 
 
                 <Button
-                    android:id="@+id/btnShowDisplay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/MainActivity.Button"
                     android:onClick="@{()->vm.onClickShowDisplayActivity()}"
                     android:text="Show Display Activity" />
 
                 <Button
-                    android:id="@+id/btnShowBattery"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/MainActivity.Button"
                     android:onClick="@{()->vm.onClickShowBatteryActivity()}"
                     android:text="Show Battery Activity" />
 
                 <Button
-                    android:id="@+id/btnShowWindow"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/MainActivity.Button"
                     android:onClick="@{()->vm.onClickShowWindowActivity()}"
                     android:text="Show Window Activity" />
 
                 <Button
-                    android:id="@+id/btnShowNetwork"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/MainActivity.Button"
                     android:onClick="@{()->vm.onClickNetworkActivity()}"
                     android:text="Show Network Activity" />
 
                 <Button
-                    android:id="@+id/btnShowLocation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/MainActivity.Button"
                     android:onClick="@{()->vm.onClickShowLocationActivity()}"
                     android:text="Show Location Activity" />
 
                 <Button
-                    android:id="@+id/btnShowNotification"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/MainActivity.Button"
                     android:onClick="@{()->vm.onClickShowNotificationActivity()}"
                     android:text="Show Notification Activity" />
 
                 <Button
-                    android:id="@+id/btnShowAlarm"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/MainActivity.Button"
                     android:onClick="@{()->vm.onClickShowAlarmActivity()}"
                     android:text="Show Alarm Activity" />
 
                 <Button
-                    android:id="@+id/btnToastSnackbar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/MainActivity.Button"
                     android:onClick="@{()->vm.onClickToastSnackBar()}"
                     android:text="Toast and SnackBar" />
 
