@@ -1,25 +1,20 @@
 package kr.open.rhpark.app.activity.recyclerview.adapter
 
-import android.annotation.SuppressLint
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
 import kr.open.rhpark.app.R
 import kr.open.rhpark.app.activity.recyclerview.adapter.item.RcvItem
 import kr.open.rhpark.app.databinding.ItemRecyclerviewBinding
 import kr.open.rhpark.library.ui.recyclerview.viewholder.BaseRcvViewHolder
 import kr.open.rhpark.library.ui.recyclerview.list_adapter.BaseRcvListAdapter
+import kr.open.rhpark.library.ui.recyclerview.list_adapter.RcvListDifUtilCallBack
 
 class RcvListAdapter :
-    BaseRcvListAdapter<RcvItem, BaseRcvViewHolder<ItemRecyclerviewBinding>>(DifUtilCallBack()) {
-
-    class DifUtilCallBack : DiffUtil.ItemCallback<RcvItem>() {
-
-        override fun areItemsTheSame(oldItem: RcvItem, newItem: RcvItem) = oldItem.key == newItem.key
-
-        @SuppressLint("DiffUtilEquals")
-        override fun areContentsTheSame(oldItem: RcvItem, newItem: RcvItem) =
-            oldItem.key === newItem.key
-    }
+    BaseRcvListAdapter<RcvItem, BaseRcvViewHolder<ItemRecyclerviewBinding>>(
+        RcvListDifUtilCallBack<RcvItem>(
+            itemsTheSame = { oldItem, newItem -> oldItem.key == newItem.key },
+            contentsTheSame = { oldItem, newItem -> oldItem.key === newItem.key }
+        )
+    ) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):
             BaseRcvViewHolder<ItemRecyclerviewBinding> =

@@ -12,7 +12,7 @@ import kotlin.math.abs
  * This view extends RecyclerView and adds functionality to detect when the user
  * has scrolled to the edge of the view and the direction of the scroll.
  */
-public class RecyclerScrollStateView : RecyclerView {
+public open class RecyclerScrollStateView : RecyclerView {
 
     private var isAtTop = false
     private var isAtBottom = false
@@ -44,12 +44,12 @@ public class RecyclerScrollStateView : RecyclerView {
     private fun initTypeArray(attrs: AttributeSet?) {
 
         attrs?.let {
-            context.obtainStyledAttributes(it, R.styleable.Rhpark_RecyclerScrollStateView).apply {
-                getString(R.styleable.Rhpark_RecyclerScrollStateView_rhpark_scrollDirectionThreshold).also {
+            context.obtainStyledAttributes(it, R.styleable.RecyclerScrollStateView).apply {
+                getString(R.styleable.RecyclerScrollStateView_scrollDirectionThreshold).also {
                     setScrollDirectionThreshold(it?.toInt() ?: defaultScrollDirectionThreshold)
                 }
 
-                getString(R.styleable.Rhpark_RecyclerScrollStateView_rhpark_edgeReachThreshold).also {
+                getString(R.styleable.RecyclerScrollStateView_edgeReachThreshold).also {
                     setEdgeReachThreshold(it?.toInt() ?: defaultEdgeReachThreshold)
                 }
                 recycle()

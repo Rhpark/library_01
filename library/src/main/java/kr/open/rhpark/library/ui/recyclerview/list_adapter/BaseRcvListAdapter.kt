@@ -2,13 +2,12 @@ package kr.open.rhpark.library.ui.recyclerview.list_adapter
 
 import android.view.View
 import androidx.recyclerview.widget.AsyncListDiffer
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import kr.open.rhpark.library.debug.logcat.Logx
 import java.util.Collections
 
-public abstract class BaseRcvListAdapter<ITEM, VH : RecyclerView.ViewHolder>(listDiffUtil :DiffUtil.ItemCallback<ITEM>) :
+public abstract class BaseRcvListAdapter<ITEM, VH : RecyclerView.ViewHolder>(listDiffUtil :RcvListDifUtilCallBack<ITEM>) :
     ListAdapter<ITEM, VH>(listDiffUtil) {
 
     private val differ = AsyncListDiffer<ITEM>(this, listDiffUtil)

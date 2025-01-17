@@ -27,7 +27,7 @@ public fun String.timeDateToLong(format: String, locale: Locale = Locale.US): Lo
 
 public fun String.timeDateToDate(format: String, locale: Locale = Locale.US): Date? {
     val dateFormat = SimpleDateFormat(format, locale)
-    return dateFormat.parse(this)?.let { it }
+    return dateFormat.parse(this)
 }
 
 /**

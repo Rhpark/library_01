@@ -74,6 +74,7 @@
 
             <RadioButton
                 android:id="@+id/rbRcvSimpleListAdapter"
+                android:onCheckedChanged="@{(_,checked)->vm.onCheckRcvListSimpleAdapter(checked)}"
                 style="@style/RecyclerViewActivity.RadioButton"
                 android:text="SimpleList" />
 
