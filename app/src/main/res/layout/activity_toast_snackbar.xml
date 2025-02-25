@@ -36,28 +36,16 @@
             android:text="Default Snackbar" />
 
         <Button
-            android:id="@+id/btnDefaultWindowViewSnackBar"
+            android:id="@+id/btnActionSnackBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Default Window Snackbar" />
-
-
-        <Button
-            android:id="@+id/btnCustomSnackBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Custom Snackbar" />
+            android:text="Action Snackbar" />
 
         <Button
-            android:id="@+id/btnAddConfigSnackBar"
+            android:id="@+id/btnOptionSnackBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add Config Snackbar" />
+            android:text="Option Snackbar" />
 
-        <Button
-            android:id="@+id/btnShowConfigSnackBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Show Config Snackbar" />
     </LinearLayout>
 </layout>

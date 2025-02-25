@@ -4,3 +4,9 @@ public enum class FloatingViewCollisionsType {
     OCCURING,
     UNCOLLISIONS,
 }
+
+public enum class FloatingViewTouchType{
+    TOUCH_DOWN,
+    TOUCH_MOVE,
+    TOUCH_UP,
+}

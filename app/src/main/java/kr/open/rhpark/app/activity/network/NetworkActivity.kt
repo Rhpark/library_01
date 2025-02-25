@@ -5,6 +5,7 @@ import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.Manifest.permission.ACCESS_NETWORK_STATE
 import android.Manifest.permission.READ_PHONE_NUMBERS
 import android.Manifest.permission.READ_PHONE_STATE
+import android.annotation.SuppressLint
 import android.net.Network
 import android.os.Build
 import android.os.Bundle
@@ -28,10 +29,12 @@ import kr.open.rhpark.library.system.service.info.network.telephony.data.state.T
 import kr.open.rhpark.library.ui.activity.BaseBindingActivity
 import kr.open.rhpark.library.util.extensions.context.getLocationStateInfo
 import kr.open.rhpark.library.util.extensions.context.getNetworkStateInfo
+import kr.open.rhpark.library.util.extensions.ui.view.toastShowShort
 import kr.open.rhpark.library.util.inline.sdk_version.checkSdkVersion
 
 class NetworkActivity : BaseBindingActivity<ActivityNetworkBinding>(R.layout.activity_network) {
 
+    @SuppressLint("MissingPermission")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestPermissions(getPermissions()) { requestCode, deniedPermissions ->
@@ -39,7 +42,7 @@ class NetworkActivity : BaseBindingActivity<ActivityNetworkBinding>(R.layout.act
             if(deniedPermissions.isEmpty()) {
                 initNetworkStateInfo()
             } else {
-                toast.showMsgShort("deniedPermissions $deniedPermissions ")
+                toastShowShort("deniedPermissions $deniedPermissions ")
             }
         }
     }
@@ -87,27 +90,32 @@ class NetworkActivity : BaseBindingActivity<ActivityNetworkBinding>(R.layout.act
     @RequiresPermission(READ_PHONE_STATE)
     private fun registerTelephonyCallback(isGpsOn: Boolean = false) {
         Logx.d("isGpsOn $isGpsOn")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            getNetworkStateInfo().registerTelephonyCallBackFromDefaultUSim(
-                this@NetworkActivity.mainExecutor, isGpsOn,
-                onActiveDataSubId = { subId: Int -> updateActiveDataSubId(subId) },
-                onDataConnectionState = { state: Int, networkType: Int -> updateConnectState(state,networkType) },
-                onCellInfo = { currentCellInfo: CurrentCellInfo -> updateCellInfo(currentCellInfo) },
-                onSignalStrength = { currentSignalStrength: CurrentSignalStrength ->updateSignalStrength(currentSignalStrength) },
-                onServiceState = { currentServiceState: CurrentServiceState -> updateServiceState(currentServiceState) },
-                onCallState = { callState: Int, phoneNumber: String? ->updateCallState(callState,phoneNumber) },
-                onDisplayInfo = { telephonyDisplayInfo: TelephonyDisplayInfo -> updateDisplayInfo(telephonyDisplayInfo) },
-                onTelephonyNetworkState = { telephonyNetworkState: TelephonyNetworkState -> updateNetworkState(telephonyNetworkState) })
-        } else {
-            getNetworkStateInfo().registerTelephonyListenFromDefaultUSim(isGpsOn,
-                onActiveDataSubId = { subId: Int -> updateActiveDataSubId(subId) },
-                onDataConnectionState = { state: Int, networkType: Int -> updateConnectState(state,networkType) },
-                onCellInfo = { currentCellInfo: CurrentCellInfo -> updateCellInfo(currentCellInfo) },
-                onSignalStrength = { currentSignalStrength: CurrentSignalStrength ->updateSignalStrength(currentSignalStrength) },
-                onServiceState = { currentServiceState: CurrentServiceState -> updateServiceState(currentServiceState) },
-                onCallState = { callState: Int, phoneNumber: String? ->updateCallState(callState,phoneNumber) },
-                onDisplayInfo = { telephonyDisplayInfo: TelephonyDisplayInfo -> updateDisplayInfo(telephonyDisplayInfo) },
-                onTelephonyNetworkState = { telephonyNetworkState: TelephonyNetworkState -> updateNetworkState(telephonyNetworkState) })
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                getNetworkStateInfo().registerTelephonyCallBackFromDefaultUSim(
+                    this@NetworkActivity.mainExecutor, isGpsOn,
+                    onActiveDataSubId = { subId: Int -> updateActiveDataSubId(subId) },
+                    onDataConnectionState = { state: Int, networkType: Int -> updateConnectState(state,networkType) },
+                    onCellInfo = { currentCellInfo: CurrentCellInfo -> updateCellInfo(currentCellInfo) },
+                    onSignalStrength = { currentSignalStrength: CurrentSignalStrength ->updateSignalStrength(currentSignalStrength) },
+                    onServiceState = { currentServiceState: CurrentServiceState -> updateServiceState(currentServiceState) },
+                    onCallState = { callState: Int, phoneNumber: String? ->updateCallState(callState,phoneNumber) },
+                    onDisplayInfo = { telephonyDisplayInfo: TelephonyDisplayInfo -> updateDisplayInfo(telephonyDisplayInfo) },
+                    onTelephonyNetworkState = { telephonyNetworkState: TelephonyNetworkState -> updateNetworkState(telephonyNetworkState) })
+            } else {
+                getNetworkStateInfo().registerTelephonyListenFromDefaultUSim(isGpsOn,
+                    onActiveDataSubId = { subId: Int -> updateActiveDataSubId(subId) },
+                    onDataConnectionState = { state: Int, networkType: Int -> updateConnectState(state,networkType) },
+                    onCellInfo = { currentCellInfo: CurrentCellInfo -> updateCellInfo(currentCellInfo) },
+                    onSignalStrength = { currentSignalStrength: CurrentSignalStrength ->updateSignalStrength(currentSignalStrength) },
+                    onServiceState = { currentServiceState: CurrentServiceState -> updateServiceState(currentServiceState) },
+                    onCallState = { callState: Int, phoneNumber: String? ->updateCallState(callState,phoneNumber) },
+                    onDisplayInfo = { telephonyDisplayInfo: TelephonyDisplayInfo -> updateDisplayInfo(telephonyDisplayInfo) },
+                    onTelephonyNetworkState = { telephonyNetworkState: TelephonyNetworkState -> updateNetworkState(telephonyNetworkState) })
+            }
+        } catch (e:IllegalArgumentException) {
+            e.printStackTrace()
+            toastShowShort(e.toString())
         }
     }
 

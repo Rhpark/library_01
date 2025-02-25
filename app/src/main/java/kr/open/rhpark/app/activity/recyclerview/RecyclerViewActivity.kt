@@ -17,6 +17,7 @@ import kr.open.rhpark.library.ui.activity.BaseBindingActivity
 import kr.open.rhpark.library.ui.recyclerview.list_adapter.RcvListDifUtilCallBack
 import kr.open.rhpark.library.ui.recyclerview.list_adapter.RcvListSimpleAdapter
 import kr.open.rhpark.library.util.extensions.context.getSoftKeyboardController
+import kr.open.rhpark.library.util.extensions.ui.view.toastShowShort
 
 class RecyclerViewActivity : BaseBindingActivity<ActivityRecyclerviewBinding>(R.layout.activity_recyclerview) {
 
@@ -62,16 +63,6 @@ class RecyclerViewActivity : BaseBindingActivity<ActivityRecyclerviewBinding>(R.
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding.vm = vm
-        binding.rcvList.run {
-            setOnReachEdgeListener { edge, isReached ->
-                Logx.d("edge : $edge, isReached : $isReached")
-                toast.showMsgShort("edge : $edge, isReached : $isReached")
-            }
-            setOnScrollDirectionListener { scrollDirection ->
-                Logx.d("scrollDirection : $scrollDirection")
-                toast.showMsgShort("scrollDirection : $scrollDirection")
-            }
-        }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
@@ -86,7 +77,7 @@ class RecyclerViewActivity : BaseBindingActivity<ActivityRecyclerviewBinding>(R.
                         }
 
                         is RecyclerviewActivityVmEvent.OnToastShow -> {
-                            toast.showMsgShort(it.msg)
+                            toastShowShort(it.msg)
                         }
 
                         is RecyclerviewActivityVmEvent.OnUpdateAdapter -> {
@@ -96,7 +87,32 @@ class RecyclerViewActivity : BaseBindingActivity<ActivityRecyclerviewBinding>(R.
                 }
             }
         }
+        recyclerviewScrollStateSet()
         applicationContext.getSoftKeyboardController().showDelay(binding.edtKey, 200L)
+    }
+
+    private fun recyclerviewScrollStateSet() {
+        lifecycleScope.launch {
+            launch {
+                binding.rcvList.sfEdgeReachedFlow.collect{
+                    toastShowShort("edge : ${it.first}, isReached : ${it.second}")
+                }
+            }
+            launch {
+                binding.rcvList.sfScrollDirectionFlow.collect {
+                    toastShowShort("scrollDirection : $it")
+                }
+            }
+        }
+
+// or
+//        binding.rcvList.setOnScrollDirectionListener { direction->
+//
+//        }
+//
+//        binding.rcvList.setOnReachEdgeListener { edge, isReached ->
+//
+//        }
     }
 
     private fun onSetAdapter(adapterType: RecyclerviewActivityVm.AdapterType, datas: List<RcvItem>) {

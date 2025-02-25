@@ -20,6 +20,9 @@ import kr.open.rhpark.library.system.service.info.battery.power.PowerProfile
 import kr.open.rhpark.library.system.service.info.battery.power.PowerProfileVO
 import kr.open.rhpark.library.system.service.base.BaseSystemService
 import kr.open.rhpark.library.system.service.base.DataUpdate
+import kr.open.rhpark.library.util.extensions.context.getBatteryStateInfo
+import kr.open.rhpark.library.util.extensions.context.getSystemBatteryManager
+import kr.open.rhpark.library.util.inline.sdk_version.checkSdkVersion
 
 /**
  * Thisclass provides information about the battery state of an Android device.
@@ -44,11 +47,12 @@ import kr.open.rhpark.library.system.service.base.DataUpdate
  * @param batteryManager The BatteryManager instance.
  * @param batteryManager BatteryManager 인스턴스.
  */
-public class BatteryStateInfo(
+public open class BatteryStateInfo(
     context: Context,
-    public val batteryManager: BatteryManager,
     private val coroutineScope: CoroutineScope,
 ) : BaseSystemService(context, listOf(android.Manifest.permission.BATTERY_STATS)) {
+
+    public val batteryManager: BatteryManager by lazy { context.getSystemBatteryManager() }
 
     private val UPDATE_BATTERY = "RHPARK_BATTERY_STATE_UPDATE"
 
@@ -60,27 +64,16 @@ public class BatteryStateInfo(
     public val sfUpdate: StateFlow<BatteryStateEvent> = msfUpdate.asStateFlow()
 
     private val capacity = DataUpdate(getCapacity()) { sendFlow(BatteryStateEvent.OnCapacity(it)) }
-
     private val currentAmpere = DataUpdate(getCurrentAmpere()) { sendFlow(BatteryStateEvent.OnCurrentAmpere(it)) }
-
     private val currentAverageAmpere = DataUpdate(getCurrentAverageAmpere()) { sendFlow(BatteryStateEvent.OnCurrentAverageAmpere(it)) }
-
     private val chargeStatus = DataUpdate(getChargeStatus()) { sendFlow(BatteryStateEvent.OnChargeStatus(it)) }
-
     private val chargeCounter = DataUpdate(getChargeCounter()) { sendFlow(BatteryStateEvent.OnChargeCounter(it)) }
-
     private val chargePlug = DataUpdate(getChargePlug()) { sendFlow(BatteryStateEvent.OnChargePlug(it)) }
-
     private val energyCounter = DataUpdate(getEnergyCounter()) { sendFlow(BatteryStateEvent.OnEnergyCounter(it)) }
-
     private val health = DataUpdate(getHealth()) { sendFlow(BatteryStateEvent.OnHealth(it)) }
-
     private val present = DataUpdate(getPresent()) { sendFlow(BatteryStateEvent.OnPresent(it)) }
-
     private val totalCapacity = DataUpdate(getTotalCapacity()) { sendFlow(BatteryStateEvent.OnTotalCapacity(it)) }
-
     private val temperature = DataUpdate(getTemperature()) { sendFlow(BatteryStateEvent.OnTemperature(it)) }
-
     private val voltage = DataUpdate(getVoltage()) { sendFlow(BatteryStateEvent.OnVoltage(it)) }
 
     private val batteryBroadcastReceiver = object : BroadcastReceiver() {
@@ -108,21 +101,23 @@ public class BatteryStateInfo(
 
     public fun registerBatteryReceiver() {
         unRegisterReceiver()
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            batteryStatus = context.registerReceiver(batteryBroadcastReceiver, intentFilter, RECEIVER_EXPORTED)
-        } else {
-            batteryStatus = context.registerReceiver(batteryBroadcastReceiver, intentFilter)
-        }
+        checkSdkVersion(Build.VERSION_CODES.TIRAMISU,
+            positiveWork = {
+                batteryStatus = context.registerReceiver(batteryBroadcastReceiver, intentFilter, RECEIVER_EXPORTED)
+            }, negativeWork = {
+                batteryStatus = context.registerReceiver(batteryBroadcastReceiver, intentFilter)
+            }
+        )
     }
 
-    public var scope: Job? = null
+    public var updateJob: Job? = null
+
     public fun registerBatteryUpdate(
         coroutine: CoroutineScope = coroutineScope,
         updateCycleTime: Long = 1000
     ) {
         registerBatteryReceiver()
-        scope = coroutine.launch {
-
+        updateJob = coroutine.launch {
             while(isActive) {
                 sendBroadcast()
                 delay(updateCycleTime)
@@ -136,8 +131,8 @@ public class BatteryStateInfo(
     }
 
     public fun stopUpdateScope() {
-        scope?.cancel()
-        scope = null
+        updateJob?.cancel()
+        updateJob = null
     }
 
     private fun updateBatteryInfo() {
@@ -166,14 +161,14 @@ public class BatteryStateInfo(
     }
 
     private fun unRegisterReceiver() {
-        batteryStatus?.let {
-            try {
-                context.unregisterReceiver(batteryBroadcastReceiver)
-            } catch (e:Exception) {
+
+        try {
+            batteryStatus?.let { context.unregisterReceiver(batteryBroadcastReceiver) }
+        } catch (e:Exception) {
 //            e.printStackTrace()
-            }
+        } finally {
+            batteryStatus = null
         }
-        batteryStatus = null
     }
 
     /**

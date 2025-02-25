@@ -14,8 +14,7 @@ import kr.open.rhpark.library.system.service.controller.alarm.vo.AlarmVO.ALARM_K
 import kr.open.rhpark.library.util.extensions.context.getAlarmController
 import kr.open.rhpark.library.util.extensions.context.getPowerManager
 
-public abstract class BaseAlarmReceiver(
-) : BroadcastReceiver() {
+public abstract class BaseAlarmReceiver() : BroadcastReceiver() {
 
     protected lateinit var notificationController: SimpleNotificationController
 
@@ -34,35 +33,30 @@ public abstract class BaseAlarmReceiver(
     @SuppressLint("InvalidWakeLockTag")
     override fun onReceive(context: Context?, intent: Intent?) {
         Logx.d()
-        context?.let { context ->
+        if(context == null || intent == null) return
 
-            Logx.d("BaseAlarmReceiver onReceive")
-            val pm = context.getPowerManager()
-            val wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK or
-                    PowerManager.ACQUIRE_CAUSES_WAKEUP or
-                    PowerManager.ON_AFTER_RELEASE, "AlarmReceiver").apply {
-                acquire(powerManagerAcquireTime)
-            }
-            val alarmController = context.getAlarmController()
-
-            intent?.let { intent ->
-                Logx.d(" intent.action ${intent.action}")
-                if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
-                    //data load
-                    loadAllAlarmDtoList().forEach {
-                        registerAlarm(alarmController, it)
-                    }
-                } else {
-                    // alarmDto Load
-                    val key = intent.getIntExtra(ALARM_KEY, ALARM_KEY_DEFAULT_VALUE)
-                    loadAlarmDtoList(intent, key)?.let {
-                        createNotificationChannel(context, it)
-                        showNotification(context, it)
-                    } ?: Logx.e("")
-                }
-            }
-            wl.release()
+        Logx.d("BaseAlarmReceiver onReceive")
+        val pm = context.getPowerManager()
+        val wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK or
+                PowerManager.ACQUIRE_CAUSES_WAKEUP or
+                PowerManager.ON_AFTER_RELEASE, "AlarmReceiver").apply {
+            acquire(powerManagerAcquireTime)
         }
+        val alarmController = context.getAlarmController()
+
+        Logx.d(" intent.action ${intent.action}")
+        if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
+            //data load
+            loadAllAlarmDtoList().forEach { registerAlarm(alarmController, it) }
+        } else {
+            // alarmDto Load
+            val key = intent.getIntExtra(ALARM_KEY, ALARM_KEY_DEFAULT_VALUE)
+            loadAlarmDtoList(intent, key)?.let {
+                createNotificationChannel(context, it)
+                showNotification(context, it)
+            } ?: Logx.e("Failed to load AlarmDTO for key: $key")
+        }
+        wl.release()
     }
 
     private fun registerAlarm(alarmController: AlarmController, alarmDto: AlarmDTO): Unit =

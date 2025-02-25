@@ -19,7 +19,7 @@ public class PermissionManagerForFragment(private val fragment: Fragment) {
         fragment.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             val data = requestPermissionList.find { it.getRemainPermissions() == permissions.map { it.key}.toList() }
             data?.let {
-                it.resultPermissionFromFragment(permissions)
+                it.resultPermissionsFromFragment(permissions)
                 Logx.d("permissions remove ${it.toString()}")
                 requestPermissionList.remove(it)
             }?: Logx.d("can not find permissions Data,")
@@ -38,18 +38,18 @@ public class PermissionManagerForFragment(private val fragment: Fragment) {
      * 사용자에게 지정된 권한을 요청.
      *
      * @param permissions The list of permissions to request.
-     * @param onDenied The callback to be invoked when permissions result.
+     * @param onResult The callback to be invoked when permissions result.
      *
      * @param permissions 요청할 권한 목록.
-     * @param onDenied 권한 결과 콜백
+     * @param onResult 권한 결과 콜백
      */
     public fun requestPermissions(
-        requestCode: Int,
+        requestCode: Int = PERMISSION_REQUEST_CODE,
         permissions: List<String>,
-        onDenied: ((requestCode:Int, deniedPermissions: List<String>) -> Unit)
+        onResult: ((requestCode:Int, deniedPermissions: List<String>) -> Unit)
     ) {
         Logx.d("permissions $permissions")
-        val permission = PermissionCheck(fragment.requireContext(), requestCode, permissions, onDenied)
+        val permission = PermissionCheck(fragment.requireContext(), requestCode, permissions, onResult)
 
         val requestPermissionsList = permission.getRemainPermissions()
         Logx.d("requestPermissionsList ${requestPermissionsList.toList()}")
@@ -63,14 +63,7 @@ public class PermissionManagerForFragment(private val fragment: Fragment) {
             requestPermissionLauncher.launch(requestPermissionsList.toTypedArray())
             requestPermissionList.add(permission)
         } else {
-            onDenied(requestCode, emptyList())
+            onResult(requestCode, emptyList())
         }
-    }
-
-    public fun requestPermissions(
-        permissions: List<String>,
-        onDenied: ((requestCode:Int, deniedPermissions: List<String>) -> Unit)
-    ) {
-        requestPermissions(PERMISSION_REQUEST_CODE, permissions, onDenied)
     }
 }

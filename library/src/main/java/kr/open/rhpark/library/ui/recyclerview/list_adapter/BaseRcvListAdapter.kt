@@ -70,9 +70,7 @@ public abstract class BaseRcvListAdapter<ITEM, VH : RecyclerView.ViewHolder>(lis
     /** Move **/
     public fun moveItem(fromPosition: Int, toPosition: Int) {
         differ.submitList(
-            getMutableItemList().apply {
-                Collections.swap(this, fromPosition, toPosition)
-            }
+            getMutableItemList().apply { Collections.swap(this, fromPosition, toPosition) }
         )
     }
 

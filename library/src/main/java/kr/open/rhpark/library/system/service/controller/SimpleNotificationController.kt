@@ -12,6 +12,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.Action
 import androidx.core.app.NotificationCompat.PRIORITY_LOW
 import kr.open.rhpark.library.system.service.base.BaseSystemService
+import kr.open.rhpark.library.util.extensions.context.getNotificationManager
 
 /**
  * <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
@@ -21,14 +22,16 @@ import kr.open.rhpark.library.system.service.base.BaseSystemService
  * NotificationManager.IMPORTANCE_LOW	중간 중요도이며 알림음이 울리지 않음
  * NotificationManager.IMPORTANCE_MIN   낮은 중요도이며 알림음이 없고 상태표시줄에 표시되지 않음
  */
-public class SimpleNotificationController(
-    context: Context,
-    public val notificationManager: NotificationManager,
+public open class SimpleNotificationController(context: Context)
+    : BaseSystemService(context, listOf(POST_NOTIFICATIONS)) {
 
-) : BaseSystemService(context, listOf(POST_NOTIFICATIONS)) {
-
+    public val notificationManager: NotificationManager by lazy { context.getNotificationManager() }
 
     private var currentChannel: NotificationChannel? = null
+
+    /**
+     * NotificationChannel을 생성 및 등록하고 현재 채널로 설정.
+     */
     public fun createChannel(notificationChannel:NotificationChannel) {
         currentChannel = notificationChannel
         notificationManager.createNotificationChannel(notificationChannel)
@@ -50,15 +53,19 @@ public class SimpleNotificationController(
         smallIcon: Int? = null,
         largeIcon: Bitmap? = null
     ): NotificationCompat.Builder {
-        return currentChannel?.let {
-            NotificationCompat.Builder(context, it.id).apply {
+        return currentChannel?.let { channel ->
+            NotificationCompat.Builder(context, channel.id).apply {
                 title?.let { setContentTitle(it) }
                 content?.let { setContentText(it) }
                 setAutoCancel(isAutoCancel)
                 smallIcon?.let { setSmallIcon(it) }
                 largeIcon?.let { setLargeIcon(it) }
             }
-        }?: throw Exception("Perform Function before that createChannel")
+        }?: throw IllegalStateException("Notification channel not created. Call createChannel() first.")
+    }
+
+    private fun showNotification(notificationId: Int, builder: NotificationCompat.Builder) {
+        notificationManager.notify(notificationId, builder.build())
     }
 
     public fun showNotificationForActivity(
@@ -77,7 +84,7 @@ public class SimpleNotificationController(
             }
             actions?.forEach { addAction(it) }
         }
-       notificationManager.notify(notificationId, builder.build())
+        showNotification(notificationId,builder)
     }
 
     public fun showNotificationForBroadcast(
@@ -92,13 +99,12 @@ public class SimpleNotificationController(
     ) {
         val builder = getBuilder(title, content, isAutoCancel, smallIcon, largeIcon).apply {
             clickIntent?.let {
-                val pendingIntent = getClickShowBroadcastPendingIntent(notificationId, it)
-                setContentIntent(pendingIntent)
+                setContentIntent(getClickShowBroadcastPendingIntent(notificationId, it))
 //                setFullScreenIntent(pendingIntent, true)
             }
             actions?.forEach { addAction(it) }
         }
-        notificationManager.notify(notificationId, builder.build())
+        showNotification(notificationId,builder)
     }
 
     public fun showNotificationBigImageForActivity(
@@ -119,7 +125,7 @@ public class SimpleNotificationController(
 
             actions?.forEach { addAction(it) }
         }
-        notificationManager.notify(notificationId, builder.build())
+        showNotification(notificationId,builder)
     }
 
     public fun showNotificationBigTextForActivity(
@@ -140,7 +146,7 @@ public class SimpleNotificationController(
             setStyle(NotificationCompat.BigTextStyle().bigText(snippet))
             actions?.forEach { addAction(it) }
         }
-        notificationManager.notify(notificationId, builder.build())
+        showNotification(notificationId,builder)
     }
 
     public fun showNotificationForActionsActivity(
@@ -185,7 +191,7 @@ public class SimpleNotificationController(
             action01?.let { addAction(it) }
             action02?.let { addAction(it) }
         }
-        notificationManager.notify(notificationId, builder.build())
+        showNotification(notificationId,builder)
         return builder
     }
 
@@ -221,5 +227,4 @@ public class SimpleNotificationController(
     public fun notify(notificationId: Int,build: Notification) {
         notificationManager.notify(notificationId, build)
     }
-
 }

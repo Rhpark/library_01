@@ -6,7 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.Settings
-import kr.open.rhpark.library.util.extensions.context.remainPermissions
+import kr.open.rhpark.library.util.inline.context.remainPermissions
 
 /**
  * This class is used to check and request permissions in an Android app.
@@ -15,19 +15,19 @@ import kr.open.rhpark.library.util.extensions.context.remainPermissions
  * @param context  The application context.
  * @param requestCode  requestCode
  * @param permissions The list of permissions to request.
- * @param onDenied  The callback to handle the permission request result.
+ * @param onResult  The callback to handle the permission request result.
  *
  * @param context 애플리케이션 컨텍스트.
  * @param requestCode  requestCode
  * @param permissions 요청할 권한 목록.
- * @param onDenied 권한 요청 결과를 처리하는 콜백.
+ * @param onResult 권한 요청 결과를 처리하는 콜백.
  *
  */
 public class PermissionCheck(
     private val context: Context,
     public val requestCode: Int,
     permissions: List<String>,
-    private val onDenied: ((requestCode:Int, deniedPermissions: List<String>) -> Unit),
+    private val onResult: ((requestCode:Int, deniedPermissions: List<String>) -> Unit),
 ) {
     private var remainPermissions: List<String> = context.remainPermissions(permissions)
 
@@ -63,26 +63,24 @@ public class PermissionCheck(
     /**
      * Handles the result of a permission request.
      * 권한 요청 결과를 처리.
-     *
-     * @param onDenied 거부된 권한 목록.
      */
     public fun resultPermissionsFromActivity(permissions: Array<out String>, grantResults: IntArray) {
         val deniedList = mutableListOf<String>()
-        permissions.forEachIndexed { index, s ->
+        permissions.forEachIndexed { index, permission ->
             if (grantResults[index] == PackageManager.PERMISSION_DENIED) {
-                if(s == Manifest.permission.SYSTEM_ALERT_WINDOW) {
+                if(permission == Manifest.permission.SYSTEM_ALERT_WINDOW) {
                     if(!Settings.canDrawOverlays(context)) {
-                        deniedList.add(s)
+                        deniedList.add(permission)
                     }
                 } else {
-                    deniedList.add(s)
+                    deniedList.add(permission)
                 }
             }
         }
         result(deniedList)
     }
 
-    public fun resultPermissionFromFragment(permissions: Map<String,Boolean>) {
+    public fun resultPermissionsFromFragment(permissions: Map<String,Boolean>) {
         val deniedList = permissions.filter { !it.value }.map { it.key }.toMutableList()
         result(deniedList)
     }
@@ -91,6 +89,6 @@ public class PermissionCheck(
         if(isRemainPermissionSystemAlertWindow()) {
             if(!Settings.canDrawOverlays(context)) deniedList.add(Manifest.permission.SYSTEM_ALERT_WINDOW)
         }
-        onDenied(requestCode, deniedList)
+        onResult(requestCode, deniedList)
     }
 }

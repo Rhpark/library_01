@@ -36,15 +36,16 @@ public abstract class BaseBindingActivity<BINDING : ViewDataBinding>(@LayoutRes 
      * 뷰 바인딩 객체.
      */
     protected lateinit var binding: BINDING
+        private set
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, layoutRes)
-        onCrateView(binding.root, savedInstanceState)
+        onCreateView(binding.root, savedInstanceState)
         binding.lifecycleOwner = this
     }
 
-    protected fun onCrateView(rootView: View, savedInstanceState: Bundle?) {
+    protected fun onCreateView(rootView: View, savedInstanceState: Bundle?) {
 
     }
     /**

@@ -8,15 +8,14 @@ import android.icu.util.Calendar
 import kr.open.rhpark.library.system.service.base.BaseSystemService
 import kr.open.rhpark.library.system.service.controller.alarm.dto.AlarmDTO
 import kr.open.rhpark.library.system.service.controller.alarm.receiver.BaseAlarmReceiver
+import kr.open.rhpark.library.util.extensions.context.getAlarmManager
 
 /**
  *
  */
-public open class AlarmController(
-    context: Context,
-    public val alarmManager: AlarmManager
-) :
-    BaseSystemService(context) {
+public open class AlarmController(context: Context) : BaseSystemService(context) {
+
+    public val alarmManager: AlarmManager by lazy { context.getAlarmManager() }
 
     public fun registerAlarmClock(receiver: Class<*>, alarmDto: AlarmDTO) {
         val calendar = getCalendar(alarmDto)
@@ -60,7 +59,7 @@ public open class AlarmController(
         val intent = Intent(context, BaseAlarmReceiver::class.java)
         val pendingIntent =
             PendingIntent.getBroadcast(context, key, intent, PendingIntent.FLAG_NO_CREATE)
-        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager.cancel(pendingIntent)
+
+        pendingIntent?.let { alarmManager.cancel(it) }
     }
 }

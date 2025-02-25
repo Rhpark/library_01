@@ -9,8 +9,10 @@ import android.os.Vibrator
 import android.os.VibratorManager
 import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
-import androidx.appcompat.app.AppCompatActivity
 import kr.open.rhpark.library.system.service.base.BaseSystemService
+import kr.open.rhpark.library.util.extensions.context.getVibrator
+import kr.open.rhpark.library.util.extensions.context.getVibratorManager
+import kr.open.rhpark.library.util.inline.sdk_version.checkSdkVersion
 
 /**
  *
@@ -20,7 +22,7 @@ import kr.open.rhpark.library.system.service.base.BaseSystemService
  * Vibrator(SDK < 31), VibratorManager(SDK >= 31)
  *
  */
-public class VibratorController(context: Context) :
+public open class VibratorController(context: Context) :
     BaseSystemService(context, listOf(VIBRATE)) {
 
     /**
@@ -28,7 +30,7 @@ public class VibratorController(context: Context) :
      */
     public val vibrator: Vibrator by lazy {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
-            (context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator)
+            context.getVibrator()
         } else {
             throw IllegalStateException("Can not be used Vibrator Class, required must be lower than SDK version S(31), this SDK version ${Build.VERSION.SDK_INT}")
         }
@@ -41,7 +43,7 @@ public class VibratorController(context: Context) :
     @get:RequiresApi(Build.VERSION_CODES.S)
     public val vibratorManger: VibratorManager by lazy {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            (context.getSystemService(AppCompatActivity.VIBRATOR_MANAGER_SERVICE) as VibratorManager)
+            context.getVibratorManager()
         } else {
             throw IllegalStateException("Can not be used VibratorManager Class, required SDK version >= Build.VERSION_CODES.S(31), this SDK version ${Build.VERSION.SDK_INT}")
         }
@@ -61,11 +63,15 @@ public class VibratorController(context: Context) :
 
         val oneShort = VibrationEffect.createOneShot(timer, effect)
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
-            vibrator.vibrate(oneShort)
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            vibratorManger.vibrate(CombinedVibration.createParallel(oneShort))
-        }
+        checkSdkVersion(
+            Build.VERSION_CODES.S,
+            positiveWork = {
+                vibratorManger.vibrate(CombinedVibration.createParallel(oneShort))
+            },
+            negativeWork = {
+                vibrator.vibrate(oneShort)
+            }
+        )
     }
 
     /**
@@ -77,12 +83,14 @@ public class VibratorController(context: Context) :
 
         val effect = VibrationEffect.createPredefined(vibrationEffectClick)
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
-            vibrator.vibrate(effect)
-        } else {
-            //if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-            vibratorManger.vibrate(CombinedVibration.createParallel(effect))
-        }
+        checkSdkVersion(Build.VERSION_CODES.S,
+            positiveWork = {
+                vibratorManger.vibrate(CombinedVibration.createParallel(effect))
+            },
+            negativeWork = {
+                vibrator.vibrate(effect)
+            }
+        )
     }
 
     /**
@@ -122,10 +130,9 @@ public class VibratorController(context: Context) :
     @RequiresPermission(VIBRATE)
     public fun cancel() {
 
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S) {
-            vibrator.cancel()
-        } else {
-            vibratorManger.cancel()
-        }
+        checkSdkVersion(Build.VERSION_CODES.S,
+            positiveWork = { vibratorManger.cancel() },
+            negativeWork = { vibrator.cancel() }
+        )
     }
 }

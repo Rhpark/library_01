@@ -2,6 +2,7 @@ package kr.open.rhpark.library.system.service.info.location
 
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -22,14 +23,16 @@ import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.repository.local.sharedpreference.LocationSharedPreference
 import kr.open.rhpark.library.system.service.base.BaseSystemService
 import kr.open.rhpark.library.system.service.base.DataUpdate
-import kr.open.rhpark.library.util.extensions.context.hasPermissions
+import kr.open.rhpark.library.util.extensions.context.getSystemLocationManager
+import kr.open.rhpark.library.util.inline.context.hasPermissions
 
 public open class LocationStateInfo(
     context: Context,
-    public val locationManager: LocationManager,
     private val coroutineScope: CoroutineScope
 ) :
     BaseSystemService(context, listOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION)) {
+
+    public val locationManager: LocationManager by lazy { context.getSystemLocationManager() }
 
     private val msfUpdate: MutableStateFlow<LocationStateEvent> = MutableStateFlow(LocationStateEvent.OnGpsEnabled(isGpsEnabled()))
     public val sfUpdate: StateFlow<LocationStateEvent> = msfUpdate.asStateFlow()
@@ -144,6 +147,7 @@ public open class LocationStateInfo(
         }
     }
 
+    @SuppressLint("MissingPermission")
     public fun getLocation(): Location? {
 
         return if (!isAnyEnabled()) {
@@ -175,7 +179,7 @@ public open class LocationStateInfo(
         LocationSharedPreference(context).saveApplyLocation(key,location)
     }
 
-    public fun saveCommitLocation(key:String, location: Location) {
+    public suspend fun saveCommitLocation(key:String, location: Location) {
         LocationSharedPreference(context).saveCommitLocation(key,location)
     }
 

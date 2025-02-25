@@ -1,11 +1,17 @@
 package kr.open.rhpark.library.system.service.controller.windowmanager.floating.drag
 
 import android.view.View
-import kr.open.rhpark.library.system.service.base.DataUpdate
-import kr.open.rhpark.library.system.service.controller.windowmanager.floating.vo.FloatingViewCollisionsType
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kr.open.rhpark.library.system.service.controller.windowmanager.floating.fixed.FloatingFixedView
+import kr.open.rhpark.library.system.service.controller.windowmanager.floating.vo.FloatingViewCollisionsType
+import kr.open.rhpark.library.system.service.controller.windowmanager.floating.vo.FloatingViewTouchType
 
-public class FloatingDragView(
+/**
+ * FloatingDragView는 드래그 가능한 플로팅 뷰로, 드래그 시 충돌 상태를 갱신.
+ * 코루틴 StateFlow를 통해 터치 단계별 충돌 상태를 항상 최신으로 보유.
+ */
+public open class FloatingDragView(
     view: View,
     startX: Int,
     startY: Int,
@@ -14,11 +20,13 @@ public class FloatingDragView(
     public var collisionsWhileTouchUp: ((FloatingDragView, FloatingViewCollisionsType) -> Unit)? = null
 ) : FloatingFixedView(view, startX, startY) {
 
-    private val updateCollisionWhileDrag = DataUpdate(FloatingViewCollisionsType.UNCOLLISIONS) { type ->
-            collisionsWhileDrag?.invoke(this, type)
-        }
+    private val msfCollisionStateFlow = MutableStateFlow<Pair<FloatingViewTouchType, FloatingViewCollisionsType>>(
+        FloatingViewTouchType.TOUCH_UP to FloatingViewCollisionsType.UNCOLLISIONS
+    )
+    public val sfCollisionStateFlow: StateFlow<Pair<FloatingViewTouchType, FloatingViewCollisionsType>>
+        get() = msfCollisionStateFlow
 
-    public fun updateCollisionWhileDrag(floatingViewCollisionsType: FloatingViewCollisionsType) {
-        updateCollisionWhileDrag.update(floatingViewCollisionsType)
+    public fun updateCollisionState(phase: FloatingViewTouchType, type: FloatingViewCollisionsType) {
+        msfCollisionStateFlow.value = phase to type
     }
 }

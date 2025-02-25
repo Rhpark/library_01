@@ -1,17 +1,15 @@
 package kr.open.rhpark.library.ui.fragment
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.system.permission.PermissionManagerBase
 import kr.open.rhpark.library.system.permission.PermissionManagerForFragment
-import kr.open.rhpark.library.ui.view.snackbar.DefaultSnackBar
-import kr.open.rhpark.library.ui.view.toast.DefaultToast
-import kr.open.rhpark.library.util.extensions.context.hasPermission
-import kr.open.rhpark.library.util.extensions.context.hasPermissions
-import kr.open.rhpark.library.util.extensions.context.remainPermissions
+import kr.open.rhpark.library.util.inline.context.hasPermission
+import kr.open.rhpark.library.util.inline.context.hasPermissions
+import kr.open.rhpark.library.util.inline.context.remainPermissions
+import kr.open.rhpark.library.util.inline.context.startActivity
 
 /**
  * A base fragment classthat provides common functionality for fragments.
@@ -31,18 +29,6 @@ import kr.open.rhpark.library.util.extensions.context.remainPermissions
 public abstract class RootFragment : Fragment() {
 
     /**
-     * A toast object for displaying short messages to the user.
-     * 사용자에게 메시지를 표시하기 위한 토스트 객체.
-     */
-    protected val toast: DefaultToast by lazy { DefaultToast(requireContext()) }
-
-    /**
-     * A snackbar object for displaying brief messages of the screen.
-     * 화면에 간단한 메시지를 표시하기 위한 스낵바 객체입니다.
-     */
-    protected val snackBar: DefaultSnackBar by lazy { DefaultSnackBar(requireView()) }
-
-    /**
      * The PermissionCheck for handling permission request results.
      * 권한 요청 결과를 처리하기 위한 PermissionCheck.
      */
@@ -58,36 +44,26 @@ public abstract class RootFragment : Fragment() {
      * 사용자에게 지정된 권한을 요청.
      *
      * @param permissions The list of permissions to request.
-     * @param onDenied The callback to be invoked when permissions result.
+     * @param onResult The callback to be invoked when permissions result.
      *
      * @param permissions 요청할 권한 목록.
-     * @param onDenied 권한 결과 콜백
+     * @param onResult 권한 결과 콜백
      */
     protected fun requestPermissions(
         permissions: List<String>,
-        onDenied: ((requestCode:Int, deniedPermissions: List<String>) -> Unit),
+        onResult: ((requestCode:Int, deniedPermissions: List<String>) -> Unit),
     ) {
         Logx.d("permissions $permissions")
-        permissionManager.requestPermissions(PermissionManagerBase.PERMISSION_REQUEST_CODE, permissions, onDenied)
+        permissionManager.requestPermissions(PermissionManagerBase.PERMISSION_REQUEST_CODE, permissions, onResult)
     }
 
     protected fun requestPermissions(
         requestCode: Int,
         permissions: List<String>,
-        onDenied: ((requestCode: Int, deniedPermissions: List<String>) -> Unit)
+        onResult: ((requestCode: Int, deniedPermissions: List<String>) -> Unit)
     ) {
-        permissionManager.requestPermissions(requestCode, permissions, onDenied)
+        permissionManager.requestPermissions(requestCode, permissions, onResult)
     }
-
-    /**
-     * Starts an activity with the specified class.
-     * 지정된 클래스의 액티비티를 시작합니다.
-     *
-     * @param activity The class of the activity to start.
-     *
-     * @param activity 시작할 액티비티의 클래스입니다.
-     */
-    protected fun startActivity(activity: Class<*>?) { startActivity(Intent(requireContext(), activity))    }
 
     /**
      * Starts an activity with the specified class and intent flags.
@@ -101,12 +77,8 @@ public abstract class RootFragment : Fragment() {
      * @param extras 인텐트에 포함할 Bundle.
      * @param intentFlags 인텐트에 추가할 인텐트 플래그.
      */
-    protected fun startActivity(activity: Class<*>, extras: Bundle? = null, vararg intentFlags: Int) {
-        val intent = Intent(requireContext(), activity).apply {
-            extras?.let { putExtras(it) }
-            intentFlags.forEach { addFlags(it) }
-        }
-        startActivity(intent)
+    protected fun startActivity(activity: Class<*>, extras: Bundle? = null, intentFlags: IntArray?) {
+        requireContext().startActivity(activity,extras,intentFlags)
     }
 
 

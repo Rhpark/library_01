@@ -10,6 +10,10 @@ import kr.open.rhpark.app.R
 import kr.open.rhpark.app.databinding.ActivityToastSnackbarBinding
 import kr.open.rhpark.library.ui.activity.BaseBindingActivity
 import kr.open.rhpark.library.util.extensions.context.getSoftKeyboardController
+import kr.open.rhpark.library.util.extensions.ui.view.snackBarShowIndefinite
+import kr.open.rhpark.library.util.extensions.ui.view.snackBarShowShort
+import kr.open.rhpark.library.util.extensions.ui.view.toastShort
+import kr.open.rhpark.library.util.extensions.ui.view.toastShowShort
 
 class ToastSnackBarActivity :
     BaseBindingActivity<ActivityToastSnackbarBinding>(R.layout.activity_toast_snackbar) {
@@ -20,48 +24,33 @@ class ToastSnackBarActivity :
         binding.run {
             applicationContext.getSoftKeyboardController().showDelay(editText,200L)
 
-            btnDefaultToast.setOnClickListener { toast.showMsgShort("Default Toast") }
+            btnDefaultToast.setOnClickListener {
+                toastShowShort("Toast Show Short")
+            }
 
             btnCustomToast.visibility = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) View.GONE else View.VISIBLE
             btnCustomToast.setOnClickListener {
-                toast.setGravity(Triple(Gravity.CENTER_VERTICAL, 0, 0))
-                toast.setBackground(Color.YELLOW)
-                toast.showMsgShort("Custom Toast")
+                toastShort("Option").apply {
+                    setGravity(Gravity.CENTER_VERTICAL,0,0)
+                    view?.setBackgroundColor(Color.YELLOW)
+                }.show()
             }
 
-            btnDefaultSnackBar.setOnClickListener { v -> snackBar.showMsgShort(v, "Default SnackBar") }
-            btnDefaultWindowViewSnackBar.setOnClickListener { snackBar.showMsgShortWindowView("Default Window View SnackBar") }
+            btnDefaultSnackBar.setOnClickListener { v -> v.snackBarShowShort("Default SnackBar") }
 
-            btnCustomSnackBar.setOnClickListener { v ->
-                snackBar.apply {
-                    setAnimation(animation = BaseTransientBottomBar.ANIMATION_MODE_SLIDE)
-                    setTextColor(Color.BLUE)
-                    setBackgroundTint(Color.WHITE)
-                    setActionTextColor(Color.RED)
-                    setAction("Action_01") { v ->
-                        toast.showMsgShort("OnClick SnackBar Action_01")
-                    }
-                }.showMsgShort(v,"Custom SnackBar")
+            btnActionSnackBar.setOnClickListener { v ->
+                v.snackBarShowShort("TestMsg", actionText = "Actino_1") { toastShowShort("Click Action_1") }
             }
 
-            btnAddConfigSnackBar.setOnClickListener { v->
-                snackBar.addSnackBarShortConfig(v,"short_01") { snackBar ->
-                    snackBar.apply {
-                        animationMode = BaseTransientBottomBar.ANIMATION_MODE_SLIDE
-                        setTextColor(Color.WHITE)
-                        setBackgroundTint(Color.BLACK)
-                        setActionTextColor(Color.YELLOW)
-                        setAction("Short_01") { v -> toast.showMsgShort("OnClick SnackBar Short_01") }
-                    }
-                }
-                toast.showMsgShort("Config Save SnackBar")
-            }
-
-            btnShowConfigSnackBar.setOnClickListener {
-                snackBar.getSnackBarShortConfig("short_01")?.let {
-                    it.setText("Hello Snack Short 01 ")
-                    it.show()
-                }?: toast.showMsgShort("Config Not Found!")
+            btnOptionSnackBar.setOnClickListener { v->
+                v.snackBarShowIndefinite(
+                    "Option_Test",
+                    animationMode = BaseTransientBottomBar.ANIMATION_MODE_SLIDE,
+                    bgTint = Color.WHITE,
+                    textColor = Color.RED,
+                    actionTextColor = Color.BLUE,
+                    actionText = "Action_01",
+                    ) { toastShowShort("OnCLick Action_01") }
             }
         }
     }

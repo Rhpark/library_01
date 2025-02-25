@@ -2,12 +2,18 @@ package kr.open.rhpark.library.repository.local.sharedpreference
 
 import android.content.Context
 import android.content.SharedPreferences
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 import kr.open.rhpark.library.debug.logcat.Logx
 
 
 public abstract class BaseSharedPreference(context: Context, groupKey: String, sharedPrivateMode: Int = Context.MODE_PRIVATE) {
 
-    private val sp: SharedPreferences by lazy { context.getSharedPreferences(groupKey, sharedPrivateMode) }
+    protected val sp: SharedPreferences by lazy { context.applicationContext.getSharedPreferences(groupKey, sharedPrivateMode) }
+
+    protected val commitMutex : Mutex by lazy { Mutex() } // use for coroutine commit, synchronized
 
     /******** Load data ********/
     protected fun getString(key: String, defaultValue: String?): String? = sp.getString(key, defaultValue)
@@ -16,69 +22,53 @@ public abstract class BaseSharedPreference(context: Context, groupKey: String, s
     protected fun getBoolean(key: String, defaultValue: Boolean): Boolean = sp.getBoolean(key, defaultValue)
     protected fun getLong(key: String, defaultValue: Long): Long = sp.getLong(key, defaultValue)
     protected fun getSet(key: String, defaultValue: Set<String>?): Set<String>? = sp.getStringSet(key, defaultValue)
-
-    protected fun getDouble(key: String, default:Double): Double {
-        return sp.getString(key, null)?.let {
-            try {
-                it.toDouble()
-            }catch (e:Exception) {
-                e.printStackTrace()
-                default
-            }
-        }?: default
-    }
+    protected fun getDouble(key: String, default:Double): Double  = sp.getString(key, null)?.toDoubleOrNull() ?: default
 
     /**
      * Save Data
      * must be called after apply() or commit()
      */
-    protected fun put(key: String, value: Any?): SharedPreferences.Editor = when (value) {
-        is String -> sp.edit().putString(key, value)
-        is Boolean -> sp.edit().putBoolean(key, value)
-        is Float-> sp.edit().putFloat(key, value)
-        is Int -> sp.edit().putInt(key, value)
-        is Double ->  sp.edit().putString(key, value.toString())
-        is Long -> sp.edit().putLong(key, value)
+    protected fun SharedPreferences.Editor.putValue(key: String, value: Any?): SharedPreferences.Editor = when (value) {
+        is String -> putString(key, value)
+        is Boolean -> putBoolean(key, value)
+        is Float-> putFloat(key, value)
+        is Int -> putInt(key, value)
+        is Double ->  putString(key, value.toString())
+        is Long -> putLong(key, value)
         is Set<*> -> {
-            try {
-                sp.edit().putStringSet(key, value as Set<String?>)
-            } catch (e: ClassCastException) {
-                Logx.e("ClassCastException: Set<*> is not Set<String>. Key: $key, Value: $value")
-                throw ClassCastException("ClassCastException: Set<*> is not Set<String>. Key: $key, Value: $value")
+            val stringSet = value.filterIsInstance<String>().toSet()
+            if (stringSet.size != value.size) {
+                Logx.e("[ERROR] Set<*> is not Set<String>. Key: $key, Value: $value")
+                throw ClassCastException("[ERROR] Set<*> is not Set<String>. Key: $key, Value: $value")
             }
+            putStringSet(key, stringSet)
         }
 
         else -> {
             if (value != null) {
                 Logx.e("Unsupported value type: ${value.javaClass}")
             }
-            sp.edit().remove(key)
+            remove(key)
         }
     }
 
     protected fun saveApply() { sp.edit().apply() }
-    protected fun saveApply(key: String, value: Any?) { put(key, value).apply() }
+    protected fun saveApply(key: String, value: Any?) { sp.edit().putValue(key, value).apply() }
 
-    protected fun saveCommit() { sp.edit().commit() }
-    protected fun saveCommit(key: String, value: Any?) { put(key, value).commit() }
+    protected suspend inline fun commitDoWork(crossinline doWork: SharedPreferences.Editor.() -> Unit): Boolean =
+        withContext(Dispatchers.IO) { commitMutex.withLock { sp.edit().apply { doWork() }.commit() } }
 
-    /**
-     * remove data
-     * after editor.commit() or editor.apply() using sp.edit()
-     */
-    private fun removeAt(key: String): SharedPreferences.Editor = sp.edit().remove(key)
+    protected suspend fun saveCommit():Boolean = commitDoWork{  }
 
-    protected fun removeAtApply(key: String) { removeAt(key).apply() }
+    protected suspend fun saveCommit(key: String, value: Any?) :Boolean = commitDoWork{ putValue(key, value) }
 
-    protected fun removeAtCommit(key: String) { removeAt(key).commit() }
+    protected fun removeAtApply(key: String) { sp.edit().remove(key).apply() }
 
-    /**
-     * remove all
-     * after editor.commit() or editor.apply() using sp.edit()
-     */
-    private fun removeAll(): SharedPreferences.Editor = sp.edit().clear()
+    protected suspend fun removeAtCommit(key: String):Boolean = commitDoWork{ remove(key) }
 
-    public fun removeAllApply() { removeAll().apply() }
+    protected fun removeAllApply() { sp.edit().clear().apply() }
 
-    public fun removeAllCommit() { removeAll().commit() }
+    protected suspend fun removeAllCommit():Boolean = commitDoWork{ clear() }
+
+    protected fun getEditor() : SharedPreferences.Editor = sp.edit()
 }

@@ -133,43 +133,45 @@ internal class LogxWriter {
 
     private fun jsonMsgSort(tag:String, msg: String) {
 
-        val space = "   "
-        var cnt = 0
-        var logMsg = ""
-        val jsonMsgList = msg.replace("\\s+".toRegex(), "")
-        for (sp in jsonMsgList) {
+        val result = StringBuilder()
+        var indentLevel = 0
+        var inQuotes = false
 
-            when(sp) {
-                ',' -> {
-                    var spaceLen = ""
-                    for(j in 0 until cnt) spaceLen += space
-                    log(Pair(tag, "$spaceLen$logMsg"), sp, LogxType.JSON)
-                    logMsg = ""
-                }
-
-                '[', '{' -> {
-                    var spaceLen = ""
-                    for(j in 0 until cnt) spaceLen += space
-                    log(Pair(tag, "$spaceLen$logMsg"), sp, LogxType.JSON)
-                    logMsg = ""
-                    cnt++
-                }
-
-                ']', '}' -> {
-                    var spaceLen = ""
-                    if(logMsg.isNotEmpty()) {
-                        for(j in 0 until cnt) spaceLen += space
-                        log(Pair(tag, "$spaceLen"), logMsg, LogxType.JSON)
+        for (char in msg) {
+            when (char) {
+                '{', '[' -> {
+                    result.append(char)
+                    if (!inQuotes) {
+                        result.append("\n")
+                        indentLevel++
+                        result.append("  ".repeat(indentLevel))
                     }
-                    logMsg = ""
-                    spaceLen = ""
-                    cnt--
-                    for(j in 0 until cnt) spaceLen += space
-                    log(Pair(tag, "$spaceLen$logMsg"), sp, LogxType.JSON)
                 }
-                else -> logMsg += sp
+                '}', ']' -> {
+                    if (!inQuotes) {
+                        result.append("\n")
+                        indentLevel = maxOf(0, indentLevel - 1)
+                        result.append("  ".repeat(indentLevel))
+                    }
+                    result.append(char)
+                }
+                ',' -> {
+                    result.append(char)
+                    if (!inQuotes) {
+                        result.append("\n")
+                        result.append("  ".repeat(indentLevel))
+                    }
+                }
+                '"' -> {
+                    result.append(char)
+                    if (result.lastOrNull() != '\\') {
+                        inQuotes = !inQuotes // 따옴표 안인지 여부를 반전
+                    }
+                }
+                else -> result.append(char)
             }
         }
+        log(Pair(tag, ""), result, LogxType.JSON)
     }
 
     private fun isDebug(logType: LogxType) = if (!Logx.isDebug) false

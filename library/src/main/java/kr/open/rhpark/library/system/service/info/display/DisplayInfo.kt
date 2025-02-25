@@ -9,6 +9,8 @@ import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.annotation.RequiresApi
 import kr.open.rhpark.library.system.service.base.BaseSystemService
+import kr.open.rhpark.library.util.extensions.context.getSystemWindowManager
+import kr.open.rhpark.library.util.inline.sdk_version.checkSdkVersion
 
 /**
  * This class provides information about the display of an Android device.
@@ -20,8 +22,11 @@ import kr.open.rhpark.library.system.service.base.BaseSystemService
  * @param windowManager The WindowManager instance.
  * @param windowManager WindowManager 인스턴스.
  */
-public class DisplayInfo(context: Context, public val windowManager: WindowManager)
+public open class DisplayInfo(context: Context)
     : BaseSystemService(context, null) {
+
+
+    public val windowManager: WindowManager by lazy { context.getSystemWindowManager() }
 
     /**
      * Returns the full screen size.
@@ -30,17 +35,15 @@ public class DisplayInfo(context: Context, public val windowManager: WindowManag
      * @return  The full screen size (width, height).
      * @return 전체 화면 크기 (너비, 높이)
      */
-    public fun getFullScreenSize(): Point = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        val metrics = getCurrentWindowMetrics().bounds
-        val width = metrics.width()
-        val height = metrics.height()
-        Point(width, height)
-    } else {
-        val displayMetrics = DisplayMetrics()
-        (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager)
-            .defaultDisplay.getRealMetrics(displayMetrics)
-        Point(displayMetrics.widthPixels, displayMetrics.heightPixels)
-    }
+    public fun getFullScreenSize(): Point = checkSdkVersion(Build.VERSION_CODES.R,
+        positiveWork = { with(getCurrentWindowMetrics().bounds) { Point(width(), height()) } },
+        negativeWork = {
+            val metrics = DisplayMetrics().apply {
+                windowManager.defaultDisplay.getRealMetrics(this)
+            }
+            Point(metrics.widthPixels, metrics.heightPixels)
+        }
+    )
 
     @RequiresApi(Build.VERSION_CODES.R)
     private fun getCurrentWindowMetrics() = windowManager.currentWindowMetrics
@@ -55,19 +58,18 @@ public class DisplayInfo(context: Context, public val windowManager: WindowManag
      * @return The screen size (width, height).
      * @return 화면 크기 (너비, 높이).
      */
-    public fun getScreen(): Pair<Int,Int> = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        val windowMetrics = getCurrentWindowMetrics()
-        val insets = windowMetrics.windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.systemBars())
+    public fun getScreen(): Pair<Int,Int> = checkSdkVersion(Build.VERSION_CODES.R,
+        positiveWork = {
+            val windowMetrics = getCurrentWindowMetrics()
+            val insets = windowMetrics.windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.systemBars())
 
-        val width = windowMetrics.bounds.width() - (insets.left + insets.right)
-        val height = windowMetrics.bounds.height() - (insets.bottom + insets.top)
-        Pair(width, height)
-    } else {
-        getScreenWithStatusBar().run {
-            val statusBarHeight = getStatusBarHeight()
-            return@run Pair(first, second - statusBarHeight)
+            val width = windowMetrics.bounds.width() - (insets.left + insets.right)
+            val height = windowMetrics.bounds.height() - (insets.bottom + insets.top)
+            Pair(width, height)
+        }, negativeWork = {
+            getScreenWithStatusBar().let { (w, h) -> Pair(w, h - getStatusBarHeight()) }
         }
-    }
+    )
 
     /**
      * Returns the screen size excluding the navigation bar.
@@ -76,20 +78,19 @@ public class DisplayInfo(context: Context, public val windowManager: WindowManag
      * @return The screen size (width, height).
      * @return 화면 크기 (너비, 높이)
      */
-    public fun getScreenWithStatusBar(): Pair<Int, Int> {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+    public fun getScreenWithStatusBar(): Pair<Int, Int> = checkSdkVersion(Build.VERSION_CODES.R,
+        positiveWork = {
             val windowMetrics = getCurrentWindowMetrics()
             val insets = windowMetrics.windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.systemBars())
 
             val width = windowMetrics.bounds.width()
             val height = windowMetrics.bounds.height() - (insets.bottom)
-            return Pair(width, height)
-        } else {
-            context.resources.displayMetrics.run {
-                return Pair(widthPixels, heightPixels)
-            }
+            Pair(width, height)
+        },
+        negativeWork = {
+            with(context.resources.displayMetrics) { Pair(widthPixels, heightPixels) }
         }
-    }
+    )
 
     /**
      * Returns the status bar height.
@@ -98,16 +99,16 @@ public class DisplayInfo(context: Context, public val windowManager: WindowManag
      * @return The status bar height.
      * @return 상태 표시줄 높이.
      */
-    public fun getStatusBarHeight(): Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        val windowMetrics = getCurrentWindowMetrics()
-        windowMetrics.windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.systemBars()).top
-
-    } else {
-        val resourceId = context.resources.getIdentifier("status_bar_height", "dimen", "android")
-        if (resourceId > 0) context.resources.getDimensionPixelSize(resourceId)
-        else throw Resources.NotFoundException("Can not find status bar height. you can try call method getStatusBarHeight(activity: Activity).")
-    }
-
+    public fun getStatusBarHeight(): Int = checkSdkVersion(Build.VERSION_CODES.R,
+        positiveWork = {
+            getCurrentWindowMetrics().windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.systemBars()).top
+        },
+        negativeWork = {
+            context.resources.getIdentifier("status_bar_height", "dimen", "android")
+                .takeIf { it > 0 }?.let { context.resources.getDimensionPixelSize(it) }
+                ?: throw Resources.NotFoundException("Cannot find status bar height. Try getStatusBarHeight(activity: Activity).")
+        }
+    )
 
     /**
      * Returns the navigation bar height.
@@ -116,13 +117,14 @@ public class DisplayInfo(context: Context, public val windowManager: WindowManag
      * @return The navigation bar height.
      * @return 탐색 표시줄 높이.
      */
-    public fun getNavigationBarHeight(): Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        val windowMetrics = getCurrentWindowMetrics()
-        windowMetrics.windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.systemBars()).bottom
-
-    } else {
-        val resourceId = context.resources.getIdentifier("navigation_bar_height", "dimen", "android")
-        if (resourceId > 0) context.resources.getDimensionPixelSize(resourceId)
-        else throw Resources.NotFoundException("Can not find navigation bar height. you can try call method getNavigationBarHeight(activity: Activity).")
-    }
+    public fun getNavigationBarHeight(): Int = checkSdkVersion(Build.VERSION_CODES.R,
+        positiveWork = {
+            getCurrentWindowMetrics().windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.systemBars()).bottom
+        },
+        negativeWork = {
+            context.resources.getIdentifier("navigation_bar_height", "dimen", "android").
+            takeIf { it > 0 }?.let { context.resources.getDimensionPixelSize(it) }
+                ?: throw Resources.NotFoundException("Cannot find navigation bar height. Try getNavigationBarHeight(activity: Activity).")
+        }
+    )
 }

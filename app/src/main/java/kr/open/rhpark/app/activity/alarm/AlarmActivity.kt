@@ -15,6 +15,7 @@ import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.system.service.controller.alarm.dto.AlarmDTO
 import kr.open.rhpark.library.ui.activity.BaseBindingActivity
 import kr.open.rhpark.library.util.extensions.context.getAlarmController
+import kr.open.rhpark.library.util.extensions.ui.view.toastShowShort
 import kr.open.rhpark.library.util.inline.sdk_version.checkSdkVersion
 import java.time.LocalDateTime
 
@@ -39,9 +40,9 @@ class AlarmActivity :
             btnAlarmRegister.setOnClickListener {
                 val edit = edtTimer.text
                 if (edit.isNullOrEmpty()) {
-                    toast.showMsgShort("input Min timer")
+                    toastShowShort("input Min timer")
                 } else if (edit.toString().toInt() < 1) {
-                    toast.showMsgShort("over than 0")
+                    toastShowShort("over than 0")
                 }else {
                     Logx.d()
                     val min = edtTimer.text.toString().toInt()

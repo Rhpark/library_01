@@ -5,6 +5,7 @@ import kr.open.rhpark.app.R
 import kr.open.rhpark.app.databinding.ActivityDisplayBinding
 import kr.open.rhpark.library.ui.activity.BaseBindingActivity
 import kr.open.rhpark.library.util.extensions.context.getDisplayInfo
+import kr.open.rhpark.library.util.extensions.ui.view.toastShowShort
 import kr.open.rhpark.library.util.inline.display.dpToPx
 import kr.open.rhpark.library.util.inline.display.dpToSp
 import kr.open.rhpark.library.util.inline.display.pxToDp
@@ -13,8 +14,6 @@ import kr.open.rhpark.library.util.inline.display.spToDp
 import kr.open.rhpark.library.util.inline.display.spToPx
 
 class DisplayActivity : BaseBindingActivity<ActivityDisplayBinding>(R.layout.activity_display) {
-
-    private val getDisplayInfo by lazy { getDisplayInfo() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,13 +48,13 @@ class DisplayActivity : BaseBindingActivity<ActivityDisplayBinding>(R.layout.act
 
             btbScreenInfo.setOnClickListener {
                 val getFullScreen =
-                    "FullScreen = ${getDisplayInfo.getFullScreenSize()}\n" +
-                            "ScreenWithStatusBar = ${getDisplayInfo.getScreenWithStatusBar()}\n" +
-                            "Screen = ${getDisplayInfo.getScreen()}\n" +
-                            "StatusBar height = ${getStatusBarHeight()}\n" +
-                            "NavigationBar height = ${getNavigationBarHeight()}\n" +
-                            "getStatusBarHeight = ${this@DisplayActivity.getStatusBarHeight()}\n" +
-                            "getNavigationBarHeight = ${this@DisplayActivity.getNavigationBarHeight()}\n"
+                    "FullScreen = ${getDisplayInfo().getFullScreenSize()}\n" +
+                            "ScreenWithStatusBar = ${getDisplayInfo().getScreenWithStatusBar()}\n" +
+                            "Screen = ${getDisplayInfo().getScreen()}\n" +
+                            "StatusBar height = ${statusBarHeight}\n" +
+                            "NavigationBar height = ${navigationBarHeight}\n" +
+                            "getStatusBarHeight = ${this@DisplayActivity.statusBarHeight}\n" +
+                            "getNavigationBarHeight = ${this@DisplayActivity.navigationBarHeight}\n"
 
                 tvResult.text = getFullScreen
             }
@@ -63,7 +62,7 @@ class DisplayActivity : BaseBindingActivity<ActivityDisplayBinding>(R.layout.act
     }
 
     private fun editNumberIsEmpty(): Boolean = if (binding.edtNumber.text.isEmpty()) {
-        toast.showMsgShort("Input Number")
+        toastShowShort("Input Number")
         true
     } else { false }
 }

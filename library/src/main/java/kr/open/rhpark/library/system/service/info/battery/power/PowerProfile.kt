@@ -38,15 +38,10 @@ public class PowerProfile(context: Context) {
      * @param type 검색할 전력 프로필 유형.
      * @return 평균 전력 소비량 오류가 발생하면 null.
      */
-    public fun getAveragePower(type: PowerProfileVO): Any? {
-        return try {
-            getAveragePowerMethod.invoke(powerProfileInstance, type.res)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Logx.e(e)
-            null
-        }
-    }
+    public fun getAveragePower(type: PowerProfileVO): Any? =
+        runCatching { getAveragePowerMethod.invoke(powerProfileInstance, type.res) }
+            .onFailure { Logx.e(it) }
+            .getOrNull()
 
     /**
      * Retrieves the average power consumption for the specified power profile type and index.
@@ -61,13 +56,8 @@ public class PowerProfile(context: Context) {
      * @return The average power consumption, or null if an error occurred.
      * @return 평균 전력 소비량. 오류가 발생하면 null.
      */
-    public fun getAveragePower(type: PowerProfileVO, i: Int): Any? {
-        return try {
-            getAveragePowerMethodWithInt.invoke(powerProfileInstance, type.res, i)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Logx.e(e)
-            null
-        }
-    }
+    public fun getAveragePower(type: PowerProfileVO, index: Int): Any? =
+        runCatching { getAveragePowerMethodWithInt.invoke(powerProfileInstance, type.res, index) }
+            .onFailure { Logx.e(it) }
+            .getOrNull()
 }

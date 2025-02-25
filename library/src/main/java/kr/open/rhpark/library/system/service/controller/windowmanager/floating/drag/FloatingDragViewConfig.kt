@@ -2,16 +2,12 @@ package kr.open.rhpark.library.system.service.controller.windowmanager.floating.
 
 import android.graphics.Point
 import android.graphics.PointF
-import android.view.MotionEvent
 import android.view.View
-import android.view.WindowManager.LayoutParams
-import kotlin.math.absoluteValue
+import kotlin.math.abs
 
 internal class FloatingDragViewConfig(
     public val floatingView: FloatingDragView,
-    private val onTouchDown: ((view: View, params: LayoutParams) -> Unit)? = null,
-    private val onTouchMove: ((view: View, params: LayoutParams) -> Unit)? = null,
-    private val onTouchUp: ((view: View, params: LayoutParams) -> Unit)? = null
+
 ) {
     /**
      * Value for Drag
@@ -26,30 +22,48 @@ internal class FloatingDragViewConfig(
     private var isDragging = false
     private var initialClickDownPosition:PointF = PointF(0f,0f)
 
-    public fun setOnTouchListener(view: View, event: MotionEvent): Boolean {
-        return when (event.action) {
-            MotionEvent.ACTION_DOWN -> {
-                setLocation(event.rawX, event.rawY)
-                onTouchDown?.invoke(view, floatingView.params)
-                true
-            }
-
-            MotionEvent.ACTION_MOVE -> {
-                changeLocation(event.rawX, event.rawY)
-                onTouchMove?.invoke(floatingView.view, floatingView.params)
-                true
-            }
-
-            MotionEvent.ACTION_UP -> {
-                if (!isDragging) {
-                    floatingView.view.performClick()
-                }
-                onTouchUp?.invoke(view, floatingView.params)
-                true
-            }
-            else -> false
-        }
+    public fun onTouchDown(rawX: Float, rawY: Float) {
+        setLocation(rawX,rawY)
     }
+
+    public fun onTouchMove(rawX: Float, rawY: Float) {
+        changeLocation(rawX,rawY)
+    }
+
+    public fun onTouchUp() {
+        isDragging = false
+    }
+
+    public fun getIsDragging() = isDragging
+//
+//    public fun setOnTouchListener(view: View, event: MotionEvent): Boolean {
+//        return when (event.action) {
+//            MotionEvent.ACTION_DOWN -> {
+//                setLocation(event.rawX, event.rawY)
+////                onTouchDown?.invoke(view, floatingView.params)
+//                floatingView.updateCollisionState(FloatingViewTouchType.TOUCH_DOWN,FloatingViewCollisionsType.UNCOLLISIONS)
+//                true
+//            }
+//
+//            MotionEvent.ACTION_MOVE -> {
+//                changeLocation(event.rawX, event.rawY)
+////                onTouchMove?.invoke(floatingView.view, floatingView.params)
+////                floatingView.updateCollisionState(FloatingViewTouchType.TOUCH_DRAG, FloatingViewCollisionsType.UNCOLLISIONS)
+//                true
+//            }
+//
+//            MotionEvent.ACTION_UP -> {
+//                if (!isDragging) {
+//                    floatingView.view.performClick()
+//                }
+////                onTouchUp?.invoke(view, floatingView.params)
+////                floatingView.updateCollisionState(FloatingViewTouchType.TOUCH_UP,FloatingViewCollisionsType.UNCOLLISIONS)
+//                isDragging = false
+//                true
+//            }
+//            else -> false
+//        }
+//    }
 
     private fun setLocation(x:Float, y:Float) {
         initDrag(x, y)
@@ -76,9 +90,9 @@ internal class FloatingDragViewConfig(
         floatingView.params.y = initialTouchDownPosition.y + (y - initialTouchDragPosition.y).toInt()
     }
 
-    private fun clickDragChanged(x:Float, y:Float) {
-        if ((x.absoluteValue - initialClickDownPosition.x.toInt()) > clickThreshold
-            || (y.absoluteValue - initialClickDownPosition.y.toInt()) > clickThreshold) {
+    private fun clickDragChanged(x: Float, y: Float) {
+        if (abs(x - initialClickDownPosition.x) > clickThreshold ||
+            abs(y - initialClickDownPosition.y) > clickThreshold) {
             isDragging = true
         }
     }

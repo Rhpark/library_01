@@ -2,7 +2,7 @@ package kr.open.rhpark.library.system.service.base
 
 import android.content.Context
 import kr.open.rhpark.library.debug.logcat.Logx
-import kr.open.rhpark.library.util.extensions.context.remainPermissions
+import kr.open.rhpark.library.util.inline.context.remainPermissions
 
 /**
  * Base class for system services.
@@ -12,15 +12,15 @@ import kr.open.rhpark.library.util.extensions.context.remainPermissions
  * @param context The application context.
  * @param context 애플리케이션 컨텍스트.
  *
- * @param permissionList The list of required permissions.
- * @param permissionList 필요한 권한 목록입니다.
+ * @param requiredPermissions The list of required permissions.
+ * @param requiredPermissions 필요한 권한 목록입니다.
  */
-public abstract class BaseSystemService(protected val context: Context, permissionList: List<String>? = null) {
+public abstract class BaseSystemService(protected val context: Context, requiredPermissions: List<String>? = null) {
 
     private var remainPermissions = emptyList<String>()
 
     init {
-        permissionList?.let {
+        requiredPermissions?.let {
             remainPermissions = context.remainPermissions(it)
             if(remainPermissions.isEmpty()) {
                 Logx.d("Requires that permission $remainPermissions")

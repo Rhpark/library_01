@@ -4,6 +4,7 @@ import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.Manifest.permission.ACCESS_NETWORK_STATE
 import android.Manifest.permission.READ_PHONE_NUMBERS
 import android.Manifest.permission.READ_PHONE_STATE
+import android.annotation.SuppressLint
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.LinkProperties
@@ -33,7 +34,12 @@ import kr.open.rhpark.library.system.service.info.network.telephony.data.current
 import kr.open.rhpark.library.system.service.info.network.telephony.data.current.CurrentSignalStrength
 import kr.open.rhpark.library.system.service.info.network.telephony.data.state.TelephonyNetworkState
 import kr.open.rhpark.library.system.service.base.BaseSystemService
-import kr.open.rhpark.library.util.extensions.context.hasPermissions
+import kr.open.rhpark.library.util.extensions.context.getSystemConnectivityManager
+import kr.open.rhpark.library.util.extensions.context.getSystemEuiccManager
+import kr.open.rhpark.library.util.extensions.context.getSystemSubscriptionManager
+import kr.open.rhpark.library.util.extensions.context.getSystemTelephonyManager
+import kr.open.rhpark.library.util.extensions.context.getSystemWifiManager
+import kr.open.rhpark.library.util.inline.context.hasPermissions
 import java.util.concurrent.Executor
 
 /**
@@ -43,15 +49,16 @@ import java.util.concurrent.Executor
  */
 public class NetworkStateInfo(
     context: Context,
-    public val telephonyManager: TelephonyManager,
-    public val subscriptionManager: SubscriptionManager,
-    public val connectivityManager: ConnectivityManager,
-    public val wifiManager: WifiManager,
-    public val euiccManager: EuiccManager
 ) : BaseSystemService(
     context,
     listOf(READ_PHONE_STATE, READ_PHONE_NUMBERS, ACCESS_FINE_LOCATION, ACCESS_FINE_LOCATION)
 ) {
+    public val telephonyManager: TelephonyManager by lazy { context.getSystemTelephonyManager() }
+    public val subscriptionManager: SubscriptionManager by lazy {   context.getSystemSubscriptionManager() }
+    public val connectivityManager: ConnectivityManager by lazy {   context.getSystemConnectivityManager() }
+    public val wifiManager: WifiManager by lazy {   context.getSystemWifiManager() }
+    public val euiccManager: EuiccManager by lazy { context.getSystemEuiccManager() }
+
     private val uSimTelepnohyManagerList = SparseArray<TelephonyManager>()
     private val uSimTelephonyCallbackList =  SparseArray<CommonTelephonyCallback>()
     private val isRegistered =  SparseArray<Boolean>()
@@ -72,6 +79,11 @@ public class NetworkStateInfo(
 
     init {
 
+        initialization()
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun initialization() {
         if(!context.hasPermissions(READ_PHONE_STATE)) {
             Logx.e("Can not read uSim Chip!")
         } else {

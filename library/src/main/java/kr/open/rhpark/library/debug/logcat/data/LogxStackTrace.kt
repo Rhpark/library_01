@@ -55,9 +55,7 @@ internal class LogxStackTrace {
     }
 
     private fun isCoroutinePath(className: String): Boolean = (
-            className.startsWith("kotlin.coroutines") ||
-                    className.startsWith("kotlinx.coroutines")
-            )
+            className.startsWith("kotlin.coroutines") || className.startsWith("kotlinx.coroutines"))
 
     private fun isNormalMethod(item: StackTraceElement): Boolean = !(
             item.methodName.contains("access$") ||

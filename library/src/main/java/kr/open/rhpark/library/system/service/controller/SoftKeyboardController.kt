@@ -12,22 +12,24 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.system.service.base.BaseSystemService
+import kr.open.rhpark.library.util.extensions.context.getSystemInputMethodManager
 
 /**
  * Using InputMethodManager
  * Screen Soft Keyboard control class
  * search windowSoftInputMode in https://blog.naver.com/il7942li/222671675950
  */
-public class SoftKeyboardController(context: Context, public val imm: InputMethodManager)
-    : BaseSystemService(context,null) {
+public open class SoftKeyboardController(context: Context) : BaseSystemService(context,null) {
 
+    public val imm: InputMethodManager by lazy { context.getSystemInputMethodManager() }
 
     /**
      * can config in manifest
      * android:windowSoftInputMode="SOFT_INPUT_ADJUST_PAN"
      */
-    public fun setAdjustPan(window: Window): Unit =
+    public fun setAdjustPan(window: Window) {
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+    }
 
     /**
      * can config in manifest
@@ -114,12 +116,11 @@ public class SoftKeyboardController(context: Context, public val imm: InputMetho
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     public fun startStylusHandwriting(v: View) {
         if (v.requestFocus()) { imm.startStylusHandwriting(v) }
-        else { Logx.e("view requestFocus() is false!!") }
+        else { Logx.e("[ERROR]view requestFocus() is false!!") }
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    public fun startStylusHandwriting(v: View, delay:Long): Boolean = v.postDelayed(Runnable {
-        startStylusHandwriting(v)
-    },delay)
+    public fun startStylusHandwriting(v: View, delay:Long): Boolean =
+        v.postDelayed(Runnable { startStylusHandwriting(v) },delay)
 
 }

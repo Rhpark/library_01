@@ -19,41 +19,35 @@ public class PermissionManagerForActivity(private val activity: AppCompatActivit
 
     /**
      * Requests the specified permissions from the user.
-     * 사용자에게 지정된 권한을요청.
+     * 사용자에게 지정된 권한을 요청.
      *
      * @param requestCode requestCode
      * @param permissions The list of permissions to request.
-     * @param onDenied The callback to be invoked when permissions result.
+     * @param onResult The callback to be invoked when permissions result.
      *
      * @param requestCode requestCode.
      * @param permissions 요청할 권한 목록.
-     * @param onDenied 권한 결과 콜백
+     * @param onResult 권한 결과 콜백
      */
     public fun requestPermissions(
-        requestCode: Int,
+        requestCode: Int = PERMISSION_REQUEST_CODE,
         permissions: List<String>,
-        onDenied: ((requestCode:Int, deniedPermissions: List<String>) -> Unit)
+        onResult: ((requestCode:Int, deniedPermissions: List<String>) -> Unit)
     ) {
-        val permission = PermissionCheck(activity, requestCode, permissions, onDenied)
+        val permission = PermissionCheck(activity, requestCode, permissions, onResult)
 
-        val requestPermissionsList = permission.getRemainPermissions()
-        Logx.d("requestPermissionsList ${requestPermissionsList.toList()}")
-        if(requestPermissionsList.isNotEmpty()) {
+        val remainPermissions = permission.getRemainPermissions()
+
+        Logx.d("requestPermissionsList ${remainPermissions.toList()}")
+        if(remainPermissions.isNotEmpty()) {
             if(permission.isRequestPermissionSystemAlertWindow()) {
                 requestPermissionAlertWindowLauncher.launch(permission.requestPermissionAlertWindow(activity.packageName))
             }
-            ActivityCompat.requestPermissions(activity, requestPermissionsList.toTypedArray(), requestCode)
+            ActivityCompat.requestPermissions(activity, remainPermissions.toTypedArray(), requestCode)
             requestPermissionList.add(permission)
         } else {
-            onDenied(requestCode, emptyList())
+            onResult(requestCode, emptyList())
         }
-    }
-
-    public fun requestPermissions(
-        permissions: List<String>,
-        onDenied: ((requestCode:Int, deniedPermissions: List<String>) -> Unit)
-    ) {
-        requestPermissions(PERMISSION_REQUEST_CODE, permissions, onDenied)
     }
 
     /**

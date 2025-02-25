@@ -1,11 +1,12 @@
 package kr.open.rhpark.library.repository.local.sharedpreference
 
 import android.content.Context
+import android.content.SharedPreferences.Editor
 import android.location.Location
 import android.os.Build
 import kr.open.rhpark.library.util.inline.sdk_version.checkSdkVersion
 
-public class LocationSharedPreference(context: Context) :
+public open class LocationSharedPreference(context: Context) :
     BaseSharedPreference(context, "RhParkLocation") {
 
     private val altitudeKey = "altitude"
@@ -24,38 +25,36 @@ public class LocationSharedPreference(context: Context) :
     private val verticalAccuracyMeterKey = "verticalAccuracyMeters"
 
 
-    private fun putLocation(key: String, location: Location) {
-        put(key + altitudeKey, location.altitude)
-        put(key + accuracyKey, location.accuracy)
-        put(key + bearingKey, location.bearing)
-        put(key + bearingAccuracyDegreesKey, location.bearingAccuracyDegrees)
+    private fun putLocation(key: String, location: Location): Editor = getEditor().apply {
+        this.putValue(key + altitudeKey, location.altitude)
+        this.putValue(key + accuracyKey, location.accuracy)
+        this.putValue(key + bearingKey, location.bearing)
+        this.putValue(key + bearingAccuracyDegreesKey, location.bearingAccuracyDegrees)
 
         checkSdkVersion(Build.VERSION_CODES.S) {
-            put(key + isMockKey, location.isMock)
+            this.putValue(key + isMockKey, location.isMock)
         }
         checkSdkVersion(Build.VERSION_CODES.Q) {
-            put(key + elapsedRealtimeUncertaintyNanosKey, location.elapsedRealtimeUncertaintyNanos)
+            this.putValue(key + elapsedRealtimeUncertaintyNanosKey, location.elapsedRealtimeUncertaintyNanos)
         }
         checkSdkVersion(Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            put(key + mslAltitudeMetersKey, location.mslAltitudeMeters)
-            put(key + mslAltitudeAccuracyMetersKey, location.mslAltitudeAccuracyMeters)
+            this.putValue(key + mslAltitudeMetersKey, location.mslAltitudeMeters)
+            this.putValue(key + mslAltitudeAccuracyMetersKey, location.mslAltitudeAccuracyMeters)
         }
-        put(key + latitudeKey, location.latitude)
-        put(key + longitudeKey, location.longitude)
-        put(key + providerKey, location.provider)
-        put(key + speedKey, location.speed)
-        put(key + timeKey, location.time)
-        put(key + verticalAccuracyMeterKey, location.verticalAccuracyMeters)
+        this.putValue(key + latitudeKey, location.latitude)
+        this.putValue(key + longitudeKey, location.longitude)
+        this.putValue(key + providerKey, location.provider)
+        this.putValue(key + speedKey, location.speed)
+        this.putValue(key + timeKey, location.time)
+        this.putValue(key + verticalAccuracyMeterKey, location.verticalAccuracyMeters)
     }
 
     public fun saveApplyLocation(key: String, location: Location) {
-        putLocation(key, location)
-        saveApply()
+        putLocation(key, location).apply()
     }
 
-    public fun saveCommitLocation(key: String, location: Location) {
-        putLocation(key, location)
-        saveCommit()
+    public suspend fun saveCommitLocation(key: String, location: Location) {
+        commitDoWork{ putLocation(key, location) }
     }
 
     public fun loadLocation(key: String): Location? {

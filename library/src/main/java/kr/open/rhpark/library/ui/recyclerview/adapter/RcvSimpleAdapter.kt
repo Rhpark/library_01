@@ -21,24 +21,18 @@ public class RcvSimpleAdapter<ITEM, BINDING : ViewDataBinding>(
         this.diffUtilContentsSame = diffUtilContentsSame
     }
 
-    override fun diffUtilAreItemsTheSame(oldItem: ITEM, newItem: ITEM): Boolean {
-        return diffUtilItemSame?.let { it.invoke(oldItem, newItem) }
-            ?: super.diffUtilAreItemsTheSame(oldItem, newItem)
-    }
+    override fun diffUtilAreItemsTheSame(oldItem: ITEM, newItem: ITEM): Boolean =
+        diffUtilItemSame?.let { it.invoke(oldItem, newItem) } ?: super.diffUtilAreItemsTheSame(oldItem, newItem)
 
-    override fun diffUtilAreContentsTheSame(oldItem: ITEM, newItem: ITEM): Boolean {
-        return diffUtilContentsSame?.let { it.invoke(oldItem, newItem) }
-            ?: super.diffUtilAreContentsTheSame(oldItem, newItem)
-    }
+
+    override fun diffUtilAreContentsTheSame(oldItem: ITEM, newItem: ITEM): Boolean =
+        diffUtilContentsSame?.let { it.invoke(oldItem, newItem) } ?: super.diffUtilAreContentsTheSame(oldItem, newItem)
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int)
             : BaseRcvViewHolder<BINDING> = BaseRcvViewHolder(layoutRes, parent)
 
-    override fun onBindViewHolder(
-        holder: BaseRcvViewHolder<BINDING>,
-        position: Int,
-        item: ITEM
-    ) {
+    override fun onBindViewHolder(holder: BaseRcvViewHolder<BINDING>, position: Int, item: ITEM) {
         onBind(holder, item, position)
     }
 }
