@@ -834,17 +834,348 @@ class NetworkActivity : BaseBindingActivity<ActivityNetworkBinding>(R.layout.act
 </br>
 
 ####  5 - 5 FloatingViewController
-![image](https://github.com/Rhpark/library_01/blob/master/sample_img/Sample_Base_SystemManager_FloatingController.png)
+```
+public class WindowActivity : BaseBindingActivity<ActivityWindowBinding>(R.layout.activity_window) {
 
+    private val windowManagerController by lazy { applicationContext.getFloatingViewControllerController() }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        requestPermissions(listOf(Manifest.permission.SYSTEM_ALERT_WINDOW)) { requestCode, deniedPermissionList ->
+            Logx.d("requestCode $requestCode, deniedPermissionList $deniedPermissionList")
+            if(deniedPermissionList.isEmpty()) {
+                initListener()
+            }
+        }
+    }
+
+    private fun initListener() = binding.run {
+        btnAddDragView.setOnClickListener {
+            addFloatingListener()
+        }
+
+        binding.btnAddFixedView.setOnClickListener {
+            val fixedView: ImageView = getImageView(R.drawable.ic_floating_fixed_close)
+            windowManagerController.setFloatingFixedView(
+                FloatingDragView(
+                    fixedView,
+                    (getDisplayInfo().getFullScreenSize().x / 2),
+                    (getDisplayInfo().getFullScreenSize().y / 2),
+                )
+            )
+            fixedView.setGone()
+        }
+
+        btnRemoveView.setOnClickListener { windowManagerController.removeAllFloatingView() }
+    }
+
+    private fun addFloatingListener() {
+        Logx.d()
+        val dragView = getImageView(R.drawable.ic_launcher_foreground).apply {
+            setBackgroundColor(Color.WHITE)
+        }
+        windowManagerController.addFloatingDragView(FloatingDragView(dragView, 0, 0).apply {
+            lifecycleScope.launch {
+                sfCollisionStateFlow.collect { item ->
+                    when (item.first) {
+                        FloatingViewTouchType.TOUCH_DOWN -> { showFloatingView() }
+
+                        FloatingViewTouchType.TOUCH_MOVE -> { moveFloatingView(item) }
+
+                        FloatingViewTouchType.TOUCH_UP -> { upFloatingView(this@apply,item) }
+                    }
+                }
+            }
+        })
+    }
+
+    private fun showFloatingView() {
+        windowManagerController.getFloatingFixedView()?.view?.let {
+            it.setVisible()
+            showAnimScale(it, null)
+        }
+    }
+
+    private fun moveFloatingView(item: Pair<FloatingViewTouchType, FloatingViewCollisionsType>) {
+        windowManagerController.getFloatingFixedView()?.view?.let {
+            if (item.second == FloatingViewCollisionsType.OCCURING) {
+                val rotationAnim =
+                    ObjectAnimator.ofFloat(it, "rotation", 0.0f, 180.0f)
+                rotationAnim.duration = 300
+                rotationAnim.start()
+            }
+        }
+    }
+
+    private fun upFloatingView(floatingView:FloatingDragView,item: Pair<FloatingViewTouchType, FloatingViewCollisionsType>) {
+        windowManagerController.getFloatingFixedView()?.view?.let {
+            hideAnimScale(it, object : Animator.AnimatorListener {
+                override fun onAnimationStart(animation: Animator) {}
+                override fun onAnimationRepeat(animation: Animator) {}
+                override fun onAnimationCancel(animation: Animator) {}
+                override fun onAnimationEnd(animation: Animator) {
+                    windowManagerController.getFloatingFixedView()?.let { it.view.setGone() }
+                    if (item.second == FloatingViewCollisionsType.OCCURING) {
+                        windowManagerController.removeFloatingDragView(floatingView)
+                    }
+                }
+            })
+        }
+    }
+
+    private fun showAnimScale(view: View, listener: Animator.AnimatorListener?) {
+        val scaleX = ObjectAnimator.ofFloat(view, "scaleX", 0.0f, 1.0f)
+        val scaleY = ObjectAnimator.ofFloat(view, "scaleY", 0.0f, 1.0f)
+        AnimatorSet().apply {
+            playTogether(scaleX, scaleY)
+            this.duration = 300
+            listener?.let { addListener(it) }
+            start()
+        }
+    }
+
+    private fun hideAnimScale(view: View, listener: Animator.AnimatorListener?) {
+        val scaleX = ObjectAnimator.ofFloat(view, "scaleX", 1.0f, 0.0f)
+        val scaleY = ObjectAnimator.ofFloat(view, "scaleY", 1.0f, 0.0f)
+        AnimatorSet().apply {
+            playTogether(scaleX, scaleY)
+            this.duration = 300
+            listener?.let { addListener(it) }
+            start()
+        }
+    }
+
+    private fun getImageView(res: Int): ImageView = ImageView(applicationContext).apply {
+        setImageResource(res)
+        setOnClickListener { Logx.d("OnClick Listener") }
+    }
+}
+
+```
 
 
 <br>
 </br>
+
 <br>
 </br>
 
-### 6. Toast, SnackBar
-![image](https://github.com/Rhpark/library_01/blob/master/sample_img/Sample_Base_SystemManager_Toast_Snackbar.png)
+### 6. Notification
+```
+class NotificationActivity :
+    BaseBindingActivity<ActivityNotificationBinding>(R.layout.activity_notification) {
+
+    private val CHANNEL_ID = "Channel_ID_01"
+    private val CHANNEL_NAME = "Channel_NAME_01"
+    private val data01 = "PutData_01"
+    private val dataAction01 = "PutData_Action_01"
+    private val dataAction02 = "PutData_Action_02"
+
+    private val notificationController by lazy { getNotificationController() }
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        requestPermissions(listOf(POST_NOTIFICATIONS)) { requestCode, deniedPermissions ->
+            Logx.d("requestCode $requestCode, deniedPermissions $deniedPermissions")
+            if (deniedPermissions.isEmpty()) {
+                initListener()
+            }
+        }
+
+        intent.extras?.run {
+            val data01 = getString(data01)
+            val data02 = getString(dataAction01)
+            val data03 = getInt(dataAction02)
+            binding.tvReceiveIntentData.text = "intent extras = $data01, action 01 =  $data02, action 02 =  ${data03}"
+        } ?: Logx.d("intent.extras is Null")
+    }
+
+    private fun initListener() {
+        binding.run {
+            initNotificationChannel()
+
+            btnBigTextNotification.setOnClickListener {
+
+                val clickIntent = Intent(applicationContext, NotificationActivity::class.java)
+                val notificationId = 2
+                val getNotificationIntent1 = getNotificationIntent(4, dataAction01, "action01 Click", "Action01",notificationId)
+                val getNotificationIntent2 = getNotificationIntent(4, dataAction02, 12313, "Action02",16)
+
+
+                notificationController.showNotificationBigTextForActivity(
+                    notificationId,
+                    "BigTextNotification",
+                    "BigText",
+                    true,
+                    R.drawable.ic_floating_fixed_close,
+                    snippet = "Fesafasdfasefdsfasefesadf asef sadf asdf asefas fdsf seaf safawef aa feasf sadfasefasdf asdf asf aesf asdf asfe saedf asef sadf asef asdf asefseaf",
+                    clickIntent = clickIntent,
+                    largeIcon = BitmapFactory.decodeResource(applicationContext.resources, R.drawable.bg_notifi),
+                    actions = listOf(getNotificationIntent1, getNotificationIntent2)
+                )
+            }
+
+            btnBitImageNotification.setOnClickListener {
+
+                val clickIntent = Intent(applicationContext, NotificationActivity::class.java)
+                val notificationId = 4
+                val getNotificationIntent1 = getNotificationIntent(4, dataAction01, "action01 Click", "Action01",notificationId)
+                val getNotificationIntent2 = getNotificationIntent(4, dataAction02, 12313, "Action02",6)
+
+
+                notificationController.showNotificationBigImageForActivity(
+                    notificationId,
+                    "BigImageNotification",
+                    "BigImage",
+                    true,
+                    R.drawable.ic_floating_fixed_close,
+                    clickIntent = clickIntent,
+                    largeIcon = BitmapFactory.decodeResource(applicationContext.resources, R.drawable.bg_notifi),
+                    actions = listOf(getNotificationIntent1, getNotificationIntent2)
+                )
+            }
+
+            btnShowProgressNotification.setOnClickListener {
+                val clickIntent = Intent(applicationContext, NotificationActivity::class.java)
+                val notificationId = 16
+                val actionID = 26
+
+                val actionIntent = Intent(applicationContext, NotificationActivity::class.java).apply {
+                        putExtra(data01, "Pending01")
+                        putExtra(dataAction01, 123)
+                }
+
+                val builder = notificationController.showProgressNotificationForActivity(
+                    notificationId,
+                    "TitleProgress01",
+                    "ContentsProgress01",
+                    false,
+                    R.drawable.ic_floating_fixed_close,
+                    clickIntent = clickIntent,
+                    progressPercent = 0,
+                )
+
+                thread {
+                    for (i in 0..10) {
+                        builder.setProgress(100, i * 10, false)
+                        notificationController.notify(notificationId, builder.build())
+                        sleep(1000)
+                    }
+                    builder.addAction(getNotificationIntent(notificationId, dataAction01, "action01 Click", "Action01",actionID))
+                    notificationController.notify(notificationId, builder.build())
+                }
+            }
+
+            btnAllClearNotification.setOnClickListener {
+                notificationController.cancelAll()
+            }
+        }
+    }
+
+    private fun initNotificationChannel() {
+        val channel = NotificationChannel(CHANNEL_ID,CHANNEL_NAME,NotificationManager.IMPORTANCE_HIGH).apply {
+            description = "Channel_Description_01"
+            setShowBadge(true)
+
+            val uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+            val audio = AudioAttributes.Builder()
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .setUsage(AudioAttributes.USAGE_ALARM)
+                .build()
+            setSound(uri, audio)
+            enableLights(true)
+            lightColor = Color.RED
+            enableVibration(true)
+            vibrationPattern = longArrayOf(100, 200, 100, 200)
+        }
+
+        notificationController.createChannel(channel)
+    }
+
+    private fun getNotificationIntent(notificationId:Int, actionKey:String, actionValue:Any, title:String,actionId:Int): NotificationCompat.Action {
+
+        val actionIntent1 = Intent(applicationContext, NotificationActivity::class.java).apply {
+            when(actionValue) {
+                is Int -> putExtra(actionKey, actionValue)
+                is String -> putExtra(actionKey, actionValue)
+                is Byte -> putExtra(actionKey, actionValue)
+                is Char -> putExtra(actionKey, actionValue)
+                is Float -> putExtra(actionKey, actionValue)
+                is Long -> putExtra(actionKey, actionValue)
+                is Double -> putExtra(actionKey, actionValue)
+                is Boolean -> putExtra(actionKey, actionValue)
+            }
+        }
+        val actionPendingIntent1 = NotificationCompat.Action(
+            notificationId,
+            title,
+            notificationController.getClickShowActivityPendingIntent(actionId, actionIntent1)
+        )
+        return actionPendingIntent1
+    }
+}
+
+```
+
+
+<br>
+</br>
+
+<br>
+</br>
+
+### 7. Toast, SnackBar, softkeyboardContorller
+```
+class ToastSnackBarActivity :
+    BaseBindingActivity<ActivityToastSnackbarBinding>(R.layout.activity_toast_snackbar) {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        binding.run {
+            applicationContext.getSoftKeyboardController().showDelay(editText,200L) //SoftKeyboardController
+
+            btnDefaultToast.setOnClickListener {
+                toastShowShort("Toast Show Short")
+            }
+
+            btnCustomToast.visibility = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) View.GONE else View.VISIBLE
+            btnCustomToast.setOnClickListener {
+                toastShort("Option").apply {
+                    setGravity(Gravity.CENTER_VERTICAL,0,0)
+                    view?.setBackgroundColor(Color.YELLOW)
+                }.show()
+            }
+
+            btnDefaultSnackBar.setOnClickListener { v -> v.snackBarShowShort("Default SnackBar") }
+
+            btnActionSnackBar.setOnClickListener { v ->
+                v.snackBarShowShort("TestMsg", actionText = "Actino_1") { toastShowShort("Click Action_1") }
+            }
+
+            btnOptionSnackBar.setOnClickListener { v->
+                v.snackBarShowIndefinite(
+                    "Option_Test",
+                    animationMode = BaseTransientBottomBar.ANIMATION_MODE_SLIDE,
+                    bgTint = Color.WHITE,
+                    textColor = Color.RED,
+                    actionTextColor = Color.BLUE,
+                    actionText = "Action_01",
+                    ) { toastShowShort("OnCLick Action_01") }
+            }
+        }
+    }
+}
+}
+
+```
 
 
 
