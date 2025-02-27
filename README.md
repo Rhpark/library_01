@@ -961,7 +961,7 @@ public class WindowActivity : BaseBindingActivity<ActivityWindowBinding>(R.layou
 <br>
 </br>
 
-### 6. Notification
+####  5 - 6 Notification
 ```
 class NotificationActivity :
     BaseBindingActivity<ActivityNotificationBinding>(R.layout.activity_notification) {
@@ -1131,7 +1131,7 @@ class NotificationActivity :
 <br>
 </br>
 
-### 7. Toast, SnackBar, softkeyboardContorller
+### 6. Toast, SnackBar, softkeyboardContorller
 ```
 class ToastSnackBarActivity :
     BaseBindingActivity<ActivityToastSnackbarBinding>(R.layout.activity_toast_snackbar) {
