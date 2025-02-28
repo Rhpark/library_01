@@ -25,6 +25,7 @@ import kr.open.rhpark.library.system.service.base.BaseSystemService
 import kr.open.rhpark.library.system.service.base.DataUpdate
 import kr.open.rhpark.library.util.extensions.context.getSystemLocationManager
 import kr.open.rhpark.library.util.inline.context.hasPermissions
+import kr.open.rhpark.library.util.inline.sdk_version.checkSdkVersion
 
 public open class LocationStateInfo(
     context: Context,
@@ -149,13 +150,16 @@ public open class LocationStateInfo(
 
     @SuppressLint("MissingPermission")
     public fun getLocation(): Location? {
-
+        Logx.d("isAnyEnabled() ${isAnyEnabled()} ${context.hasPermissions(ACCESS_COARSE_LOCATION)}, ${context.hasPermissions(ACCESS_FINE_LOCATION)}")
         return if (!isAnyEnabled()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                Logx.e("can not find location!, isLocationEnabled ${isLocationEnabled()}, isGpsEnabled ${isGpsEnabled()}, isNetworkEnabled ${isNetworkEnabled()}, isPassiveEnabled ${isPassiveEnabled()}, isFusedEnabled ${isFusedEnabled()}")
-            } else {
-                Logx.e("can not find location!, isLocationEnabled ${isLocationEnabled()}, isGpsEnabled ${isGpsEnabled()}, isNetworkEnabled ${isNetworkEnabled()}, isPassiveEnabled ${isPassiveEnabled()}")
-            }
+            checkSdkVersion(Build.VERSION_CODES.S,
+                positiveWork = {
+                    Logx.e("can not find location!, isLocationEnabled ${isLocationEnabled()}, isGpsEnabled ${isGpsEnabled()}, isNetworkEnabled ${isNetworkEnabled()}, isPassiveEnabled ${isPassiveEnabled()}, isFusedEnabled ${isFusedEnabled()}")
+                },
+                negativeWork = {
+                    Logx.e("can not find location!, isLocationEnabled ${isLocationEnabled()}, isGpsEnabled ${isGpsEnabled()}, isNetworkEnabled ${isNetworkEnabled()}, isPassiveEnabled ${isPassiveEnabled()}")
+                }
+            )
             null
         } else if (context.hasPermissions(ACCESS_COARSE_LOCATION)
             || context.hasPermissions(ACCESS_FINE_LOCATION)) {

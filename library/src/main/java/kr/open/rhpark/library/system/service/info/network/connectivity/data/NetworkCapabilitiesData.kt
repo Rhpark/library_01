@@ -6,6 +6,7 @@ import android.net.TransportInfo
 import android.os.Build
 import android.os.ext.SdkExtensions
 import androidx.annotation.RequiresApi
+import kr.open.rhpark.library.util.inline.sdk_version.checkSdkVersion
 
 public data class NetworkCapabilitiesData(public val networkCapabilities: NetworkCapabilities) :
     NetworkBase(networkCapabilities) {
@@ -16,11 +17,11 @@ public data class NetworkCapabilitiesData(public val networkCapabilities: Networ
 
     public fun getLinkDownstreamBandwidthKbps(): Int = networkCapabilities.getLinkDownstreamBandwidthKbps()
 
-    public fun getCapabilities(): IntArray? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        networkCapabilities.capabilities
-    } else {
-        getCapabilitiesNumber(splitStr("Capabilities: ", " LinkUpBandwidth", "&"))
-    }
+    public fun getCapabilities(): IntArray? = checkSdkVersion(Build.VERSION_CODES.S,
+        positiveWork = { networkCapabilities.capabilities },
+        negativeWork = { getCapabilitiesNumber(splitStr("Capabilities: ", " LinkUpBandwidth", "&")) }
+    )
+
 
 
     private fun getCapabilitiesNumber(capabilitiesStr:List<String>?):IntArray? {
@@ -74,26 +75,28 @@ public data class NetworkCapabilitiesData(public val networkCapabilities: Networ
         return res.toIntArray()
     }
 
-    public fun getSubscriptionIds(): List<Int>? = if (Build.VERSION.SDK_INT > Build.VERSION_CODES.R) {
-        if (SdkExtensions.getExtensionVersion(Build.VERSION_CODES.UPSIDE_DOWN_CAKE) >= 12) {
-            networkCapabilities.subscriptionIds.toList()
-        } else {
+    public fun getSubscriptionIds(): List<Int>? = checkSdkVersion(Build.VERSION_CODES.S,
+        positiveWork = {
+            if (SdkExtensions.getExtensionVersion(Build.VERSION_CODES.UPSIDE_DOWN_CAKE) >= 12) {
+                networkCapabilities.subscriptionIds.toList()
+            } else {
+                val data = splitStr("SubscriptionIds: {", "}", ",")
+                data?.map { it -> it.toInt() }?.toList()
+            }
+        },
+        negativeWork = {
             val data = splitStr("SubscriptionIds: {", "}", ",")
             data?.map { it -> it.toInt() }?.toList()
         }
-    } else {
-        val data = splitStr("SubscriptionIds: {", "}", ",")
-        data?.map { it -> it.toInt() }?.toList()
-    }
+    )
 
     @RequiresApi(Build.VERSION_CODES.R)
     public fun getNetworkSpecifier(): NetworkSpecifier? = networkCapabilities.networkSpecifier
 
-    public fun getSignalStrength(): Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-        networkCapabilities.signalStrength
-    } else {
-        splitStr("SignalStrength: "," ","")?.get(0)?.toInt() ?: Int.MIN_VALUE
-    }
+    public fun getSignalStrength(): Int = checkSdkVersion(Build.VERSION_CODES.Q,
+        positiveWork = {    networkCapabilities.signalStrength  },
+        negativeWork = {    splitStr("SignalStrength: "," ","")?.get(0)?.toInt() ?: Int.MIN_VALUE   }
+    )
 
     @RequiresApi(Build.VERSION_CODES.R)
     public fun getOwnerUid(): Int = networkCapabilities.ownerUid
@@ -133,15 +136,19 @@ public data class NetworkCapabilitiesData(public val networkCapabilities: Networ
     public fun isOsuApTransportInfo():Boolean = getDataInTransportInfoStr( ", OSU AP: ",", ")?.equals("true") ?:false
 
 
-    private fun getDataInTransportInfoStr(start: String, end: String): String? =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+    private fun getDataInTransportInfoStr(start: String, end: String): String? = checkSdkVersion(Build.VERSION_CODES.Q,
+        positiveWork = {
             networkCapabilities.transportInfo?.let {
                 val str = networkCapabilities.transportInfo.toString()
-                return str.split(start,end)
+                str.split(start,end)
             }
-        } else if(isContains(transportInfoStr)) {
-            getResStr().split(transportInfoStr)[1]?.split(start,end)
-        } else null
+        },
+        negativeWork = {
+            if(isContains(transportInfoStr)) {
+                getResStr().split(transportInfoStr)[1]?.split(start,end)
+            } else null
+        }
+    )
 
     public fun toResString(): String {
 

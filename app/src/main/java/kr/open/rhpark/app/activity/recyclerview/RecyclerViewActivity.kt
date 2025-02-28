@@ -29,8 +29,8 @@ class RecyclerViewActivity : BaseBindingActivity<ActivityRecyclerviewBinding>(R.
         }
     }
 
-    private val rcvSimpleAdapter = RcvSimpleAdapter<RcvItem, ItemRecyclerviewBinding>(R.layout.item_recyclerview) { holder, item, position ->
-        holder.binding.item = item
+    private val rcvSimpleAdapter = RcvSimpleAdapter<RcvItem, ItemRecyclerviewBinding>(R.layout.item_recyclerview) {
+        holder, item, position -> holder.binding.item = item
     }.apply {
         setDiffUtilItemSame { oldItem, newItem -> oldItem.key === newItem.key }
         setDiffUtilContentsSame { oldItem, newItem -> oldItem.key == newItem.key }

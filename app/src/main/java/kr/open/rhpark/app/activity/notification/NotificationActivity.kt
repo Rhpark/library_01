@@ -53,28 +53,12 @@ class NotificationActivity :
             initNotificationChannel()
 
             btnBigTextNotification.setOnClickListener {
+
+                val clickIntent = Intent(applicationContext, NotificationActivity::class.java)
                 val notificationId = 2
-                val clickIntent = Intent(applicationContext, NotificationActivity::class.java).apply {
-                    putExtra(data01, "notificationClick")
-                }
+                val getNotificationIntent1 = getNotificationIntent(4, dataAction01, "action01 Click", "Action01",notificationId)
+                val getNotificationIntent2 = getNotificationIntent(4, dataAction02, 12313, "Action02",16)
 
-                val actionIntent1 = Intent(applicationContext, NotificationActivity::class.java).apply {
-                    putExtra(dataAction01, "action01 Click")
-                }
-                val actionPendingIntent1 = NotificationCompat.Action(
-                    notificationId,
-                    "Action01",
-                    notificationController.getClickShowActivityPendingIntent(4, actionIntent1)
-                )
-
-                val actionIntent2 = Intent(applicationContext, NotificationActivity::class.java).apply {
-                    putExtra(dataAction02, 12313)
-                }
-                val actionPendingIntent2 = NotificationCompat.Action(
-                    notificationId,
-                    "Action02",
-                    notificationController.getClickShowActivityPendingIntent(6, actionIntent2)
-                )
 
                 notificationController.showNotificationBigTextForActivity(
                     notificationId,
@@ -85,33 +69,17 @@ class NotificationActivity :
                     snippet = "Fesafasdfasefdsfasefesadf asef sadf asdf asefas fdsf seaf safawef aa feasf sadfasefasdf asdf asf aesf asdf asfe saedf asef sadf asef asdf asefseaf",
                     clickIntent = clickIntent,
                     largeIcon = BitmapFactory.decodeResource(applicationContext.resources, R.drawable.bg_notifi),
-                    actions = listOf(actionPendingIntent1, actionPendingIntent2)
+                    actions = listOf(getNotificationIntent1, getNotificationIntent2)
                 )
             }
 
             btnBitImageNotification.setOnClickListener {
 
-                val notificationId = 4
-
                 val clickIntent = Intent(applicationContext, NotificationActivity::class.java)
+                val notificationId = 4
+                val getNotificationIntent1 = getNotificationIntent(4, dataAction01, "action01 Click", "Action01",notificationId)
+                val getNotificationIntent2 = getNotificationIntent(4, dataAction02, 12313, "Action02",6)
 
-                val actionIntent1 = Intent(applicationContext, NotificationActivity::class.java).apply {
-                    putExtra(dataAction01, "action01 Click")
-                }
-                val actionPendingIntent1 = NotificationCompat.Action(
-                    notificationId,
-                    "Action01",
-                    notificationController.getClickShowActivityPendingIntent(4, actionIntent1)
-                )
-
-                val actionIntent2 = Intent(applicationContext, NotificationActivity::class.java).apply {
-                    putExtra(dataAction02, 12313)
-                }
-                val actionPendingIntent2 = NotificationCompat.Action(
-                    notificationId,
-                    "Action02",
-                    notificationController.getClickShowActivityPendingIntent(6, actionIntent2)
-                )
 
                 notificationController.showNotificationBigImageForActivity(
                     notificationId,
@@ -121,14 +89,15 @@ class NotificationActivity :
                     R.drawable.ic_floating_fixed_close,
                     clickIntent = clickIntent,
                     largeIcon = BitmapFactory.decodeResource(applicationContext.resources, R.drawable.bg_notifi),
-                    actions = listOf(actionPendingIntent1, actionPendingIntent2)
+                    actions = listOf(getNotificationIntent1, getNotificationIntent2)
                 )
             }
 
             btnShowProgressNotification.setOnClickListener {
-                val notificationId = 16
-                val actionID = 18
                 val clickIntent = Intent(applicationContext, NotificationActivity::class.java)
+                val notificationId = 16
+                val actionID = 26
+
                 val actionIntent = Intent(applicationContext, NotificationActivity::class.java).apply {
                         putExtra(data01, "Pending01")
                         putExtra(dataAction01, 123)
@@ -150,13 +119,7 @@ class NotificationActivity :
                         notificationController.notify(notificationId, builder.build())
                         sleep(1000)
                     }
-                    builder.addAction(
-                        NotificationCompat.Action(
-                            notificationId,
-                            "Action01",
-                            notificationController.getClickShowActivityPendingIntent(actionID, actionIntent)
-                        )
-                    )
+                    builder.addAction(getNotificationIntent(notificationId, dataAction01, "action01 Click", "Action01",actionID))
                     notificationController.notify(notificationId, builder.build())
                 }
             }
@@ -187,4 +150,25 @@ class NotificationActivity :
         notificationController.createChannel(channel)
     }
 
+    private fun getNotificationIntent(notificationId:Int, actionKey:String, actionValue:Any, title:String,actionId:Int): NotificationCompat.Action {
+
+        val actionIntent1 = Intent(applicationContext, NotificationActivity::class.java).apply {
+            when(actionValue) {
+                is Int -> putExtra(actionKey, actionValue)
+                is String -> putExtra(actionKey, actionValue)
+                is Byte -> putExtra(actionKey, actionValue)
+                is Char -> putExtra(actionKey, actionValue)
+                is Float -> putExtra(actionKey, actionValue)
+                is Long -> putExtra(actionKey, actionValue)
+                is Double -> putExtra(actionKey, actionValue)
+                is Boolean -> putExtra(actionKey, actionValue)
+            }
+        }
+        val actionPendingIntent1 = NotificationCompat.Action(
+            notificationId,
+            title,
+            notificationController.getClickShowActivityPendingIntent(actionId, actionIntent1)
+        )
+        return actionPendingIntent1
+    }
 }

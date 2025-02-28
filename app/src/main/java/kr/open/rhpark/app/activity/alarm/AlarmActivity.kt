@@ -6,6 +6,7 @@ import android.Manifest.permission.RECEIVE_BOOT_COMPLETED
 import android.Manifest.permission.SCHEDULE_EXACT_ALARM
 import android.Manifest.permission.USE_EXACT_ALARM
 import android.Manifest.permission.WAKE_LOCK
+import android.media.RingtoneManager
 import android.os.Build
 import android.os.Bundle
 import kr.open.rhpark.app.R
@@ -48,17 +49,18 @@ class AlarmActivity :
                     val min = edtTimer.text.toString().toInt()
                     val localDataTime = LocalDateTime.now()
                     val a = AlarmDTO(
-                        1,
-                        "test002",
-                        "msg002",
-                        true,
-                        true,
-                        true,
-                        100,
-                        localDataTime.hour,
-                        localDataTime.minute + min ,
-                        0
+                        key = 1,
+                        title = "test002",
+                        msg = "msg002",
+                        isActive = true,
+                        isAllowIdle = true,
+                        vibrationEffect = longArrayOf(0,250,500,250),
+                        sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM),
+                        hour =localDataTime.hour,
+                        minute = localDataTime.minute + min ,
+                        second = 0
                     )
+                    AlarmSharedPreference(applicationContext).saveAlarm(a)
                     alarmController.registerAlarmClock(AlarmReceiver::class.java, a)
                 }
             }

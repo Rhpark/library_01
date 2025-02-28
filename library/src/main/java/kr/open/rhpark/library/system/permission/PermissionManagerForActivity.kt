@@ -38,7 +38,6 @@ public class PermissionManagerForActivity(private val activity: AppCompatActivit
 
         val remainPermissions = permission.getRemainPermissions()
 
-        Logx.d("requestPermissionsList ${remainPermissions.toList()}")
         if(remainPermissions.isNotEmpty()) {
             if(permission.isRequestPermissionSystemAlertWindow()) {
                 requestPermissionAlertWindowLauncher.launch(permission.requestPermissionAlertWindow(activity.packageName))

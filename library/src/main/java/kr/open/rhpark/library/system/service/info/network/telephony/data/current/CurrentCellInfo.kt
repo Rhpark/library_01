@@ -8,6 +8,7 @@ import kr.open.rhpark.library.system.service.info.network.telephony.data.cell.lt
 import kr.open.rhpark.library.system.service.info.network.telephony.data.cell.nr.CellInfoNrData
 import kr.open.rhpark.library.system.service.info.network.telephony.data.cell.tdscdma.CellInfoTdscdmaData
 import kr.open.rhpark.library.system.service.info.network.telephony.data.cell.wcdma.CellInfoWcdmaData
+import kr.open.rhpark.library.util.inline.sdk_version.checkSdkVersion
 
 
 public data class CurrentCellInfo(val cellInfo: List<CellInfo>) {
@@ -26,7 +27,7 @@ public data class CurrentCellInfo(val cellInfo: List<CellInfo>) {
                 is CellInfoCdma     ->  {   cellDataCdmaList.add(CellInfoCdmaData(item))   }
                 is CellInfoGsm      ->  {   cellDataGsmList.add(CellInfoGsmData(item))    }
             }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            checkSdkVersion(Build.VERSION_CODES.Q) {
                 when(item) {
                     is CellInfoNr       ->  {   cellDataNrList.add(CellInfoNrData(item))   }
                     is CellInfoTdscdma  ->  {   cellDataTdscdmaList.add(CellInfoTdscdmaData(item))   }

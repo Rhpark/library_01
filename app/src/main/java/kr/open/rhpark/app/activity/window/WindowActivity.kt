@@ -39,55 +39,7 @@ public class WindowActivity : BaseBindingActivity<ActivityWindowBinding>(R.layou
 
     private fun initListener() = binding.run {
         btnAddDragView.setOnClickListener {
-            val dragView = getImageView(R.drawable.ic_launcher_foreground).apply {
-                setBackgroundColor(Color.WHITE)
-            }
-
-            windowManagerController.addFloatingDragView(
-                FloatingDragView(dragView, 0, 0).apply {
-                    lifecycleScope.launch {
-                        sfCollisionStateFlow.collect { item ->
-                            when (item.first) {
-                                FloatingViewTouchType.TOUCH_DOWN -> {
-                                    windowManagerController.getFloatingFixedView()?.view?.let {
-                                        it.setVisible()
-                                        showAnimScale(it, null)
-                                    }
-                                }
-
-                                FloatingViewTouchType.TOUCH_MOVE -> {
-                                    windowManagerController.getFloatingFixedView()?.view?.let {
-                                        if (item.second == FloatingViewCollisionsType.OCCURING) {
-                                            val rotationAnim =
-                                                ObjectAnimator.ofFloat(it, "rotation", 0.0f, 180.0f)
-                                            rotationAnim.duration = 300
-                                            rotationAnim.start()
-                                        }
-                                    }
-                                }
-
-                                FloatingViewTouchType.TOUCH_UP -> {
-                                    windowManagerController.getFloatingFixedView()?.view?.let {
-                                        hideAnimScale(it, object : Animator.AnimatorListener {
-                                            override fun onAnimationStart(animation: Animator) {}
-                                            override fun onAnimationRepeat(animation: Animator) {}
-                                            override fun onAnimationCancel(animation: Animator) {}
-                                            override fun onAnimationEnd(animation: Animator) {
-                                                windowManagerController.getFloatingFixedView()?.let { it.view.setGone() }
-                                                if (item.second == FloatingViewCollisionsType.OCCURING) {
-                                                    windowManagerController.removeFloatingDragView(
-                                                        this@apply
-                                                    )
-                                                }
-                                            }
-                                        })
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            )
+            addFloatingListener()
         }
 
         binding.btnAddFixedView.setOnClickListener {
@@ -103,6 +55,60 @@ public class WindowActivity : BaseBindingActivity<ActivityWindowBinding>(R.layou
         }
 
         btnRemoveView.setOnClickListener { windowManagerController.removeAllFloatingView() }
+    }
+
+    private fun addFloatingListener() {
+        Logx.d()
+        val dragView = getImageView(R.drawable.ic_launcher_foreground).apply {
+            setBackgroundColor(Color.WHITE)
+        }
+        windowManagerController.addFloatingDragView(FloatingDragView(dragView, 0, 0).apply {
+            lifecycleScope.launch {
+                sfCollisionStateFlow.collect { item ->
+                    when (item.first) {
+                        FloatingViewTouchType.TOUCH_DOWN -> { showFloatingView() }
+
+                        FloatingViewTouchType.TOUCH_MOVE -> { moveFloatingView(item) }
+
+                        FloatingViewTouchType.TOUCH_UP -> { upFloatingView(this@apply,item) }
+                    }
+                }
+            }
+        })
+    }
+
+    private fun showFloatingView() {
+        windowManagerController.getFloatingFixedView()?.view?.let {
+            it.setVisible()
+            showAnimScale(it, null)
+        }
+    }
+
+    private fun moveFloatingView(item: Pair<FloatingViewTouchType, FloatingViewCollisionsType>) {
+        windowManagerController.getFloatingFixedView()?.view?.let {
+            if (item.second == FloatingViewCollisionsType.OCCURING) {
+                val rotationAnim =
+                    ObjectAnimator.ofFloat(it, "rotation", 0.0f, 180.0f)
+                rotationAnim.duration = 300
+                rotationAnim.start()
+            }
+        }
+    }
+
+    private fun upFloatingView(floatingView:FloatingDragView,item: Pair<FloatingViewTouchType, FloatingViewCollisionsType>) {
+        windowManagerController.getFloatingFixedView()?.view?.let {
+            hideAnimScale(it, object : Animator.AnimatorListener {
+                override fun onAnimationStart(animation: Animator) {}
+                override fun onAnimationRepeat(animation: Animator) {}
+                override fun onAnimationCancel(animation: Animator) {}
+                override fun onAnimationEnd(animation: Animator) {
+                    windowManagerController.getFloatingFixedView()?.let { it.view.setGone() }
+                    if (item.second == FloatingViewCollisionsType.OCCURING) {
+                        windowManagerController.removeFloatingDragView(floatingView)
+                    }
+                }
+            })
+        }
     }
 
     private fun showAnimScale(view: View, listener: Animator.AnimatorListener?) {

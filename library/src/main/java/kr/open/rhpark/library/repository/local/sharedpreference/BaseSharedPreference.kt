@@ -46,7 +46,7 @@ public abstract class BaseSharedPreference(context: Context, groupKey: String, s
 
         else -> {
             if (value != null) {
-                Logx.e("Unsupported value type: ${value.javaClass}")
+                Logx.e("Unsupported value type: $key, ${value.javaClass}")
             }
             remove(key)
         }

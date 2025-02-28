@@ -4,7 +4,9 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.media.AudioAttributes
 import kr.open.rhpark.app.R
+import kr.open.rhpark.app.activity.alarm.AlarmSharedPreference
 import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.system.service.controller.alarm.dto.AlarmDTO
 import kr.open.rhpark.library.system.service.controller.alarm.receiver.BaseAlarmReceiver
@@ -20,31 +22,20 @@ public class AlarmReceiver() : BaseAlarmReceiver() {
 
     override val powerManagerAcquireTime: Long get() = 5000L
 
-    override fun loadAllAlarmDtoList(): List<AlarmDTO> {
+    override fun loadAllAlarmDtoList(context:Context): List<AlarmDTO> {
         //data load from realm or room or sharedpreference or other
         return emptyList<AlarmDTO>()
     }
 
-    override fun loadAlarmDtoList(intent: Intent, alarmKey: Int): AlarmDTO? {
+    override fun loadAlarmDtoList(context:Context, intent: Intent, alarmKey: Int): AlarmDTO? {
         Logx.d("alarmKey is " + alarmKey)
         if(alarmKey == AlarmVO.ALARM_KEY_DEFAULT_VALUE) {
             Logx.e("Error Alarm Key $alarmKey")
             return null
         }
 
-        //data load from realm or room or sharedpreference or other
-        return AlarmDTO(
-            11,
-            "test001",
-            "msg001",
-            true,
-            true,
-            true,
-            100,
-            11,
-            0,
-            0
-        )
+        //data load from realm or room or  other
+        return AlarmSharedPreference(context).loadAlarm()
     }
 
     override fun createNotificationChannel(context: Context, alarmDto: AlarmDTO) {
@@ -53,6 +44,18 @@ public class AlarmReceiver() : BaseAlarmReceiver() {
             createChannel(
                 NotificationChannel("Alarm_ID", "Alarm_Name", NotificationManager.IMPORTANCE_HIGH).apply {
 //            setShowBadge(true)
+                    alarmDto.vibrationEffect?.let {
+                        enableVibration(true)
+                        vibrationPattern = it
+                    }
+                    alarmDto.sound?.let {
+                        setSound(
+                            it, AudioAttributes.Builder()
+                                .setUsage(AudioAttributes.USAGE_ALARM)
+                                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                                .build()
+                        )
+                    }
                 }
             )
         }

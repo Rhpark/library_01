@@ -1,6 +1,5 @@
 package kr.open.rhpark.app.fragment
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.lifecycleScope
@@ -16,7 +15,6 @@ class FirstFragment:BaseBindingFragment<FragmentFirstBinding>(R.layout.fragment_
 
     private val vm: FirstFragmentVm by lazy { getViewModel<FirstFragmentVm>() }
 
-    @SuppressLint("UnsafeRepeatOnLifecycleDetector")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Logx.d()

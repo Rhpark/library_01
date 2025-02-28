@@ -34,7 +34,6 @@ import kr.open.rhpark.library.util.inline.sdk_version.checkSdkVersion
 
 class NetworkActivity : BaseBindingActivity<ActivityNetworkBinding>(R.layout.activity_network) {
 
-    @SuppressLint("MissingPermission")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestPermissions(getPermissions()) { requestCode, deniedPermissions ->
@@ -47,7 +46,7 @@ class NetworkActivity : BaseBindingActivity<ActivityNetworkBinding>(R.layout.act
         }
     }
 
-    @RequiresPermission(READ_PHONE_STATE)
+    @SuppressLint("MissingPermission")
     private fun initNetworkStateInfo() {
         registerNetworkCallback()
         registerDefaultNetworkCallback()
@@ -91,28 +90,31 @@ class NetworkActivity : BaseBindingActivity<ActivityNetworkBinding>(R.layout.act
     private fun registerTelephonyCallback(isGpsOn: Boolean = false) {
         Logx.d("isGpsOn $isGpsOn")
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                getNetworkStateInfo().registerTelephonyCallBackFromDefaultUSim(
-                    this@NetworkActivity.mainExecutor, isGpsOn,
-                    onActiveDataSubId = { subId: Int -> updateActiveDataSubId(subId) },
-                    onDataConnectionState = { state: Int, networkType: Int -> updateConnectState(state,networkType) },
-                    onCellInfo = { currentCellInfo: CurrentCellInfo -> updateCellInfo(currentCellInfo) },
-                    onSignalStrength = { currentSignalStrength: CurrentSignalStrength ->updateSignalStrength(currentSignalStrength) },
-                    onServiceState = { currentServiceState: CurrentServiceState -> updateServiceState(currentServiceState) },
-                    onCallState = { callState: Int, phoneNumber: String? ->updateCallState(callState,phoneNumber) },
-                    onDisplayInfo = { telephonyDisplayInfo: TelephonyDisplayInfo -> updateDisplayInfo(telephonyDisplayInfo) },
-                    onTelephonyNetworkState = { telephonyNetworkState: TelephonyNetworkState -> updateNetworkState(telephonyNetworkState) })
-            } else {
-                getNetworkStateInfo().registerTelephonyListenFromDefaultUSim(isGpsOn,
-                    onActiveDataSubId = { subId: Int -> updateActiveDataSubId(subId) },
-                    onDataConnectionState = { state: Int, networkType: Int -> updateConnectState(state,networkType) },
-                    onCellInfo = { currentCellInfo: CurrentCellInfo -> updateCellInfo(currentCellInfo) },
-                    onSignalStrength = { currentSignalStrength: CurrentSignalStrength ->updateSignalStrength(currentSignalStrength) },
-                    onServiceState = { currentServiceState: CurrentServiceState -> updateServiceState(currentServiceState) },
-                    onCallState = { callState: Int, phoneNumber: String? ->updateCallState(callState,phoneNumber) },
-                    onDisplayInfo = { telephonyDisplayInfo: TelephonyDisplayInfo -> updateDisplayInfo(telephonyDisplayInfo) },
-                    onTelephonyNetworkState = { telephonyNetworkState: TelephonyNetworkState -> updateNetworkState(telephonyNetworkState) })
-            }
+            checkSdkVersion(Build.VERSION_CODES.S,
+                positiveWork = {
+                    getNetworkStateInfo().registerTelephonyCallBackFromDefaultUSim(
+                        this@NetworkActivity.mainExecutor, isGpsOn,
+                        onActiveDataSubId = { subId: Int -> updateActiveDataSubId(subId) },
+                        onDataConnectionState = { state: Int, networkType: Int -> updateConnectState(state,networkType) },
+                        onCellInfo = { currentCellInfo: CurrentCellInfo -> updateCellInfo(currentCellInfo) },
+                        onSignalStrength = { currentSignalStrength: CurrentSignalStrength ->updateSignalStrength(currentSignalStrength) },
+                        onServiceState = { currentServiceState: CurrentServiceState -> updateServiceState(currentServiceState) },
+                        onCallState = { callState: Int, phoneNumber: String? ->updateCallState(callState,phoneNumber) },
+                        onDisplayInfo = { telephonyDisplayInfo: TelephonyDisplayInfo -> updateDisplayInfo(telephonyDisplayInfo) },
+                        onTelephonyNetworkState = { telephonyNetworkState: TelephonyNetworkState -> updateNetworkState(telephonyNetworkState) })
+                },
+                negativeWork = {
+                    getNetworkStateInfo().registerTelephonyListenFromDefaultUSim(isGpsOn,
+                        onActiveDataSubId = { subId: Int -> updateActiveDataSubId(subId) },
+                        onDataConnectionState = { state: Int, networkType: Int -> updateConnectState(state,networkType) },
+                        onCellInfo = { currentCellInfo: CurrentCellInfo -> updateCellInfo(currentCellInfo) },
+                        onSignalStrength = { currentSignalStrength: CurrentSignalStrength ->updateSignalStrength(currentSignalStrength) },
+                        onServiceState = { currentServiceState: CurrentServiceState -> updateServiceState(currentServiceState) },
+                        onCallState = { callState: Int, phoneNumber: String? ->updateCallState(callState,phoneNumber) },
+                        onDisplayInfo = { telephonyDisplayInfo: TelephonyDisplayInfo -> updateDisplayInfo(telephonyDisplayInfo) },
+                        onTelephonyNetworkState = { telephonyNetworkState: TelephonyNetworkState -> updateNetworkState(telephonyNetworkState) })
+                }
+            )
         } catch (e:IllegalArgumentException) {
             e.printStackTrace()
             toastShowShort(e.toString())
@@ -151,18 +153,12 @@ class NetworkActivity : BaseBindingActivity<ActivityNetworkBinding>(R.layout.act
     private fun getPermissions() = checkSdkVersion(Build.VERSION_CODES.S,
         positiveWork = {
             listOf(
-                ACCESS_NETWORK_STATE,
-                ACCESS_FINE_LOCATION,
-                ACCESS_COARSE_LOCATION,
-                READ_PHONE_STATE,
-                READ_PHONE_NUMBERS
+                ACCESS_NETWORK_STATE, ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION,
+                READ_PHONE_STATE, READ_PHONE_NUMBERS
             )
         }, negativeWork = {
             listOf(
-                ACCESS_NETWORK_STATE,
-                ACCESS_FINE_LOCATION,
-                ACCESS_COARSE_LOCATION,
-                READ_PHONE_STATE,
+                ACCESS_NETWORK_STATE, ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION, READ_PHONE_STATE,
             )
         })
 

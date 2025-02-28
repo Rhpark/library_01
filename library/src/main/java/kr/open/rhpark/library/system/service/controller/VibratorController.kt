@@ -29,11 +29,12 @@ public open class VibratorController(context: Context) :
      * be used Build.VERSION.SDK_INT < Build.VERSION_CODES.S(31)
      */
     public val vibrator: Vibrator by lazy {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
-            context.getVibrator()
-        } else {
-            throw IllegalStateException("Can not be used Vibrator Class, required must be lower than SDK version S(31), this SDK version ${Build.VERSION.SDK_INT}")
-        }
+        checkSdkVersion(Build.VERSION_CODES.S,
+            positiveWork = {
+                throw IllegalStateException("Can not be used Vibrator Class, required must be lower than SDK version S(31), this SDK version ${Build.VERSION.SDK_INT}")
+            },
+            negativeWork = { context.getVibrator() }
+        )
     }
 
 
@@ -42,11 +43,12 @@ public open class VibratorController(context: Context) :
      */
     @get:RequiresApi(Build.VERSION_CODES.S)
     public val vibratorManger: VibratorManager by lazy {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            context.getVibratorManager()
-        } else {
-            throw IllegalStateException("Can not be used VibratorManager Class, required SDK version >= Build.VERSION_CODES.S(31), this SDK version ${Build.VERSION.SDK_INT}")
-        }
+        checkSdkVersion(Build.VERSION_CODES.S,
+            positiveWork = { context.getVibratorManager() },
+            negativeWork = {
+                throw IllegalStateException("Can not be used VibratorManager Class, required SDK version >= Build.VERSION_CODES.S(31), this SDK version ${Build.VERSION.SDK_INT}")
+            }
+        )
     }
 
     /**
@@ -56,21 +58,15 @@ public open class VibratorController(context: Context) :
     @RequiresPermission(VIBRATE)
     public fun createOneShot(timer: Long, effect: Int = VibrationEffect.DEFAULT_AMPLITUDE) {
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            vibrator.vibrate(timer)
-            return
-        }
-
-        val oneShort = VibrationEffect.createOneShot(timer, effect)
-
-        checkSdkVersion(
-            Build.VERSION_CODES.S,
+        checkSdkVersion(Build.VERSION_CODES.Q,
             positiveWork = {
-                vibratorManger.vibrate(CombinedVibration.createParallel(oneShort))
+                val oneShort = VibrationEffect.createOneShot(timer, effect)
+                checkSdkVersion(Build.VERSION_CODES.S,
+                    positiveWork = { vibratorManger.vibrate(CombinedVibration.createParallel(oneShort)) },
+                    negativeWork = { vibrator.vibrate(oneShort) }
+                )
             },
-            negativeWork = {
-                vibrator.vibrate(oneShort)
-            }
+            negativeWork = { vibrator.vibrate(timer) }
         )
     }
 

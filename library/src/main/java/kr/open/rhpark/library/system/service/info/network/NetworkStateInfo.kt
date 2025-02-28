@@ -40,6 +40,7 @@ import kr.open.rhpark.library.util.extensions.context.getSystemSubscriptionManag
 import kr.open.rhpark.library.util.extensions.context.getSystemTelephonyManager
 import kr.open.rhpark.library.util.extensions.context.getSystemWifiManager
 import kr.open.rhpark.library.util.inline.context.hasPermissions
+import kr.open.rhpark.library.util.inline.sdk_version.checkSdkVersion
 import java.util.concurrent.Executor
 
 /**
@@ -157,12 +158,11 @@ public class NetworkStateInfo(
     @RequiresPermission(READ_PHONE_STATE)
     public fun getSubIdFromDefaultUSim(): Int? = try {
         isReadSimInfoFromDefaultUSim = false
-        val id = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            telephonyManager.subscriptionId
-        } else {
-            // 첫 번째 활성화된 subscription의 ID 반환
-            getActiveSubscriptionInfoList().firstOrNull()?.subscriptionId
-        }
+
+        val id  = checkSdkVersion(Build.VERSION_CODES.R,
+            positiveWork = {    telephonyManager.subscriptionId    },
+            negativeWork = {    getActiveSubscriptionInfoList().firstOrNull()?.subscriptionId /* 첫 번째 활성화된 subscription의 ID 반환*/  }
+        )
         isReadSimInfoFromDefaultUSim = if(id == null)  false
         else true
         id
@@ -174,12 +174,10 @@ public class NetworkStateInfo(
 
     @RequiresPermission(READ_PHONE_STATE)
     public fun getSubId(simSlotIndex: Int): Int? = try {
-        val id = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            uSimTelepnohyManagerList[simSlotIndex]?.subscriptionId
-        } else {
-            getActiveSubscriptionInfoSimSlot(simSlotIndex)?.subscriptionId
-        }
-        id
+        checkSdkVersion(Build.VERSION_CODES.R,
+            positiveWork = {   uSimTelepnohyManagerList[simSlotIndex]?.subscriptionId    },
+            negativeWork = {    getActiveSubscriptionInfoSimSlot(simSlotIndex)?.subscriptionId   }
+        )
     } catch (e: NoSuchMethodError) {
         Logx.e("Can not read uSim Chip, subId = -1, e = $e")
         null
@@ -258,26 +256,34 @@ public class NetworkStateInfo(
 
     @RequiresPermission(READ_PHONE_STATE)
     public fun getMccFromDefaultUSimString(): String? = getSubscriptionInfoSubIdFromDefaultUSim()?.let {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) it.mcc.toString()
-        else it.mccString
+        checkSdkVersion(Build.VERSION_CODES.Q,
+            positiveWork = {    it.mccString    },
+            negativeWork = {    it.mcc.toString()   }
+        )
     }
 
     @RequiresPermission(READ_PHONE_STATE)
     public fun getMncFromDefaultUSimString(): String? = getSubscriptionInfoSubIdFromDefaultUSim()?.let {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) it.mnc.toString()
-        else it.mncString
+        checkSdkVersion(Build.VERSION_CODES.Q,
+            positiveWork = {    it.mncString    },
+            negativeWork = {    it.mnc.toString()   }
+        )
     }
 
     @RequiresPermission(READ_PHONE_STATE)
     public fun getMcc(slotIndex:Int) :String? = getActiveSubscriptionInfoSimSlot(slotIndex)?.let {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) it.mcc.toString()
-        else it.mccString
+        checkSdkVersion(Build.VERSION_CODES.Q,
+            positiveWork = {    it.mccString    },
+            negativeWork = {    it.mcc.toString()   }
+        )
     }
 
     @RequiresPermission(READ_PHONE_STATE)
     public fun getMnc(slotIndex:Int) :String? = getActiveSubscriptionInfoSimSlot(slotIndex)?.let {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) it.mnc.toString()
-        else it.mncString
+        checkSdkVersion(Build.VERSION_CODES.Q,
+            positiveWork = {    it.mncString    },
+            negativeWork = {    it.mnc.toString()   }
+        )
     }
 
     @RequiresPermission(anyOf = [READ_PHONE_STATE, READ_PHONE_NUMBERS])

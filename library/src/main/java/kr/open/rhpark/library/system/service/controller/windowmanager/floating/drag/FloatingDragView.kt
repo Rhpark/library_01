@@ -3,6 +3,7 @@ package kr.open.rhpark.library.system.service.controller.windowmanager.floating.
 import android.view.View
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.system.service.controller.windowmanager.floating.fixed.FloatingFixedView
 import kr.open.rhpark.library.system.service.controller.windowmanager.floating.vo.FloatingViewCollisionsType
 import kr.open.rhpark.library.system.service.controller.windowmanager.floating.vo.FloatingViewTouchType
@@ -27,6 +28,7 @@ public open class FloatingDragView(
         get() = msfCollisionStateFlow
 
     public fun updateCollisionState(phase: FloatingViewTouchType, type: FloatingViewCollisionsType) {
+        Logx.d(phase to type)
         msfCollisionStateFlow.value = phase to type
     }
 }

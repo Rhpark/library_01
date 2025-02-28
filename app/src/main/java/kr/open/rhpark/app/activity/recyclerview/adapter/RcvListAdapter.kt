@@ -8,8 +8,7 @@ import kr.open.rhpark.library.ui.recyclerview.viewholder.BaseRcvViewHolder
 import kr.open.rhpark.library.ui.recyclerview.list_adapter.BaseRcvListAdapter
 import kr.open.rhpark.library.ui.recyclerview.list_adapter.RcvListDifUtilCallBack
 
-class RcvListAdapter :
-    BaseRcvListAdapter<RcvItem, BaseRcvViewHolder<ItemRecyclerviewBinding>>(
+class RcvListAdapter : BaseRcvListAdapter<RcvItem, BaseRcvViewHolder<ItemRecyclerviewBinding>>(
         RcvListDifUtilCallBack<RcvItem>(
             itemsTheSame = { oldItem, newItem -> oldItem.key == newItem.key },
             contentsTheSame = { oldItem, newItem -> oldItem.key === newItem.key }

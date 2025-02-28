@@ -7,6 +7,7 @@ import android.net.ProxyInfo
 import android.net.RouteInfo
 import android.os.Build
 import androidx.annotation.RequiresApi
+import kr.open.rhpark.library.util.inline.sdk_version.checkSdkVersion
 import java.net.InetAddress
 
 public data class NetworkLinkPropertiesData(public val linkProperties: LinkProperties) :
@@ -14,11 +15,10 @@ public data class NetworkLinkPropertiesData(public val linkProperties: LinkPrope
 
     public fun getLinkAddresses(): MutableList<LinkAddress> = linkProperties.linkAddresses
 
-    public fun getMtu(): Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-        linkProperties.mtu
-    } else {
-        splitStr("MTU: ", " ")?.let { it[0].toInt() } ?: 0
-    }
+    public fun getMtu(): Int = checkSdkVersion(Build.VERSION_CODES.Q,
+        positiveWork = { linkProperties.mtu },
+        negativeWork = { splitStr("MTU: ", " ")?.let { it[0].toInt() } ?: 0 }
+    )
 
     public fun getRoutes(): MutableList<RouteInfo> = linkProperties.routes
 
@@ -26,11 +26,10 @@ public data class NetworkLinkPropertiesData(public val linkProperties: LinkPrope
 
     public fun getDnsServer(): MutableList<InetAddress> = linkProperties.dnsServers
 
-    public fun getDhcpServerAddress(): InetAddress? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        linkProperties.dhcpServerAddress
-    } else {
-        InetAddress.getByName(splitStr("ServerAddress: "," ")?.get(0)?.toString())
-    }
+    public fun getDhcpServerAddress(): InetAddress? = checkSdkVersion(Build.VERSION_CODES.R,
+        positiveWork = {    linkProperties.dhcpServerAddress    },
+        negativeWork = {    InetAddress.getByName(splitStr("ServerAddress: "," ")?.get(0)?.toString())  }
+    )
 
     public fun getHttpProxy(): ProxyInfo? = linkProperties.httpProxy
 
@@ -44,14 +43,13 @@ public data class NetworkLinkPropertiesData(public val linkProperties: LinkPrope
     public fun getNat64Prefix(): IpPrefix? = linkProperties.nat64Prefix
 
     public fun getTcpBufferSizes():List<String>? = if(getResStr().contains(" TcpBufferSizes: ")) {
-        getResStr().split(" TcpBufferSizes: "," ")?.split(",")?:null
+        getResStr().split(" TcpBufferSizes: "," ")?.split(",")
     } else {
         null
     }
 
     public fun toResString(): String {
-        var res: String = ""
-        res += "getLinkAddresses ${getLinkAddresses().toList()}\n" +
+        var res = "getLinkAddresses ${getLinkAddresses().toList()}\n" +
                 "getMtu ${getMtu()}\n" +
                 "getRoutes ${getRoutes()}\n" +
                 "getDomains ${getDomains()}\n" +
@@ -63,7 +61,7 @@ public data class NetworkLinkPropertiesData(public val linkProperties: LinkPrope
                 "getPrivateDnsServerName ${getPrivateDnsServerName()}\n" +
                 "getTcpBufferSizes ${getTcpBufferSizes()}\n"
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        checkSdkVersion(Build.VERSION_CODES.R) {
             res += "getNat64Prefix ${getNat64Prefix()}\n"
         }
         res += "\n\n"
