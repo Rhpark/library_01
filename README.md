@@ -514,19 +514,25 @@ class VibratorActivity : BaseBindingActivity<ActivityVibratorBinding>(R.layout.a
             btnWaveForm.setOnClickListener {
                 val times = LongArray(3).apply { this[0] = 1000L; this[1] = 1000L; this[2] = 1000L }
                 val amplitudes = IntArray(3).apply { this[0] = 64; this[1] = 255; this[2] = 128 }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    getVibratorController().createWaveform(times, amplitudes)
-                } else {
-                    toastShowShort("Requires Os Version 31(S), but your Os Version is ${Build.VERSION.SDK_INT}")
-                }
+                checkSdkVersion(Build.VERSION_CODES.S,
+                    positiveWork = {
+                        getVibratorController().createWaveform(times, amplitudes)
+                    },
+                    negativeWork = {
+                        toastShowShort("Requires Os Version 31(S), but your Os Version is ${Build.VERSION.SDK_INT}")
+                    }
+                )
             }
 
             btnPredefined.setOnClickListener {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    getVibratorController().createPredefined(VibrationEffect.EFFECT_DOUBLE_CLICK)
-                } else {
-                    toastShowShort("Requires Os Version 26(O), but your Os Version is ${Build.VERSION.SDK_INT}")
-                }
+                checkSdkVersion(Build.VERSION_CODES.Q,
+                    positiveWork = {
+                        getVibratorController().createPredefined(VibrationEffect.EFFECT_DOUBLE_CLICK)
+                    },
+                    negativeWork = {
+                        toastShowShort("Requires Os Version 26(O), but your Os Version is ${Build.VERSION.SDK_INT}")
+                    }
+                )
             }
 
             btbCancel.setOnClickListener { getVibratorController().cancel() }
@@ -713,28 +719,31 @@ class NetworkActivity : BaseBindingActivity<ActivityNetworkBinding>(R.layout.act
     private fun registerTelephonyCallback(isGpsOn: Boolean = false) {
         Logx.d("isGpsOn $isGpsOn")
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                getNetworkStateInfo().registerTelephonyCallBackFromDefaultUSim(
-                    this@NetworkActivity.mainExecutor, isGpsOn,
-                    onActiveDataSubId = { subId: Int -> updateActiveDataSubId(subId) },
-                    onDataConnectionState = { state: Int, networkType: Int -> updateConnectState(state,networkType) },
-                    onCellInfo = { currentCellInfo: CurrentCellInfo -> updateCellInfo(currentCellInfo) },
-                    onSignalStrength = { currentSignalStrength: CurrentSignalStrength ->updateSignalStrength(currentSignalStrength) },
-                    onServiceState = { currentServiceState: CurrentServiceState -> updateServiceState(currentServiceState) },
-                    onCallState = { callState: Int, phoneNumber: String? ->updateCallState(callState,phoneNumber) },
-                    onDisplayInfo = { telephonyDisplayInfo: TelephonyDisplayInfo -> updateDisplayInfo(telephonyDisplayInfo) },
-                    onTelephonyNetworkState = { telephonyNetworkState: TelephonyNetworkState -> updateNetworkState(telephonyNetworkState) })
-            } else {
-                getNetworkStateInfo().registerTelephonyListenFromDefaultUSim(isGpsOn,
-                    onActiveDataSubId = { subId: Int -> updateActiveDataSubId(subId) },
-                    onDataConnectionState = { state: Int, networkType: Int -> updateConnectState(state,networkType) },
-                    onCellInfo = { currentCellInfo: CurrentCellInfo -> updateCellInfo(currentCellInfo) },
-                    onSignalStrength = { currentSignalStrength: CurrentSignalStrength ->updateSignalStrength(currentSignalStrength) },
-                    onServiceState = { currentServiceState: CurrentServiceState -> updateServiceState(currentServiceState) },
-                    onCallState = { callState: Int, phoneNumber: String? ->updateCallState(callState,phoneNumber) },
-                    onDisplayInfo = { telephonyDisplayInfo: TelephonyDisplayInfo -> updateDisplayInfo(telephonyDisplayInfo) },
-                    onTelephonyNetworkState = { telephonyNetworkState: TelephonyNetworkState -> updateNetworkState(telephonyNetworkState) })
-            }
+            checkSdkVersion(Build.VERSION_CODES.S,
+                positiveWork = {
+                    getNetworkStateInfo().registerTelephonyCallBackFromDefaultUSim(
+                        this@NetworkActivity.mainExecutor, isGpsOn,
+                        onActiveDataSubId = { subId: Int -> updateActiveDataSubId(subId) },
+                        onDataConnectionState = { state: Int, networkType: Int -> updateConnectState(state,networkType) },
+                        onCellInfo = { currentCellInfo: CurrentCellInfo -> updateCellInfo(currentCellInfo) },
+                        onSignalStrength = { currentSignalStrength: CurrentSignalStrength ->updateSignalStrength(currentSignalStrength) },
+                        onServiceState = { currentServiceState: CurrentServiceState -> updateServiceState(currentServiceState) },
+                        onCallState = { callState: Int, phoneNumber: String? ->updateCallState(callState,phoneNumber) },
+                        onDisplayInfo = { telephonyDisplayInfo: TelephonyDisplayInfo -> updateDisplayInfo(telephonyDisplayInfo) },
+                        onTelephonyNetworkState = { telephonyNetworkState: TelephonyNetworkState -> updateNetworkState(telephonyNetworkState) })
+                },
+                negativeWork = {
+                    getNetworkStateInfo().registerTelephonyListenFromDefaultUSim(isGpsOn,
+                        onActiveDataSubId = { subId: Int -> updateActiveDataSubId(subId) },
+                        onDataConnectionState = { state: Int, networkType: Int -> updateConnectState(state,networkType) },
+                        onCellInfo = { currentCellInfo: CurrentCellInfo -> updateCellInfo(currentCellInfo) },
+                        onSignalStrength = { currentSignalStrength: CurrentSignalStrength ->updateSignalStrength(currentSignalStrength) },
+                        onServiceState = { currentServiceState: CurrentServiceState -> updateServiceState(currentServiceState) },
+                        onCallState = { callState: Int, phoneNumber: String? ->updateCallState(callState,phoneNumber) },
+                        onDisplayInfo = { telephonyDisplayInfo: TelephonyDisplayInfo -> updateDisplayInfo(telephonyDisplayInfo) },
+                        onTelephonyNetworkState = { telephonyNetworkState: TelephonyNetworkState -> updateNetworkState(telephonyNetworkState) })
+                }
+            )
         } catch (e:IllegalArgumentException) {
             e.printStackTrace()
             toastShowShort(e.toString())
@@ -1131,6 +1140,142 @@ class NotificationActivity :
 <br>
 </br>
 
+####  5 - 7 Alarm
+```
+class AlarmActivity :
+    BaseBindingActivity<ActivityAlarmBinding>(R.layout.activity_alarm) {
+
+    private val alarmController by lazy { getAlarmController() }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requestPermissions(getPermissionList()) { requestCode, deniedPermissions ->
+            Logx.d("requestCode $requestCode, deniedPermissions $deniedPermissions")
+            if (deniedPermissions.isEmpty()) {
+
+            }
+            initListener()
+        }
+    }
+
+    private fun initListener() {
+        binding.run {
+            btnAlarmRegister.setOnClickListener {
+                val edit = edtTimer.text
+                if (edit.isNullOrEmpty()) {
+                    toastShowShort("input Min timer")
+                } else if (edit.toString().toInt() < 1) {
+                    toastShowShort("over than 0")
+                }else {
+                    Logx.d()
+                    val min = edtTimer.text.toString().toInt()
+                    val localDataTime = LocalDateTime.now()
+                    val a = AlarmDTO(
+                        key = 1,
+                        title = "test002",
+                        msg = "msg002",
+                        isActive = true,
+                        isAllowIdle = true,
+                        vibrationEffect = longArrayOf(0,250,500,250),
+                        sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM),
+                        hour =localDataTime.hour,
+                        minute = localDataTime.minute + min ,
+                        second = 0
+                    )
+                    AlarmSharedPreference(applicationContext).saveAlarm(a)
+                    alarmController.registerAlarmClock(AlarmReceiver::class.java, a)
+                }
+            }
+        }
+    }
+
+    private fun getPermissionList(): List<String> {
+        val list = mutableListOf<String>()
+        list.add(RECEIVE_BOOT_COMPLETED)
+        list.add(WAKE_LOCK)
+        checkSdkVersion(Build.VERSION_CODES.TIRAMISU) {
+            list.add(USE_EXACT_ALARM)
+            list.add(POST_NOTIFICATIONS)
+        }
+        checkSdkVersion(Build.VERSION_CODES.S) {
+            list.add(SCHEDULE_EXACT_ALARM)
+        }
+        return list.toList()
+    }
+
+}
+
+public class AlarmReceiver() : BaseAlarmReceiver() {
+
+//    override val registerType = RegisterType.ALARM_EXACT_AND_ALLOW_WHILE_IDLE
+    override val registerType = RegisterType.ALARM_CLOCK
+
+    override val classType: Class<*> = this::class.java
+
+    override val powerManagerAcquireTime: Long get() = 5000L
+
+    override fun loadAllAlarmDtoList(context:Context): List<AlarmDTO> {
+        //data load from realm or room or sharedpreference or other
+        return emptyList<AlarmDTO>()
+    }
+
+    override fun loadAlarmDtoList(context:Context, intent: Intent, alarmKey: Int): AlarmDTO? {
+        Logx.d("alarmKey is " + alarmKey)
+        if(alarmKey == AlarmVO.ALARM_KEY_DEFAULT_VALUE) {
+            Logx.e("Error Alarm Key $alarmKey")
+            return null
+        }
+
+        //data load from realm or room or  other
+        return AlarmSharedPreference(context).loadAlarm()
+    }
+
+    override fun createNotificationChannel(context: Context, alarmDto: AlarmDTO) {
+        Logx.d()
+        notificationController = context.getNotificationController().apply {
+            createChannel(
+                NotificationChannel("Alarm_ID", "Alarm_Name", NotificationManager.IMPORTANCE_HIGH).apply {
+//            setShowBadge(true)
+                    alarmDto.vibrationEffect?.let {
+                        enableVibration(true)
+                        vibrationPattern = it
+                    }
+                    alarmDto.sound?.let {
+                        setSound(
+                            it, AudioAttributes.Builder()
+                                .setUsage(AudioAttributes.USAGE_ALARM)
+                                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                                .build()
+                        )
+                    }
+                }
+            )
+        }
+    }
+    override fun showNotification(context: Context, alarmDto: AlarmDTO) {
+        Logx.d()
+
+        notificationController.showNotificationForBroadcast(
+            alarmDto.key,
+            alarmDto.title,
+            alarmDto.msg,
+            false,
+            R.drawable.ic_floating_fixed_close,
+            null,
+            null,
+            null
+        )
+    }
+}
+
+```
+
+<br>
+</br>
+
+<br>
+</br>
+
 ### 6. Toast, SnackBar, softkeyboardContorller
 ```
 class ToastSnackBarActivity :
@@ -1140,13 +1285,18 @@ class ToastSnackBarActivity :
         super.onCreate(savedInstanceState)
 
         binding.run {
-            applicationContext.getSoftKeyboardController().showDelay(editText,200L) //SoftKeyboardController
+            applicationContext.getSoftKeyboardController().showDelay(editText,200L)
 
             btnDefaultToast.setOnClickListener {
                 toastShowShort("Toast Show Short")
             }
 
-            btnCustomToast.visibility = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) View.GONE else View.VISIBLE
+            checkSdkVersion(
+                Build.VERSION_CODES.R,
+                positiveWork = { btnCustomToast.setGone() },
+                negativeWork = { btnCustomToast.setVisible() }
+            )
+
             btnCustomToast.setOnClickListener {
                 toastShort("Option").apply {
                     setGravity(Gravity.CENTER_VERTICAL,0,0)
@@ -1172,7 +1322,6 @@ class ToastSnackBarActivity :
             }
         }
     }
-}
 }
 
 ```
