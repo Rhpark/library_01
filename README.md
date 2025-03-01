@@ -1,4 +1,4 @@
-# Android Easy Development Library (v0.9.1)
+# Android Easy Development Library (v1.0.0)
 
 ![image](https://jitpack.io/v/rhpark/library_01.svg)
 <br>
@@ -1332,6 +1332,30 @@ class ToastSnackBarActivity :
 </br>
 <br>
 </br>
+
+### 7. Style.xml
+
+```
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+
+    <style name="Example" />
+    <style name="Example.Layout" parent="Layout.MatchWarp.Vertical">
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="Example.TextView" parent="TextView.MatchWarp.Bold">
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="Example.Button" parent="View.MatchWarp">
+    </style>
+
+</resources>
+
+```
+
 <br>
 </br>
 
@@ -1358,7 +1382,7 @@ android {
 
 dependencies {
 	...
-	implementation("com.github.rhpark:library_01:0.9.1")
+	implementation("com.github.rhpark:library_01:1.0.0")
 	...
 }
 ```
