@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-
-
     <style name="MainActivity" />
 
-    <style name="MainActivity.Root" parent="View.AllMatch">
+    <style name="MainActivity.Root" parent="Layout.AllMatch">
         <item name="android:layout_marginLeft">16dp</item>
         <item name="android:layout_marginRight">16dp</item>
         <item name="android:layout_marginTop">8dp</item>
@@ -19,7 +17,7 @@
 
     <style name="RecyclerViewActivity" />
 
-    <style name="RecyclerViewActivity.Root" parent="View.AllMatch">
+    <style name="RecyclerViewActivity.Root" parent="Layout.AllMatch">
         <item name="android:layout_marginLeft">12dp</item>
         <item name="android:layout_marginRight">12dp</item>
         <item name="android:layout_marginTop">8dp</item>
@@ -32,6 +30,19 @@
 
     <style name="RecyclerViewActivity.RadioButton" parent="View.AllWarp">
         <item name="android:textSize">12sp</item>
+    </style>
+
+
+    <style name="Example" />
+    <style name="Example.Layout" parent="Layout.MatchWarp.Vertical">
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="Example.TextView" parent="TextView.MatchWarp.Bold">
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="Example.Button" parent="View.MatchWarp">
     </style>
 
 </resources>

@@ -13,6 +13,17 @@ import kr.open.rhpark.library.system.service.controller.alarm.receiver.BaseAlarm
 import kr.open.rhpark.library.system.service.controller.alarm.vo.AlarmVO
 import kr.open.rhpark.library.util.extensions.context.getNotificationController
 
+/**
+ * AndroidManifest.xml
+ * <receiver android:name=".activity.alarm.receiver.AlarmReceiver"
+ *     android:enabled="true"
+ *     android:exported="true">
+ *     <intent-filter>
+ *         <action android:name="android.intent.action.BOOT_COMPLETED"/>
+ *     </intent-filter>
+ *
+ * </receiver>
+ */
 public class AlarmReceiver() : BaseAlarmReceiver() {
 
 //    override val registerType = RegisterType.ALARM_EXACT_AND_ALLOW_WHILE_IDLE
