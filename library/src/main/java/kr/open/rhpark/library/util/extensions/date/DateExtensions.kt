@@ -1,8 +1,11 @@
 package kr.open.rhpark.library.util.extensions.date
 
 import java.text.SimpleDateFormat
+import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.Date
 import java.util.Locale
@@ -29,6 +32,37 @@ public fun String.timeDateToDate(format: String, locale: Locale = Locale.US): Da
     val dateFormat = SimpleDateFormat(format, locale)
     return dateFormat.parse(this)
 }
+
+
+/**
+ * if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+ *     val nowMillis = System.currentTimeMillis()
+ *     val localDateTime = nowMillis.toLocalDateTime()
+ *     val formatted = localDateTime.format("HH:mm:ss dd/MM/yyyy", Locale.US)
+ *     Logx.d("Formatted LocalDateTime: $formatted")
+ * }
+ */
+public fun Long.toLocalDateTime(): LocalDateTime =
+    Instant.ofEpochMilli(this).atZone(ZoneId.systemDefault()).toLocalDateTime()
+
+public fun LocalDateTime.format(pattern: String, locale: Locale = Locale.getDefault()): String {
+    val formatter = DateTimeFormatter.ofPattern(pattern, locale)
+    return this.format(formatter)
+}
+
+/**
+ * if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+ *     val date = Date()
+ *     val formatted = date.formatToString("yyyy-MM-dd HH:mm:ss")
+ *     Logx.d("Formatted Date: $formatted")
+ * }
+ */
+public fun Date.toLocalDateTime(): LocalDateTime =
+    this.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
+
+public fun Date.formatToString(pattern: String, locale: Locale = Locale.getDefault()): String =
+    this.toLocalDateTime().format(pattern, locale)
+
 
 /**
  * ex)

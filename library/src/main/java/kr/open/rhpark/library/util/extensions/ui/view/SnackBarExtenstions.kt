@@ -141,12 +141,16 @@ public fun View.snackBarShowShort(msg: CharSequence,
                                   @BaseTransientBottomBar.AnimationMode animMode: Int? = null,
                                   isGestureInsetBottomIgnored: Boolean? = null) {
     snackBarMakeShort(msg).apply {
-        val snackBarLayout = (this.view as Snackbar.SnackbarLayout)
-        snackBarLayout.removeAllViews()
-        snackBarLayout.setPadding(0,0,0,0)
-        snackBarLayout.addView(customView)
-        animMode?.let {    animationMode = it    }
-        isGestureInsetBottomIgnored?.let{ setGestureInsetBottomIgnored(it)}
+        val snackBarLayout = (this.view as? Snackbar.SnackbarLayout)?.let {
+            it.removeAllViews()
+            it.setPadding(0,0,0,0)
+            it.addView(customView)
+            animMode?.let {    animationMode = it    }
+            isGestureInsetBottomIgnored?.let{ setGestureInsetBottomIgnored(it)}
+        }
+        if(snackBarLayout == null) {
+            Logx.e("Snackbar view is not of type Snackbar.SnackbarLayout")
+        }
     }.show()
 }
 
@@ -202,12 +206,16 @@ public fun View.snackBarShowLong(
     isGestureInsetBottomIgnored: Boolean? = null
 ) {
     snackBarMakeLong(msg).apply {
-        val snackBarLayout = (this.view as Snackbar.SnackbarLayout)
-        snackBarLayout.removeAllViews()
-        snackBarLayout.setPadding(0, 0, 0, 0)
-        snackBarLayout.addView(customView)
-        animMode?.let { animationMode = it }
-        isGestureInsetBottomIgnored?.let { setGestureInsetBottomIgnored(it) }
+        val snackBarLayout = (this.view as? Snackbar.SnackbarLayout)?.let {
+            it.removeAllViews()
+            it.setPadding(0, 0, 0, 0)
+            it.addView(customView)
+            animMode?.let { animationMode = it }
+            isGestureInsetBottomIgnored?.let { setGestureInsetBottomIgnored(it) }
+        }
+        if(snackBarLayout == null) {
+            Logx.e("Snackbar view is not of type Snackbar.SnackbarLayout")
+        }
     }.show()
 }
 
@@ -262,11 +270,16 @@ public fun View.snackBarShowIndefinite(
     isGestureInsetBottomIgnored: Boolean? = null
 ) {
     snackBarMakeIndefinite(msg).apply {
-        val snackBarLayout = (this.view as Snackbar.SnackbarLayout)
-        snackBarLayout.removeAllViews()
-        snackBarLayout.setPadding(0, 0, 0, 0)
-        snackBarLayout.addView(customView)
-        animMode?.let { animationMode = it }
-        isGestureInsetBottomIgnored?.let { setGestureInsetBottomIgnored(it) }
+        val snackBarLayout = (this.view as? Snackbar.SnackbarLayout)?.let {
+            it.removeAllViews()
+            it.setPadding(0, 0, 0, 0)
+            it.addView(customView)
+            animMode?.let { animationMode = it }
+            isGestureInsetBottomIgnored?.let { setGestureInsetBottomIgnored(it) }
+        }
+
+        if(snackBarLayout == null) {
+            Logx.e("Snackbar view is not of type Snackbar.SnackbarLayout")
+        }
     }.show()
 }
