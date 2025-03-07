@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kr.open.rhpark.library.R
 import kr.open.rhpark.library.debug.logcat.Logx
-import kr.open.rhpark.library.util.inline.coroutine.safeEmit
+import kr.open.rhpark.library.util.extensions.coroutine.safeEmit
 import java.lang.ref.WeakReference
 import kotlin.math.abs
 

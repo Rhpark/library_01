@@ -5,10 +5,7 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import androidx.annotation.IntegerRes
-import kr.open.rhpark.library.util.extensions.context.getSoftKeyboardController
 
 /********
  * View *
@@ -39,20 +36,7 @@ public fun View.setOnDebouncedClickListener(debounceTime: Long = 600L, action: (
 /************
  * EditText *
  ************/
-public fun EditText.showKeyBoard(flag: Int = InputMethodManager.SHOW_IMPLICIT): Boolean {
-    return this.context.getSoftKeyboardController().show(this, flag)
-}
-public fun EditText.showKeyBoard(delay: Long, flag: Int = InputMethodManager.SHOW_IMPLICIT): Boolean {
-    return this.context.getSoftKeyboardController().showDelay(this, delay, flag)
-}
 
-public fun EditText.hind(flag: Int = 0): Boolean {
-    return this.context.getSoftKeyboardController().hide(this, flag)
-}
-
-public fun EditText.hindDelay(delay: Long, flag: Int = 0): Boolean {
-    return this.context.getSoftKeyboardController().hideDelay(this, delay, flag)
-}
 
 
 /*************

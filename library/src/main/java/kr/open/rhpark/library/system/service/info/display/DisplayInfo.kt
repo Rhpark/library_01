@@ -10,7 +10,7 @@ import android.view.WindowManager
 import androidx.annotation.RequiresApi
 import kr.open.rhpark.library.system.service.base.BaseSystemService
 import kr.open.rhpark.library.util.extensions.context.getSystemWindowManager
-import kr.open.rhpark.library.util.inline.sdk_version.checkSdkVersion
+import kr.open.rhpark.library.util.extensions.sdk_version.checkSdkVersion
 
 /**
  * This class provides information about the display of an Android device.
@@ -18,9 +18,6 @@ import kr.open.rhpark.library.util.inline.sdk_version.checkSdkVersion
  *
  * @param context The application context.
  * @param context 애플리케이션 컨텍스트.
- *
- * @param windowManager The WindowManager instance.
- * @param windowManager WindowManager 인스턴스.
  */
 public open class DisplayInfo(context: Context)
     : BaseSystemService(context, null) {

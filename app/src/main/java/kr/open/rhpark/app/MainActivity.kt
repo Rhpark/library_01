@@ -7,10 +7,10 @@ import kotlinx.coroutines.launch
 import kr.open.rhpark.app.databinding.ActivityMainBinding
 import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.ui.activity.BaseBindingActivity
+import kr.open.rhpark.library.util.extensions.context.startActivity
 import kr.open.rhpark.library.util.extensions.debug.logxD
 import kr.open.rhpark.library.util.extensions.debug.logxJ
 import kr.open.rhpark.library.util.extensions.debug.logxP
-import kr.open.rhpark.library.util.inline.context.startActivity
 
 class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_main) {
 

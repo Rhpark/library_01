@@ -12,7 +12,7 @@ import androidx.annotation.RequiresPermission
 import kr.open.rhpark.library.system.service.base.BaseSystemService
 import kr.open.rhpark.library.util.extensions.context.getVibrator
 import kr.open.rhpark.library.util.extensions.context.getVibratorManager
-import kr.open.rhpark.library.util.inline.sdk_version.checkSdkVersion
+import kr.open.rhpark.library.util.extensions.sdk_version.checkSdkVersion
 
 /**
  *

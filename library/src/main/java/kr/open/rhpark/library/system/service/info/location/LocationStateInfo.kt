@@ -24,8 +24,8 @@ import kr.open.rhpark.library.repository.local.sharedpreference.LocationSharedPr
 import kr.open.rhpark.library.system.service.base.BaseSystemService
 import kr.open.rhpark.library.system.service.base.DataUpdate
 import kr.open.rhpark.library.util.extensions.context.getSystemLocationManager
-import kr.open.rhpark.library.util.inline.context.hasPermissions
-import kr.open.rhpark.library.util.inline.sdk_version.checkSdkVersion
+import kr.open.rhpark.library.util.extensions.context.hasPermissions
+import kr.open.rhpark.library.util.extensions.sdk_version.checkSdkVersion
 
 public open class LocationStateInfo(
     context: Context,

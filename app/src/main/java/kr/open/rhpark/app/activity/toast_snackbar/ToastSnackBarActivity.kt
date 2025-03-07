@@ -15,7 +15,7 @@ import kr.open.rhpark.library.util.extensions.ui.view.snackBarShowIndefinite
 import kr.open.rhpark.library.util.extensions.ui.view.snackBarShowShort
 import kr.open.rhpark.library.util.extensions.ui.view.toastShort
 import kr.open.rhpark.library.util.extensions.ui.view.toastShowShort
-import kr.open.rhpark.library.util.inline.sdk_version.checkSdkVersion
+import kr.open.rhpark.library.util.extensions.sdk_version.checkSdkVersion
 
 class ToastSnackBarActivity :
     BaseBindingActivity<ActivityToastSnackbarBinding>(R.layout.activity_toast_snackbar) {

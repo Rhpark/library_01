@@ -6,10 +6,10 @@ import androidx.fragment.app.Fragment
 import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.system.permission.PermissionManagerBase
 import kr.open.rhpark.library.system.permission.PermissionManagerForFragment
-import kr.open.rhpark.library.util.inline.context.hasPermission
-import kr.open.rhpark.library.util.inline.context.hasPermissions
-import kr.open.rhpark.library.util.inline.context.remainPermissions
-import kr.open.rhpark.library.util.inline.context.startActivity
+import kr.open.rhpark.library.util.extensions.context.hasPermission
+import kr.open.rhpark.library.util.extensions.context.hasPermissions
+import kr.open.rhpark.library.util.extensions.context.remainPermissions
+import kr.open.rhpark.library.util.extensions.context.startActivity
 
 /**
  * A base fragment classthat provides common functionality for fragments.

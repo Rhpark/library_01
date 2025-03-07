@@ -1,4 +1,4 @@
-package kr.open.rhpark.library.util.inline.coroutine
+package kr.open.rhpark.library.util.extensions.coroutine
 
 import kotlinx.coroutines.flow.MutableSharedFlow
 

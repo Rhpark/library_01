@@ -6,7 +6,7 @@ import android.os.Build
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager.LayoutParams
-import kr.open.rhpark.library.util.inline.sdk_version.checkSdkVersion
+import kr.open.rhpark.library.util.extensions.sdk_version.checkSdkVersion
 
 public open class FloatingFixedView(
     public val view: View,

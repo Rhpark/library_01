@@ -20,9 +20,8 @@ import kr.open.rhpark.library.system.service.info.battery.power.PowerProfile
 import kr.open.rhpark.library.system.service.info.battery.power.PowerProfileVO
 import kr.open.rhpark.library.system.service.base.BaseSystemService
 import kr.open.rhpark.library.system.service.base.DataUpdate
-import kr.open.rhpark.library.util.extensions.context.getBatteryStateInfo
 import kr.open.rhpark.library.util.extensions.context.getSystemBatteryManager
-import kr.open.rhpark.library.util.inline.sdk_version.checkSdkVersion
+import kr.open.rhpark.library.util.extensions.sdk_version.checkSdkVersion
 
 /**
  * Thisclass provides information about the battery state of an Android device.
@@ -43,9 +42,6 @@ import kr.open.rhpark.library.util.inline.sdk_version.checkSdkVersion
  *
  * @param context The application context
  * @param context 애플리케이션 컨텍스트.
- *
- * @param batteryManager The BatteryManager instance.
- * @param batteryManager BatteryManager 인스턴스.
  */
 public open class BatteryStateInfo(
     context: Context,

@@ -1,4 +1,4 @@
-package kr.open.rhpark.library.util.inline.time
+package kr.open.rhpark.library.util.extensions.time
 
 public inline fun measureTimeMillis(block: () -> Unit): Long {
     val start = System.currentTimeMillis()

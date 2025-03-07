@@ -2,7 +2,7 @@ package kr.open.rhpark.library.system.service.base
 
 import android.content.Context
 import kr.open.rhpark.library.debug.logcat.Logx
-import kr.open.rhpark.library.util.inline.context.remainPermissions
+import kr.open.rhpark.library.util.extensions.context.remainPermissions
 
 /**
  * Base class for system services.

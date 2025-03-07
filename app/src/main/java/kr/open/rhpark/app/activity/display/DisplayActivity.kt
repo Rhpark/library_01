@@ -6,12 +6,12 @@ import kr.open.rhpark.app.databinding.ActivityDisplayBinding
 import kr.open.rhpark.library.ui.activity.BaseBindingActivity
 import kr.open.rhpark.library.util.extensions.context.getDisplayInfo
 import kr.open.rhpark.library.util.extensions.ui.view.toastShowShort
-import kr.open.rhpark.library.util.inline.display.dpToPx
-import kr.open.rhpark.library.util.inline.display.dpToSp
-import kr.open.rhpark.library.util.inline.display.pxToDp
-import kr.open.rhpark.library.util.inline.display.pxToSp
-import kr.open.rhpark.library.util.inline.display.spToDp
-import kr.open.rhpark.library.util.inline.display.spToPx
+import kr.open.rhpark.library.util.extensions.ui.display.dpToPx
+import kr.open.rhpark.library.util.extensions.ui.display.dpToSp
+import kr.open.rhpark.library.util.extensions.ui.display.pxToDp
+import kr.open.rhpark.library.util.extensions.ui.display.pxToSp
+import kr.open.rhpark.library.util.extensions.ui.display.spToDp
+import kr.open.rhpark.library.util.extensions.ui.display.spToPx
 
 class DisplayActivity : BaseBindingActivity<ActivityDisplayBinding>(R.layout.activity_display) {
 

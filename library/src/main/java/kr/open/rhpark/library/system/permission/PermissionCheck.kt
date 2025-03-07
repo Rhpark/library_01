@@ -6,7 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.Settings
-import kr.open.rhpark.library.util.inline.context.remainPermissions
+import kr.open.rhpark.library.util.extensions.context.remainPermissions
 
 /**
  * This class is used to check and request permissions in an Android app.

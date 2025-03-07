@@ -1,4 +1,4 @@
-package kr.open.rhpark.library.util.inline.sdk_version
+package kr.open.rhpark.library.util.extensions.sdk_version
 
 import android.os.Build
 import androidx.annotation.ChecksSdkIntAtLeast

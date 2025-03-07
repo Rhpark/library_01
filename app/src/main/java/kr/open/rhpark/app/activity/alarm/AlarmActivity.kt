@@ -17,7 +17,7 @@ import kr.open.rhpark.library.system.service.controller.alarm.dto.AlarmDTO
 import kr.open.rhpark.library.ui.activity.BaseBindingActivity
 import kr.open.rhpark.library.util.extensions.context.getAlarmController
 import kr.open.rhpark.library.util.extensions.ui.view.toastShowShort
-import kr.open.rhpark.library.util.inline.sdk_version.checkSdkVersion
+import kr.open.rhpark.library.util.extensions.sdk_version.checkSdkVersion
 import java.time.LocalDateTime
 
 class AlarmActivity :

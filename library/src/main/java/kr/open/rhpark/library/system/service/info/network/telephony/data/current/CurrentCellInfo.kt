@@ -8,7 +8,7 @@ import kr.open.rhpark.library.system.service.info.network.telephony.data.cell.lt
 import kr.open.rhpark.library.system.service.info.network.telephony.data.cell.nr.CellInfoNrData
 import kr.open.rhpark.library.system.service.info.network.telephony.data.cell.tdscdma.CellInfoTdscdmaData
 import kr.open.rhpark.library.system.service.info.network.telephony.data.cell.wcdma.CellInfoWcdmaData
-import kr.open.rhpark.library.util.inline.sdk_version.checkSdkVersion
+import kr.open.rhpark.library.util.extensions.sdk_version.checkSdkVersion
 
 
 public data class CurrentCellInfo(val cellInfo: List<CellInfo>) {

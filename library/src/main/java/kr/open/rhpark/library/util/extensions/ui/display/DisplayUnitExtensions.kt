@@ -1,4 +1,4 @@
-package kr.open.rhpark.library.util.inline.display
+package kr.open.rhpark.library.util.extensions.ui.display
 
 import android.content.Context
 import android.util.TypedValue

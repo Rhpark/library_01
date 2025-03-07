@@ -14,7 +14,7 @@ import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.system.service.info.location.LocationStateEvent
 import kr.open.rhpark.library.ui.activity.BaseBindingActivity
 import kr.open.rhpark.library.util.extensions.context.getLocationStateInfo
-import kr.open.rhpark.library.util.inline.sdk_version.checkSdkVersion
+import kr.open.rhpark.library.util.extensions.sdk_version.checkSdkVersion
 
 
 class LocationActivity : BaseBindingActivity<ActivityLocationBinding>(R.layout.activity_location) {
