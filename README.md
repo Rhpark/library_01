@@ -1,4 +1,4 @@
-# Android Easy Development Library (v1.0.0)
+# Android Easy Development Library (v1.0.1)
 
 ![image](https://jitpack.io/v/rhpark/library_01.svg)
 <br>
@@ -463,7 +463,7 @@ class RecyclerViewActivity : BaseBindingActivity<ActivityRecyclerviewBinding>(R.
 ####  4 - 2 RecyclerStateViewConfig (XML)
 ```
 //..
-        <kr.open.rhpark.library.ui.recyclerview.view.RecyclerScrollStateView
+        <kr.open.rhpark.library.ui.view.recyclerview.RecyclerScrollStateView
             android:id="@+id/rcvList"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -1382,7 +1382,7 @@ android {
 
 dependencies {
 	...
-	implementation("com.github.rhpark:library_01:1.0.0")
+	implementation("com.github.rhpark:library_01:1.0.1")
 	...
 }
 ```
