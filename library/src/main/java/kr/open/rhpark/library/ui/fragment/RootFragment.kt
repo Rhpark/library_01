@@ -16,12 +16,10 @@ import kr.open.rhpark.library.util.extensions.context.startActivity
  * 프래그먼트에 대한 공통 기능을 제공하는 기본 프래그먼트 클래스.
  *
  * This class handles tasks such as:
- * - Displaying toast messages and snackbars.
  * - Managing system service information.* - Requesting permissions.
  * - Starting activities.
  *
  * 이 클래스는 다음과 같은 작업을 처리한다.
- * - 토스트 메시지 및 스낵바 표시.
  * - 시스템 서비스 정보 관리.
  * - 권한 요청.
  * - 액티비티 시작.

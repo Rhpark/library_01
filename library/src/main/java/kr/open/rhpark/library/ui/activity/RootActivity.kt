@@ -21,14 +21,12 @@ import kr.open.rhpark.library.util.extensions.sdk_version.checkSdkVersion
  * 애플리케이션의 모든 액티비티에 대한 공통 기능을 제공하는 기본 액티비티 클래스.
  *
  * This class handles tasks such as:
- * - Displaying toast messages and snackbars.
  * - Managing system service information.
  * - Requesting permissions.
  * - Starting activities.
  * - Setting the status bar to transparent.
  *
  * 이 클래스는 다음과 같은 작업을 처리합니다.
- * - 토스트 메시지 및 스낵바 표시.
  * - 시스템 서비스 정보 관리.
  * - 권한 요청.
  * - 액티비티 시작.
@@ -81,9 +79,12 @@ public abstract class RootActivity : AppCompatActivity() {
 //        permissionManager.onRequestPermissionsResult(requestCode, permissions, grantResults)
 //    }
 
+    protected fun beforeOnCreated(savedInstanceState: Bundle?){}
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         permissionManager = PermissionManagerForActivity(this)
+        beforeOnCreated(savedInstanceState)
     }
 
     /**
@@ -107,7 +108,6 @@ public abstract class RootActivity : AppCompatActivity() {
      * 상태 표시줄을 투명하게 설정.
      */
     protected fun setStatusBarTransparent() {
-
         window.apply {
             setFlags(
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,

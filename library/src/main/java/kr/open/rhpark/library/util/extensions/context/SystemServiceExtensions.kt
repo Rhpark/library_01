@@ -77,7 +77,7 @@ public fun Context.getVibratorManager(): VibratorManager = getSystemService(Vibr
 
 public fun Context.getSoftKeyboardController(): SoftKeyboardController = SoftKeyboardController(this)
 
-public fun Context.getFloatingViewControllerController(): FloatingViewController = FloatingViewController(this)
+public fun Context.getFloatingViewController(): FloatingViewController = FloatingViewController(this)
 
 public fun Context.getAlarmController(): AlarmController = AlarmController(this)
 

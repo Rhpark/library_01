@@ -18,13 +18,13 @@ import kr.open.rhpark.library.system.service.controller.windowmanager.floating.v
 import kr.open.rhpark.library.system.service.controller.windowmanager.floating.vo.FloatingViewTouchType
 import kr.open.rhpark.library.ui.activity.BaseBindingActivity
 import kr.open.rhpark.library.util.extensions.context.getDisplayInfo
-import kr.open.rhpark.library.util.extensions.context.getFloatingViewControllerController
+import kr.open.rhpark.library.util.extensions.context.getFloatingViewController
 import kr.open.rhpark.library.util.extensions.ui.view.setGone
 import kr.open.rhpark.library.util.extensions.ui.view.setVisible
 
 public class WindowActivity : BaseBindingActivity<ActivityWindowBinding>(R.layout.activity_window) {
 
-    private val windowManagerController by lazy { applicationContext.getFloatingViewControllerController() }
+    private val windowManagerController by lazy { applicationContext.getFloatingViewController() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
