@@ -463,7 +463,7 @@ class RecyclerViewActivity : BaseBindingActivity<ActivityRecyclerviewBinding>(R.
 ####  4 - 2 RecyclerStateViewConfig (XML)
 ```
 //..
-        <kr.open.rhpark.library.ui.recyclerview.view.RecyclerScrollStateView
+        <kr.open.rhpark.library.ui.view.recyclerview.RecyclerScrollStateView
             android:id="@+id/rcvList"
             android:layout_width="match_parent"
             android:layout_height="0dp"
