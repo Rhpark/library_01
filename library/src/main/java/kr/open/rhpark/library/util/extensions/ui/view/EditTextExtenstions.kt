@@ -12,19 +12,19 @@ public fun EditText.textToInt(): Int? = this.text.toString().toIntOrNull()
 public fun EditText.textToFloat(): Float? = this.text.toString().toFloatOrNull()
 public fun EditText.textToDouble(): Double? = this.text.toString().toDoubleOrNull()
 
-public fun EditText.showKeyBoard(flag: Int = InputMethodManager.SHOW_IMPLICIT): Boolean =
+public fun EditText.showSoftKeyBoard(flag: Int = InputMethodManager.SHOW_IMPLICIT): Boolean =
     this.context.getSoftKeyboardController().show(this, flag)
 
-public fun EditText.showKeyBoard(delay: Long, flag: Int = InputMethodManager.SHOW_IMPLICIT): Boolean =
+public fun EditText.showSoftKeyBoard(delay: Long, flag: Int = InputMethodManager.SHOW_IMPLICIT): Boolean =
     this.context.getSoftKeyboardController().showDelay(this, delay, flag)
 
-public fun EditText.showKeyBoard(delay: Long, coroutineScope: CoroutineScope,flag: Int = InputMethodManager.SHOW_IMPLICIT): Unit =
+public fun EditText.showSoftKeyBoard(delay: Long, coroutineScope: CoroutineScope, flag: Int = InputMethodManager.SHOW_IMPLICIT): Unit =
     this.context.getSoftKeyboardController().showDelay(this, delay, flag, coroutineScope)
 
-public fun EditText.hind(flag: Int = 0): Boolean {
+public fun EditText.hindSoftKeyboard(flag: Int = 0): Boolean {
     return this.context.getSoftKeyboardController().hide(this, flag)
 }
 
-public fun EditText.hindDelay(delay: Long, flag: Int = 0): Boolean {
+public fun EditText.hindSoftKeyboard(delay: Long, flag: Int = 0): Boolean {
     return this.context.getSoftKeyboardController().hideDelay(this, delay, flag)
 }
