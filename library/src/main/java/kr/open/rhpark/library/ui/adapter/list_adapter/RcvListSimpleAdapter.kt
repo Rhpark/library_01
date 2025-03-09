@@ -1,9 +1,9 @@
-package kr.open.rhpark.library.ui.recyclerview.list_adapter
+package kr.open.rhpark.library.ui.adapter.list_adapter
 
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.databinding.ViewDataBinding
-import kr.open.rhpark.library.ui.recyclerview.viewholder.BaseRcvViewHolder
+import kr.open.rhpark.library.ui.adapter.viewholder.BaseRcvViewHolder
 
 public class RcvListSimpleAdapter<ITEM, BINDING : ViewDataBinding>(
     @LayoutRes private val layoutRes: Int,

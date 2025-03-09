@@ -1,4 +1,4 @@
-package kr.open.rhpark.library.ui.recyclerview.view
+package kr.open.rhpark.library.ui.view.recyclerview
 
 import android.content.Context
 import android.util.AttributeSet

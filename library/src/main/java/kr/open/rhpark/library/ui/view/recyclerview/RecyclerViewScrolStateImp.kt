@@ -1,4 +1,4 @@
-package kr.open.rhpark.library.ui.recyclerview.view
+package kr.open.rhpark.library.ui.view.recyclerview
 
 public interface OnScrollDirectionChangedListener {
     public fun onScrollDirectionChanged(scrollDirection: ScrollDirection)

@@ -1,4 +1,4 @@
-package kr.open.rhpark.library.ui.recyclerview.adapter
+package kr.open.rhpark.library.ui.adapter.recyclerView_adapter
 
 import android.view.View
 import androidx.recyclerview.widget.DiffUtil

@@ -1,4 +1,4 @@
-package kr.open.rhpark.library.ui.recyclerview.view
+package kr.open.rhpark.library.ui.view.recyclerview
 
 public sealed class ScrollDirection {
     public data object UP : ScrollDirection()
@@ -9,8 +9,8 @@ public sealed class ScrollDirection {
 }
 
 public sealed class ScrollEdge {
-    public data object TOP:ScrollEdge()
-    public data object BOTTOM:ScrollEdge()
-    public data object LEFT:ScrollEdge()
-    public data object RIGHT:ScrollEdge()
+    public data object TOP: ScrollEdge()
+    public data object BOTTOM: ScrollEdge()
+    public data object LEFT: ScrollEdge()
+    public data object RIGHT: ScrollEdge()
 }

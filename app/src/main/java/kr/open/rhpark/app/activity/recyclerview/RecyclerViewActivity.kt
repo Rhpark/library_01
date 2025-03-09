@@ -8,14 +8,14 @@ import kotlinx.coroutines.launch
 import kr.open.rhpark.app.R
 import kr.open.rhpark.app.activity.recyclerview.adapter.RcvAdapter
 import kr.open.rhpark.app.activity.recyclerview.adapter.RcvListAdapter
-import kr.open.rhpark.library.ui.recyclerview.adapter.RcvSimpleAdapter
+import kr.open.rhpark.library.ui.adapter.recyclerView_adapter.RcvSimpleAdapter
 import kr.open.rhpark.app.activity.recyclerview.adapter.item.RcvItem
 import kr.open.rhpark.app.databinding.ActivityRecyclerviewBinding
 import kr.open.rhpark.app.databinding.ItemRecyclerviewBinding
 import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.ui.activity.BaseBindingActivity
-import kr.open.rhpark.library.ui.recyclerview.list_adapter.RcvListDifUtilCallBack
-import kr.open.rhpark.library.ui.recyclerview.list_adapter.RcvListSimpleAdapter
+import kr.open.rhpark.library.ui.adapter.list_adapter.RcvListDifUtilCallBack
+import kr.open.rhpark.library.ui.adapter.list_adapter.RcvListSimpleAdapter
 import kr.open.rhpark.library.util.extensions.context.getSoftKeyboardController
 import kr.open.rhpark.library.util.extensions.ui.view.toastShowShort
 
