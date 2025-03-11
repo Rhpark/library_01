@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 
-public class BaseFragment(@LayoutRes private val layoutRes: Int) : RootFragment() {
+public abstract class BaseFragment(@LayoutRes private val layoutRes: Int) : RootFragment() {
 
     protected lateinit var rootView: View
     override fun onCreateView(
@@ -16,9 +16,5 @@ public class BaseFragment(@LayoutRes private val layoutRes: Int) : RootFragment(
     ): View? {
         rootView = inflater.inflate(layoutRes, container, false)
         return rootView
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
     }
 }

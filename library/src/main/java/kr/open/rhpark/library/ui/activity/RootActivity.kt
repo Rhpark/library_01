@@ -13,7 +13,6 @@ import kr.open.rhpark.library.system.permission.PermissionManagerForActivity
 import kr.open.rhpark.library.util.extensions.context.hasPermission
 import kr.open.rhpark.library.util.extensions.context.hasPermissions
 import kr.open.rhpark.library.util.extensions.context.remainPermissions
-import kr.open.rhpark.library.util.extensions.context.startActivity
 import kr.open.rhpark.library.util.extensions.sdk_version.checkSdkVersion
 
 /**
@@ -79,7 +78,7 @@ public abstract class RootActivity : AppCompatActivity() {
 //        permissionManager.onRequestPermissionsResult(requestCode, permissions, grantResults)
 //    }
 
-    protected fun beforeOnCreated(savedInstanceState: Bundle?){}
+    protected open fun beforeOnCreated(savedInstanceState: Bundle?){}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,21 +86,6 @@ public abstract class RootActivity : AppCompatActivity() {
         beforeOnCreated(savedInstanceState)
     }
 
-    /**
-     * Starts an activity with the specified class and intent flags.
-     * 지정된 클래스 및 인텐트 플래그로 액티비티를 시작.
-     *
-     * @param activity The class of the activity to start.
-     * @param extras extras to include in the intent.
-     * @param intentFlags The intent flags to add to the intent.
-     *
-     * @param activity 시작할 액티비티의 클래스.
-     * @param extras 인텐트에 포함할 Bundle.
-     * @param intentFlags 인텐트에 추가할 인텐트 플래그.
-     */
-    protected fun startActivity(activity: Class<*>, extras: Bundle? = null, intentFlags: IntArray?) {
-        applicationContext.startActivity(activity, extras, intentFlags)
-    }
 
     /**
      * Sets the status bar to transparent.

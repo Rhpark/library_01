@@ -25,19 +25,19 @@ import androidx.lifecycle.ViewModelProvider
  * - 바인딩에 대한 수명 주기 소유자를 설정.
  * - ViewModel을 얻는 편리한 방법을 제공.
  *
- * @param T The type of the View Binding class.
+ * @param BINDING The type of the View Binding class.
  * @param layoutRes The layout resource ID for the fragment.
  *
- * @param T 뷰 바인딩 클래스의 유형.
+ * @param BINDING 뷰 바인딩 클래스의 유형.
  * @param layoutRes 프래그먼트의 레이아웃 리소스 ID.
  */
-public abstract class BaseBindingFragment<T : ViewDataBinding>(@LayoutRes private val layoutRes: Int) : RootFragment() {
+public abstract class BaseBindingFragment<BINDING : ViewDataBinding>(@LayoutRes private val layoutRes: Int) : RootFragment() {
 
     /**
      * The View Binding object for the fragment.
      * 프래그먼트에 대한 뷰 바인딩 객체.
      */
-    protected lateinit var binding: T
+    protected lateinit var binding: BINDING
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,7 +45,7 @@ public abstract class BaseBindingFragment<T : ViewDataBinding>(@LayoutRes privat
         savedInstanceState: Bundle?
     ): View {
         binding = DataBindingUtil.inflate(inflater, layoutRes, container, false)
-        onCrateView(binding.root, savedInstanceState)
+        afterOnCrateView(binding.root, savedInstanceState)
         return binding.root
     }
 
@@ -59,7 +59,7 @@ public abstract class BaseBindingFragment<T : ViewDataBinding>(@LayoutRes privat
      * @param rootView 프래그먼트 레이아웃의 루트 뷰.
      * @param savedInstanceState null이 아닌 경우 이 프래그먼트는 여기에 지정된 이전에 저장된 상태에서 다시 생성.
      */
-    protected fun onCrateView(rootView: View, savedInstanceState: Bundle?) {
+    protected open fun afterOnCrateView(rootView: View, savedInstanceState: Bundle?) {
 
     }
 

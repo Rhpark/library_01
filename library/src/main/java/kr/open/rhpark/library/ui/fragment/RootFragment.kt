@@ -9,7 +9,6 @@ import kr.open.rhpark.library.system.permission.PermissionManagerForFragment
 import kr.open.rhpark.library.util.extensions.context.hasPermission
 import kr.open.rhpark.library.util.extensions.context.hasPermissions
 import kr.open.rhpark.library.util.extensions.context.remainPermissions
-import kr.open.rhpark.library.util.extensions.context.startActivity
 
 /**
  * A base fragment classthat provides common functionality for fragments.
@@ -61,22 +60,6 @@ public abstract class RootFragment : Fragment() {
         onResult: ((requestCode: Int, deniedPermissions: List<String>) -> Unit)
     ) {
         permissionManager.requestPermissions(requestCode, permissions, onResult)
-    }
-
-    /**
-     * Starts an activity with the specified class and intent flags.
-     * 지정된 클래스 및 인텐트 플래그로 액티비티를 시작.
-     *
-     * @param activity The class of the activity to start.
-     * @param extras extras to include in the intent.
-     * @param intentFlags The intent flags to add to the intent.
-     *
-     * @param activity 시작할 액티비티의 클래스.
-     * @param extras 인텐트에 포함할 Bundle.
-     * @param intentFlags 인텐트에 추가할 인텐트 플래그.
-     */
-    protected fun startActivity(activity: Class<*>, extras: Bundle? = null, intentFlags: IntArray?) {
-        requireContext().startActivity(activity,extras,intentFlags)
     }
 
 

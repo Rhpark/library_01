@@ -33,12 +33,6 @@ public fun View.setOnDebouncedClickListener(debounceTime: Long = 600L, action: (
     }
 }
 
-/************
- * EditText *
- ************/
-
-
-
 /*************
  * ViewGroup *
  *************/
