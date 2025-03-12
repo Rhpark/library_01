@@ -8,15 +8,15 @@ import kotlinx.coroutines.launch
 import kr.open.rhpark.app.R
 import kr.open.rhpark.app.activity.recyclerview.adapter.RcvAdapter
 import kr.open.rhpark.app.activity.recyclerview.adapter.RcvListAdapter
-import kr.open.rhpark.library.ui.adapter.recyclerView_adapter.RcvSimpleAdapter
+import kr.open.rhpark.library.ui.adapter.recyclerView_adapter.SimpleRcvAdapter
 import kr.open.rhpark.app.activity.recyclerview.adapter.item.RcvItem
 import kr.open.rhpark.app.databinding.ActivityRecyclerviewBinding
 import kr.open.rhpark.app.databinding.ItemRecyclerviewBinding
 import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.ui.activity.BaseBindingActivity
 import kr.open.rhpark.library.ui.adapter.list_adapter.RcvListDifUtilCallBack
-import kr.open.rhpark.library.ui.adapter.list_adapter.RcvListSimpleAdapter
-import kr.open.rhpark.library.util.extensions.context.getSoftKeyboardController
+import kr.open.rhpark.library.ui.adapter.list_adapter.SimpleRcvListAdapter
+import kr.open.rhpark.library.util.extensions.ui.view.showSoftKeyBoard
 import kr.open.rhpark.library.util.extensions.ui.view.toastShowShort
 
 class RecyclerViewActivity : BaseBindingActivity<ActivityRecyclerviewBinding>(R.layout.activity_recyclerview) {
@@ -29,7 +29,7 @@ class RecyclerViewActivity : BaseBindingActivity<ActivityRecyclerviewBinding>(R.
         }
     }
 
-    private val rcvSimpleAdapter = RcvSimpleAdapter<RcvItem, ItemRecyclerviewBinding>(R.layout.item_recyclerview) {
+    private val rcvSimpleAdapter = SimpleRcvAdapter<RcvItem, ItemRecyclerviewBinding>(R.layout.item_recyclerview) {
         holder, item, position -> holder.binding.item = item
     }.apply {
         setDiffUtilItemSame { oldItem, newItem -> oldItem.key === newItem.key }
@@ -45,18 +45,16 @@ class RecyclerViewActivity : BaseBindingActivity<ActivityRecyclerviewBinding>(R.
         }
     }
 
-    private val rcvListSimpleAdapter =
-        RcvListSimpleAdapter<RcvItem, ItemRecyclerviewBinding>(R.layout.item_recyclerview,
-            onBind = { holder, item, position -> holder.binding.item = item },
-            RcvListDifUtilCallBack<RcvItem>(
-                { oldItem, newItem -> oldItem.key === newItem.key },
-                { oldItem, newItem -> oldItem.key == newItem.key }
-            )
-        ).apply {
-            setOnItemClickListener { i, rcvItem, view ->
-                Logx.d("rcvListSimpleAdapter On Click posision $i, item $rcvItem")
-            }
+    private val rcvListSimpleAdapter = SimpleRcvListAdapter<RcvItem, ItemRecyclerviewBinding>(R.layout.item_recyclerview,
+        RcvListDifUtilCallBack<RcvItem>(
+            { oldItem, newItem -> oldItem.key === newItem.key },
+            { oldItem, newItem -> oldItem.key == newItem.key }
+        )
+    ) { holder, item, position -> holder.binding.item = item }.apply {
+        setOnItemClickListener { i, rcvItem, view ->
+            Logx.d("rcvListSimpleAdapter On Click posision $i, item $rcvItem")
         }
+    }
 
 
 
@@ -88,7 +86,7 @@ class RecyclerViewActivity : BaseBindingActivity<ActivityRecyclerviewBinding>(R.
             }
         }
         recyclerviewScrollStateSet()
-        applicationContext.getSoftKeyboardController().showDelay(binding.edtKey, 200L)
+        binding.edtKey.showSoftKeyBoard(200L)
     }
 
     private fun recyclerviewScrollStateSet() {
