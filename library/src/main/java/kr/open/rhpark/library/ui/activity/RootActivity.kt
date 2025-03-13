@@ -13,7 +13,7 @@ import kr.open.rhpark.library.system.permission.PermissionManagerForActivity
 import kr.open.rhpark.library.util.extensions.context.hasPermission
 import kr.open.rhpark.library.util.extensions.context.hasPermissions
 import kr.open.rhpark.library.util.extensions.context.remainPermissions
-import kr.open.rhpark.library.util.extensions.sdk_version.checkSdkVersion
+import kr.open.rhpark.library.util.extensions.conditional.sdk_version.checkSdkVersion
 
 /**
  * A base activity classthat provides common functionality for all activities in the application.

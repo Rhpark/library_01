@@ -10,7 +10,7 @@ import android.view.WindowManager
 import androidx.annotation.RequiresApi
 import kr.open.rhpark.library.system.service.base.BaseSystemService
 import kr.open.rhpark.library.util.extensions.context.getSystemWindowManager
-import kr.open.rhpark.library.util.extensions.sdk_version.checkSdkVersion
+import kr.open.rhpark.library.util.extensions.conditional.sdk_version.checkSdkVersion
 
 /**
  * This class provides information about the display of an Android device.

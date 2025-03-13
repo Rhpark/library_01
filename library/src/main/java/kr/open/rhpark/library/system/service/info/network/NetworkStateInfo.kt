@@ -40,7 +40,7 @@ import kr.open.rhpark.library.util.extensions.context.getSystemSubscriptionManag
 import kr.open.rhpark.library.util.extensions.context.getSystemTelephonyManager
 import kr.open.rhpark.library.util.extensions.context.getSystemWifiManager
 import kr.open.rhpark.library.util.extensions.context.hasPermissions
-import kr.open.rhpark.library.util.extensions.sdk_version.checkSdkVersion
+import kr.open.rhpark.library.util.extensions.conditional.sdk_version.checkSdkVersion
 import java.util.concurrent.Executor
 
 /**

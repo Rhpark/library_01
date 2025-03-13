@@ -30,7 +30,7 @@ import kr.open.rhpark.library.ui.activity.BaseBindingActivity
 import kr.open.rhpark.library.util.extensions.context.getLocationStateInfo
 import kr.open.rhpark.library.util.extensions.context.getNetworkStateInfo
 import kr.open.rhpark.library.util.extensions.ui.view.toastShowShort
-import kr.open.rhpark.library.util.extensions.sdk_version.checkSdkVersion
+import kr.open.rhpark.library.util.extensions.conditional.sdk_version.checkSdkVersion
 
 class NetworkActivity : BaseBindingActivity<ActivityNetworkBinding>(R.layout.activity_network) {
 
@@ -124,7 +124,7 @@ class NetworkActivity : BaseBindingActivity<ActivityNetworkBinding>(R.layout.act
     @RequiresPermission(READ_PHONE_STATE)
     private fun registerLocationState() {
         getGpsStateInfo().apply {
-            registerLocationOnOffState()
+            registerLocation()
             lifecycleScope.launch {
                 sfUpdate.collect{ type->
                     when(type) {

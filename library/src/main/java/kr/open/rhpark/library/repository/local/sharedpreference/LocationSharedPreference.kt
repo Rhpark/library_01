@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences.Editor
 import android.location.Location
 import android.os.Build
-import kr.open.rhpark.library.util.extensions.sdk_version.checkSdkVersion
+import kr.open.rhpark.library.util.extensions.conditional.sdk_version.checkSdkVersion
 
 public open class LocationSharedPreference(context: Context) :
     BaseSharedPreference(context, "RhParkLocation") {

@@ -18,7 +18,7 @@ import kr.open.rhpark.library.system.service.info.network.telephony.data.current
 import kr.open.rhpark.library.system.service.info.network.telephony.data.state.TelephonyNetworkDetailType
 import kr.open.rhpark.library.system.service.info.network.telephony.data.state.TelephonyNetworkState
 import kr.open.rhpark.library.system.service.info.network.telephony.data.state.TelephonyNetworkType
-import kr.open.rhpark.library.util.extensions.sdk_version.checkSdkVersion
+import kr.open.rhpark.library.util.extensions.conditional.sdk_version.checkSdkVersion
 
 /**
  * Using for telephonyManager.registerTelephonyCallback or telephonyManager.listen

@@ -6,13 +6,15 @@ import android.os.VibrationEffect
 import kr.open.rhpark.app.R
 import kr.open.rhpark.app.databinding.ActivityVibratorBinding
 import kr.open.rhpark.library.debug.logcat.Logx
+import kr.open.rhpark.library.system.service.controller.VibratorController
 import kr.open.rhpark.library.ui.activity.BaseBindingActivity
 import kr.open.rhpark.library.util.extensions.context.getVibratorController
 import kr.open.rhpark.library.util.extensions.ui.view.toastShowShort
-import kr.open.rhpark.library.util.extensions.sdk_version.checkSdkVersion
+import kr.open.rhpark.library.util.extensions.conditional.sdk_version.checkSdkVersion
 
 class VibratorActivity : BaseBindingActivity<ActivityVibratorBinding>(R.layout.activity_vibrator) {
 
+    private val vibratorController: VibratorController by lazy { getVibratorController() }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -29,7 +31,7 @@ class VibratorActivity : BaseBindingActivity<ActivityVibratorBinding>(R.layout.a
                 if (edtKey.text.isEmpty()) {
                     toastShowShort("Input Timer")
                 } else {
-                    getVibratorController().createOneShot(edtKey.text.toString().toLong())
+                    vibratorController.createOneShot(edtKey.text.toString().toLong())
                 }
             }
 
@@ -38,7 +40,7 @@ class VibratorActivity : BaseBindingActivity<ActivityVibratorBinding>(R.layout.a
                 val amplitudes = IntArray(3).apply { this[0] = 64; this[1] = 255; this[2] = 128 }
                 checkSdkVersion(Build.VERSION_CODES.S,
                     positiveWork = {
-                        getVibratorController().createWaveform(times, amplitudes)
+                        vibratorController.createWaveform(times, amplitudes)
                     },
                     negativeWork = {
                         toastShowShort("Requires Os Version 31(S), but your Os Version is ${Build.VERSION.SDK_INT}")
@@ -49,7 +51,7 @@ class VibratorActivity : BaseBindingActivity<ActivityVibratorBinding>(R.layout.a
             btnPredefined.setOnClickListener {
                 checkSdkVersion(Build.VERSION_CODES.Q,
                     positiveWork = {
-                        getVibratorController().createPredefined(VibrationEffect.EFFECT_DOUBLE_CLICK)
+                        vibratorController.createPredefined(VibrationEffect.EFFECT_DOUBLE_CLICK)
                     },
                     negativeWork = {
                         toastShowShort("Requires Os Version 26(O), but your Os Version is ${Build.VERSION.SDK_INT}")
@@ -57,7 +59,7 @@ class VibratorActivity : BaseBindingActivity<ActivityVibratorBinding>(R.layout.a
                 )
             }
 
-            btbCancel.setOnClickListener { getVibratorController().cancel() }
+            btbCancel.setOnClickListener { vibratorController.cancel() }
         }
     }
 }

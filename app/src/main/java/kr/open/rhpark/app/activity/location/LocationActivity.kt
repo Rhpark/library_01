@@ -14,7 +14,7 @@ import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.system.service.info.location.LocationStateEvent
 import kr.open.rhpark.library.ui.activity.BaseBindingActivity
 import kr.open.rhpark.library.util.extensions.context.getLocationStateInfo
-import kr.open.rhpark.library.util.extensions.sdk_version.checkSdkVersion
+import kr.open.rhpark.library.util.extensions.conditional.sdk_version.checkSdkVersion
 
 
 class LocationActivity : BaseBindingActivity<ActivityLocationBinding>(R.layout.activity_location) {
@@ -41,7 +41,7 @@ class LocationActivity : BaseBindingActivity<ActivityLocationBinding>(R.layout.a
         }
         binding.btnLocationTurnOnOff.setOnClickListener {
             binding.tvLocationTurnOnOff.text = "Location Turn On ? ${locationStateInfo.isLocationEnabled()}"
-            locationStateInfo.registerLocationOnOffState()
+            locationStateInfo.registerLocation()
         }
         binding.btnLocationChange.setOnClickListener {
             locationStateInfo.registerLocationUpdateStart(
@@ -53,13 +53,9 @@ class LocationActivity : BaseBindingActivity<ActivityLocationBinding>(R.layout.a
                 Logx.d("Type $type")
                 when (type) {
                     is LocationStateEvent.OnGpsEnabled -> binding.tvLocationTurnOnOff.text = "OnGpsEnabled ${type.isEnabled}"
-
                     is LocationStateEvent.OnNetworkEnabled -> binding.tvLocationNetworkTurnOnOff.text = "OnNetworkEnabled ${type.isEnabled}"
-
                     is LocationStateEvent.OnFusedEnabled -> binding.tvLocationFusedTurnOnOff.text = "OnFusedEnabled ${type.isEnabled}"
-
                     is LocationStateEvent.OnPassiveEnabled -> binding.tvLocationPassiveTurnOnOff.text = "OnPassiveEnabled ${type.isEnabled}"
-
                     is LocationStateEvent.OnLocationChanged -> binding.tvLocationChange.text = "OnLocationChanged ${type.location}"
                 }
             }
@@ -70,6 +66,4 @@ class LocationActivity : BaseBindingActivity<ActivityLocationBinding>(R.layout.a
         super.onDestroy()
         locationStateInfo.onDestroy()
     }
-
-
 }

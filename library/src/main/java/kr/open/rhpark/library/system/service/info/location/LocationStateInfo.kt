@@ -25,7 +25,7 @@ import kr.open.rhpark.library.system.service.base.BaseSystemService
 import kr.open.rhpark.library.system.service.base.DataUpdate
 import kr.open.rhpark.library.util.extensions.context.getSystemLocationManager
 import kr.open.rhpark.library.util.extensions.context.hasPermissions
-import kr.open.rhpark.library.util.extensions.sdk_version.checkSdkVersion
+import kr.open.rhpark.library.util.extensions.conditional.sdk_version.checkSdkVersion
 
 public open class LocationStateInfo(
     context: Context,
@@ -72,7 +72,7 @@ public open class LocationStateInfo(
 
     private val intentFilter = IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION)
 
-    public fun registerLocationOnOffState() {
+    public fun registerLocation() {
         unregisterGpsState()
         gpsStateBroadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {

@@ -21,10 +21,10 @@ import kr.open.rhpark.library.system.service.info.battery.power.PowerProfileVO
 import kr.open.rhpark.library.system.service.base.BaseSystemService
 import kr.open.rhpark.library.system.service.base.DataUpdate
 import kr.open.rhpark.library.util.extensions.context.getSystemBatteryManager
-import kr.open.rhpark.library.util.extensions.sdk_version.checkSdkVersion
+import kr.open.rhpark.library.util.extensions.conditional.sdk_version.checkSdkVersion
 
 /**
- * Thisclass provides information about the battery state of an Android device.
+ * This class provides information about the battery state of an Android device.
  * BatteryStateInfo 클래스는 Android 기기의 배터리 상태 정보를 제공.
  *
  * It is recommended to call destroy() upon complete shutdown.
