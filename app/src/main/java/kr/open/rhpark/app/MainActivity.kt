@@ -14,6 +14,7 @@ import kr.open.rhpark.library.util.extensions.debug.logxP
 import kr.open.rhpark.library.util.extensions.conditional.`if`.ifEquals
 import kr.open.rhpark.library.util.extensions.conditional.`if`.ifGreaterThan
 import kr.open.rhpark.library.util.extensions.conditional.`if`.ifGreaterThanOrEqual
+import kr.open.rhpark.library.util.extensions.conditional.`if`.ifNotEquals
 
 class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_main) {
 
@@ -94,5 +95,9 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
                 Logx.d("is negative")
             }
         )
+
+        ifNotEquals(1,1) {
+            Logx.d("is positive")
+        }
     }
 }
