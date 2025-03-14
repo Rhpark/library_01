@@ -1359,7 +1359,7 @@ class ToastSnackBarActivity :
 <br>
 </br>
 
-### 8. If.xml
+### 8. If Inline
 
 ```
 {
