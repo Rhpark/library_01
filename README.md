@@ -1,4 +1,4 @@
-# Android Easy Development Library (v1.0.2)
+# Android Easy Development Library (v1.1.1)
 
 ![image](https://jitpack.io/v/rhpark/library_01.svg)
 <br>
@@ -1359,6 +1359,59 @@ class ToastSnackBarActivity :
 <br>
 </br>
 
+### 8. If.xml
+
+```
+{
+        ifGreaterThan(2,1){
+            Logx.d("is positive")
+        }
+        ifGreaterThan(2,2,
+            positiveWork = {
+                Logx.d("is positive")
+            },
+            negativeWork = {
+                Logx.d("is negative")
+            }
+        )
+        ifGreaterThanOrEqual(2L,2L){
+            Logx.d("is positive")
+        }
+        ifGreaterThanOrEqual(2L,2L,
+            positiveWork = {
+                Logx.d("is positive")
+            },
+            negativeWork = {
+                Logx.d("is negative")
+            }
+        )
+
+        ifEquals(1.1,1.1){
+            Logx.d("is positive")
+        }
+
+        ifEquals(0.1, 1.1,
+            positiveWork = {
+                Logx.d("is positive")
+            },
+            negativeWork = {
+                Logx.d("is negative")
+            }
+        )
+
+        checkSdkVersion(Build.VERSION_CODES.S,
+            positiveWork = { Logx.d("is positive")},
+            negativeWork = { Logx.d("is negative") }
+        )
+
+        checkSdkVersion(Build.VERSION_CODES.S){ Logx.d("is positive") }
+}
+
+```
+
+<br>
+</br>
+
 ## Setting
 
 #### 1. Build.Gradle (Module :App)
@@ -1382,7 +1435,7 @@ android {
 
 dependencies {
 	...
-	implementation("com.github.rhpark:library_01:1.0.2")
+	implementation("com.github.rhpark:library_01:1.1.1")
 	...
 }
 ```
