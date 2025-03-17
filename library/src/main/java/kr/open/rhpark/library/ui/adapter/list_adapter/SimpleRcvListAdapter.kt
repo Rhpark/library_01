@@ -5,7 +5,7 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.ViewDataBinding
 import kr.open.rhpark.library.ui.adapter.viewholder.BaseRcvViewHolder
 
-public class SimpleRcvListAdapter<ITEM, BINDING : ViewDataBinding>(
+public open class SimpleRcvListAdapter<ITEM, BINDING : ViewDataBinding>(
     @LayoutRes private val layoutRes: Int,
     difUtilCallBack:RcvListDifUtilCallBack<ITEM>,
     private val onBind: (BaseRcvViewHolder<BINDING>, ITEM, position: Int) -> Unit

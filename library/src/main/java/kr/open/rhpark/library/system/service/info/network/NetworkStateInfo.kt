@@ -48,7 +48,7 @@ import java.util.concurrent.Executor
  * <uses-permission android:name="android.permission.INTERNET"/>
  * <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
  */
-public class NetworkStateInfo(
+public open class NetworkStateInfo(
     context: Context,
 ) : BaseSystemService(
     context,

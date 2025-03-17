@@ -195,7 +195,7 @@
         <item name="android:textStyle">normal</item>
     </style>
 
-    <style name="TextView.AllMatch" parent="View.AllWarp" />
+    <style name="TextView.AllMatch" parent="View.AllMatch" />
 
     <style name="TextView.AllMatch.Bold">
         <item name="android:textStyle">bold</item>
