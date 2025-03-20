@@ -18,15 +18,15 @@ import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.RequiresApi
 import kotlinx.coroutines.CoroutineScope
-import kr.open.rhpark.library.system.service.controller.SimpleNotificationController
-import kr.open.rhpark.library.system.service.controller.alarm.AlarmController
-import kr.open.rhpark.library.system.service.controller.SoftKeyboardController
-import kr.open.rhpark.library.system.service.controller.VibratorController
-import kr.open.rhpark.library.system.service.controller.windowmanager.FloatingViewController
-import kr.open.rhpark.library.system.service.info.battery.BatteryStateInfo
-import kr.open.rhpark.library.system.service.info.display.DisplayInfo
-import kr.open.rhpark.library.system.service.info.location.LocationStateInfo
-import kr.open.rhpark.library.system.service.info.network.NetworkStateInfo
+import kr.open.rhpark.library.domain.common.systemmanager.controller.SimpleNotificationController
+import kr.open.rhpark.library.domain.common.systemmanager.controller.alarm.AlarmController
+import kr.open.rhpark.library.domain.common.systemmanager.controller.SoftKeyboardController
+import kr.open.rhpark.library.domain.common.systemmanager.controller.VibratorController
+import kr.open.rhpark.library.domain.common.systemmanager.controller.windowmanager.FloatingViewController
+import kr.open.rhpark.library.domain.common.systemmanager.info.battery.BatteryStateInfo
+import kr.open.rhpark.library.domain.common.systemmanager.info.display.DisplayInfo
+import kr.open.rhpark.library.domain.common.systemmanager.info.location.LocationStateInfo
+import kr.open.rhpark.library.domain.common.systemmanager.info.network.NetworkStateInfo
 
 /*****************
  * SystemService *
