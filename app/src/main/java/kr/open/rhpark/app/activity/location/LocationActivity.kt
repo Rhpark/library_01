@@ -11,8 +11,8 @@ import kotlinx.coroutines.launch
 import kr.open.rhpark.app.R
 import kr.open.rhpark.app.databinding.ActivityLocationBinding
 import kr.open.rhpark.library.debug.logcat.Logx
-import kr.open.rhpark.library.system.service.info.location.LocationStateEvent
-import kr.open.rhpark.library.ui.activity.BaseBindingActivity
+import kr.open.rhpark.library.domain.common.systemmanager.info.location.LocationStateEvent
+import kr.open.rhpark.library.ui.view.activity.BaseBindingActivity
 import kr.open.rhpark.library.util.extensions.context.getLocationStateInfo
 import kr.open.rhpark.library.util.extensions.conditional.sdk_version.checkSdkVersion
 

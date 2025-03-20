@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kr.open.rhpark.app.activity.recyclerview.adapter.item.RcvItem
 import kr.open.rhpark.library.debug.logcat.Logx
-import kr.open.rhpark.library.viewmodels.BaseViewModelEvent
+import kr.open.rhpark.library.ui.viewmodels.BaseViewModelEvent
 
 class RecyclerviewActivityVm : BaseViewModelEvent<RecyclerviewActivityVmEvent>() {
 

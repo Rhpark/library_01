@@ -6,9 +6,9 @@ import kotlinx.coroutines.launch
 import kr.open.rhpark.app.R
 import kr.open.rhpark.app.databinding.ActivityBatteryBinding
 import kr.open.rhpark.library.debug.logcat.Logx
-import kr.open.rhpark.library.system.service.info.battery.BatteryStateEvent
-import kr.open.rhpark.library.system.service.info.battery.BatteryStateInfo
-import kr.open.rhpark.library.ui.activity.BaseBindingActivity
+import kr.open.rhpark.library.domain.common.systemmanager.info.battery.BatteryStateEvent
+import kr.open.rhpark.library.domain.common.systemmanager.info.battery.BatteryStateInfo
+import kr.open.rhpark.library.ui.view.activity.BaseBindingActivity
 import kr.open.rhpark.library.util.extensions.context.getBatteryStateInfo
 
 class BatteryActivity : BaseBindingActivity<ActivityBatteryBinding>(R.layout.activity_battery) {

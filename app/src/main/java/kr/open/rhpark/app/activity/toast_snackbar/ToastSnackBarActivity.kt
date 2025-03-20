@@ -7,7 +7,7 @@ import android.view.Gravity
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import kr.open.rhpark.app.R
 import kr.open.rhpark.app.databinding.ActivityToastSnackbarBinding
-import kr.open.rhpark.library.ui.activity.BaseBindingActivity
+import kr.open.rhpark.library.ui.view.activity.BaseBindingActivity
 import kr.open.rhpark.library.util.extensions.context.getSoftKeyboardController
 import kr.open.rhpark.library.util.extensions.ui.view.setGone
 import kr.open.rhpark.library.util.extensions.ui.view.setVisible

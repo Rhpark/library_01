@@ -14,7 +14,7 @@ import androidx.core.app.NotificationCompat
 import kr.open.rhpark.app.R
 import kr.open.rhpark.app.databinding.ActivityNotificationBinding
 import kr.open.rhpark.library.debug.logcat.Logx
-import kr.open.rhpark.library.ui.activity.BaseBindingActivity
+import kr.open.rhpark.library.ui.view.activity.BaseBindingActivity
 import kr.open.rhpark.library.util.extensions.context.getNotificationController
 import java.lang.Thread.sleep
 import kotlin.concurrent.thread

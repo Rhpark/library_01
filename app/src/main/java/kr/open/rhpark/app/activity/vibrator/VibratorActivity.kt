@@ -6,8 +6,8 @@ import android.os.VibrationEffect
 import kr.open.rhpark.app.R
 import kr.open.rhpark.app.databinding.ActivityVibratorBinding
 import kr.open.rhpark.library.debug.logcat.Logx
-import kr.open.rhpark.library.system.service.controller.VibratorController
-import kr.open.rhpark.library.ui.activity.BaseBindingActivity
+import kr.open.rhpark.library.domain.common.systemmanager.controller.VibratorController
+import kr.open.rhpark.library.ui.view.activity.BaseBindingActivity
 import kr.open.rhpark.library.util.extensions.context.getVibratorController
 import kr.open.rhpark.library.util.extensions.ui.view.toastShowShort
 import kr.open.rhpark.library.util.extensions.conditional.sdk_version.checkSdkVersion

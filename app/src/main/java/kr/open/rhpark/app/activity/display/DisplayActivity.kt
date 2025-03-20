@@ -3,7 +3,7 @@ package kr.open.rhpark.app.activity.display
 import android.os.Bundle
 import kr.open.rhpark.app.R
 import kr.open.rhpark.app.databinding.ActivityDisplayBinding
-import kr.open.rhpark.library.ui.activity.BaseBindingActivity
+import kr.open.rhpark.library.ui.view.activity.BaseBindingActivity
 import kr.open.rhpark.library.util.extensions.context.getDisplayInfo
 import kr.open.rhpark.library.util.extensions.ui.view.toastShowShort
 import kr.open.rhpark.library.util.extensions.ui.display.dpToPx

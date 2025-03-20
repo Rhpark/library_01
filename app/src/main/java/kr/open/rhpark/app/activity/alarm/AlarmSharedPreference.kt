@@ -3,10 +3,10 @@ package kr.open.rhpark.app.activity.alarm
 import android.content.Context
 import android.content.SharedPreferences.Editor
 import android.net.Uri
-import kr.open.rhpark.library.repository.local.sharedpreference.BaseSharedPreference
-import kr.open.rhpark.library.system.service.controller.alarm.dto.AlarmDTO
+import kr.open.rhpark.library.data.source.local.BaseSharedPreference
+import kr.open.rhpark.library.domain.common.systemmanager.controller.alarm.dto.AlarmDTO
 
-class AlarmSharedPreference(context: Context):BaseSharedPreference(context,"Alarm") {
+class AlarmSharedPreference(context: Context): BaseSharedPreference(context,"Alarm") {
 
     private val key = "Key"
     private val msg = "Msg"

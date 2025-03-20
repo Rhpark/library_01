@@ -13,10 +13,10 @@ import kotlinx.coroutines.launch
 import kr.open.rhpark.app.R
 import kr.open.rhpark.app.databinding.ActivityWindowBinding
 import kr.open.rhpark.library.debug.logcat.Logx
-import kr.open.rhpark.library.system.service.controller.windowmanager.floating.drag.FloatingDragView
-import kr.open.rhpark.library.system.service.controller.windowmanager.floating.vo.FloatingViewCollisionsType
-import kr.open.rhpark.library.system.service.controller.windowmanager.floating.vo.FloatingViewTouchType
-import kr.open.rhpark.library.ui.activity.BaseBindingActivity
+import kr.open.rhpark.library.domain.common.systemmanager.controller.windowmanager.floating.drag.FloatingDragView
+import kr.open.rhpark.library.domain.common.systemmanager.controller.windowmanager.floating.vo.FloatingViewCollisionsType
+import kr.open.rhpark.library.domain.common.systemmanager.controller.windowmanager.floating.vo.FloatingViewTouchType
+import kr.open.rhpark.library.ui.view.activity.BaseBindingActivity
 import kr.open.rhpark.library.util.extensions.context.getDisplayInfo
 import kr.open.rhpark.library.util.extensions.context.getFloatingViewController
 import kr.open.rhpark.library.util.extensions.ui.view.setGone

@@ -5,7 +5,7 @@ import android.os.Bundle
 import kr.open.rhpark.app.R
 import kr.open.rhpark.app.databinding.ActivityFragmentShowBinding
 import kr.open.rhpark.app.fragment.FirstFragment
-import kr.open.rhpark.library.ui.activity.BaseBindingActivity
+import kr.open.rhpark.library.ui.view.activity.BaseBindingActivity
 
 class FragmentShowActivity : BaseBindingActivity<ActivityFragmentShowBinding>(R.layout.activity_fragment_show) {
 

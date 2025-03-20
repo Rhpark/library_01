@@ -7,11 +7,11 @@ import kotlinx.coroutines.launch
 import kr.open.rhpark.app.R
 import kr.open.rhpark.app.databinding.FragmentFirstBinding
 import kr.open.rhpark.library.debug.logcat.Logx
-import kr.open.rhpark.library.ui.fragment.BaseBindingFragment
+import kr.open.rhpark.library.ui.view.fragment.BaseBindingFragment
 import kr.open.rhpark.library.util.extensions.ui.view.snackBarShowShort
 import kr.open.rhpark.library.util.extensions.ui.view.toastShowShort
 
-class FirstFragment:BaseBindingFragment<FragmentFirstBinding>(R.layout.fragment_first) {
+class FirstFragment: BaseBindingFragment<FragmentFirstBinding>(R.layout.fragment_first) {
 
     private val vm: FirstFragmentVm by lazy { getViewModel<FirstFragmentVm>() }
 

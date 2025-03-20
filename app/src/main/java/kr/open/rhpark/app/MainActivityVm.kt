@@ -12,7 +12,7 @@ import kr.open.rhpark.app.activity.second.FragmentShowActivity
 import kr.open.rhpark.app.activity.toast_snackbar.ToastSnackBarActivity
 import kr.open.rhpark.app.activity.vibrator.VibratorActivity
 import kr.open.rhpark.app.activity.window.WindowActivity
-import kr.open.rhpark.library.viewmodels.BaseViewModelEvent
+import kr.open.rhpark.library.ui.viewmodels.BaseViewModelEvent
 
 class MainActivityVm : BaseViewModelEvent<MainActivityVmEvent>() {
 

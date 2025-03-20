@@ -4,9 +4,9 @@ import android.view.ViewGroup
 import kr.open.rhpark.app.R
 import kr.open.rhpark.app.activity.recyclerview.adapter.item.RcvItem
 import kr.open.rhpark.app.databinding.ItemRecyclerviewBinding
-import kr.open.rhpark.library.ui.adapter.viewholder.BaseRcvViewHolder
-import kr.open.rhpark.library.ui.adapter.list_adapter.BaseRcvListAdapter
-import kr.open.rhpark.library.ui.adapter.list_adapter.RcvListDifUtilCallBack
+import kr.open.rhpark.library.ui.view.adapter.viewholder.BaseRcvViewHolder
+import kr.open.rhpark.library.ui.view.adapter.list_adapter.BaseRcvListAdapter
+import kr.open.rhpark.library.ui.view.adapter.list_adapter.RcvListDifUtilCallBack
 
 class RcvListAdapter : BaseRcvListAdapter<RcvItem, BaseRcvViewHolder<ItemRecyclerviewBinding>>(
         RcvListDifUtilCallBack<RcvItem>(

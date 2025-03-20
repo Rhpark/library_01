@@ -13,8 +13,8 @@ import kr.open.rhpark.app.R
 import kr.open.rhpark.app.activity.alarm.receiver.AlarmReceiver
 import kr.open.rhpark.app.databinding.ActivityAlarmBinding
 import kr.open.rhpark.library.debug.logcat.Logx
-import kr.open.rhpark.library.system.service.controller.alarm.dto.AlarmDTO
-import kr.open.rhpark.library.ui.activity.BaseBindingActivity
+import kr.open.rhpark.library.domain.common.systemmanager.controller.alarm.dto.AlarmDTO
+import kr.open.rhpark.library.ui.view.activity.BaseBindingActivity
 import kr.open.rhpark.library.util.extensions.context.getAlarmController
 import kr.open.rhpark.library.util.extensions.ui.view.toastShowShort
 import kr.open.rhpark.library.util.extensions.conditional.sdk_version.checkSdkVersion

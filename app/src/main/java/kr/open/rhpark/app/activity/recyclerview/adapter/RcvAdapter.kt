@@ -4,8 +4,8 @@ import android.view.ViewGroup
 import kr.open.rhpark.app.R
 import kr.open.rhpark.app.activity.recyclerview.adapter.item.RcvItem
 import kr.open.rhpark.app.databinding.ItemRecyclerviewBinding
-import kr.open.rhpark.library.ui.adapter.recyclerView_adapter.BaseRcvAdapter
-import kr.open.rhpark.library.ui.adapter.viewholder.BaseRcvViewHolder
+import kr.open.rhpark.library.ui.view.adapter.recyclerView_adapter.BaseRcvAdapter
+import kr.open.rhpark.library.ui.view.adapter.viewholder.BaseRcvViewHolder
 
 class RcvAdapter : BaseRcvAdapter<RcvItem, BaseRcvViewHolder<ItemRecyclerviewBinding>>() {
 
