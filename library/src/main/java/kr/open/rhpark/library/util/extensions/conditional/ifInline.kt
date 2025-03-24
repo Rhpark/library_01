@@ -1,4 +1,4 @@
-package kr.open.rhpark.library.util.extensions.conditional.`if`
+package kr.open.rhpark.library.util.extensions.conditional
 
 
 /**
@@ -175,6 +175,29 @@ public inline fun <T> ifEquals(
     center: Int, comparison: Int, positiveWork: () -> T, negativeWork: () -> T
 ): T = if (center == comparison) { positiveWork() } else { negativeWork() }
 
+/**
+ * @param center
+ *
+ * @return center == true
+ */
+public inline fun <T> ifTrue(center: Boolean, positiveWork: () -> T, negativeWork: () -> T): T =
+    if (center) { positiveWork() } else { negativeWork() }
+
+/**
+ * @param center
+ *
+ * @return center == true
+ */
+public inline fun <T> ifTrue(center: Boolean, positiveWork: () -> T): T? =
+    if (center) { positiveWork() } else null
+
+/**
+ * @param center
+ *
+ * @return center == false
+ */
+public inline fun <T> ifFalse(center: Boolean, positiveWork: () -> T): T? =
+    if (!center) { positiveWork() } else null
 
 /**
  * @param center
@@ -191,8 +214,7 @@ public inline fun <T> ifEquals(center: Float, comparison: Float, doWork: () -> T
  *
  * @return center == comparison
  */
-public inline fun <T> ifEquals(
-    center: Float, comparison: Float, positiveWork: () -> T, negativeWork: () -> T
+public inline fun <T> ifEquals(center: Float, comparison: Float, positiveWork: () -> T, negativeWork: () -> T
 ): T = if (center == comparison) { positiveWork() } else negativeWork()
 
 /**
@@ -210,8 +232,7 @@ public inline fun <T> ifEquals(center: Double, comparison: Double, doWork: () ->
  *
  * @return center == comparison
  */
-public inline fun <T> ifEquals(
-    center: Double, comparison: Double, positiveWork: () -> T, negativeWork: () -> T
+public inline fun <T> ifEquals(center: Double, comparison: Double, positiveWork: () -> T, negativeWork: () -> T
 ): T = if (center == comparison) { positiveWork() } else negativeWork()
 
 /**
