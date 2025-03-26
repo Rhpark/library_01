@@ -251,4 +251,109 @@
         <item name="android:textStyle">normal</item>
     </style>
 
+    <style name="RecyclerView"/>
+    <style name="RecyclerView.MatchWarp.LinearLayoutManager" parent="View.MatchWarp">
+        <item name="layoutManager">androidx.recyclerview.widget.LinearLayoutManager</item>
+    </style>
+    <style name="RecyclerView.MatchWarp.GridLayoutManager" parent="View.MatchWarp">
+        <item name="layoutManager">androidx.recyclerview.widget.GridLayoutManager</item>
+    </style>
+    <style name="RecyclerView.MatchWarp.StaggeredGridLayoutManager" parent="View.MatchWarp">
+        <item name="layoutManager">androidx.recyclerview.widget.StaggeredGridLayoutManager</item>
+    </style>
+    <style name="RecyclerView.MatchWarp.CarouselLayoutManager" parent="View.MatchWarp">
+        <item name="layoutManager">com.google.android.material.carousel.CarouselLayoutManager</item>
+    </style>
+
+
+    <style name="RecyclerView.AllMatch.LinearLayoutManager" parent="View.AllMatch">
+        <item name="layoutManager">androidx.recyclerview.widget.LinearLayoutManager</item>
+    </style>
+    <style name="RecyclerView.AllMatch.GridLayoutManager" parent="View.AllMatch">
+        <item name="layoutManager">androidx.recyclerview.widget.GridLayoutManager</item>
+    </style>
+    <style name="RecyclerView.AllMatch.StaggeredGridLayoutManager" parent="View.AllMatch">
+        <item name="layoutManager">androidx.recyclerview.widget.StaggeredGridLayoutManager</item>
+    </style>
+    <style name="RecyclerView.AllMatch.CarouselLayoutManager" parent="View.AllMatch">
+        <item name="layoutManager">com.google.android.material.carousel.CarouselLayoutManager</item>
+    </style>
+
+    <style name="RecyclerView.AllWarp.LinearLayoutManager" parent="View.AllWarp">
+        <item name="layoutManager">androidx.recyclerview.widget.LinearLayoutManager</item>
+    </style>
+    <style name="RecyclerView.AllWarp.GridLayoutManager" parent="View.AllWarp">
+        <item name="layoutManager">androidx.recyclerview.widget.GridLayoutManager</item>
+    </style>
+    <style name="RecyclerView.AllWarp.StaggeredGridLayoutManager" parent="View.AllWarp">
+        <item name="layoutManager">androidx.recyclerview.widget.StaggeredGridLayoutManager</item>
+    </style>
+    <style name="RecyclerView.AllWarp.CarouselLayoutManager" parent="View.AllWarp">
+        <item name="layoutManager">com.google.android.material.carousel.CarouselLayoutManager</item>
+    </style>
+
+    <style name="RecyclerView.WarpMatch.LinearLayoutManager" parent="View.WarpMatch">
+        <item name="layoutManager">androidx.recyclerview.widget.LinearLayoutManager</item>
+    </style>
+    <style name="RecyclerView.WarpMatch.GridLayoutManager" parent="View.WarpMatch">
+        <item name="layoutManager">androidx.recyclerview.widget.GridLayoutManager</item>
+    </style>
+    <style name="RecyclerView.WarpMatch.StaggeredGridLayoutManager" parent="View.WarpMatch">
+        <item name="layoutManager">androidx.recyclerview.widget.StaggeredGridLayoutManager</item>
+    </style>
+    <style name="RecyclerView.WarpMatch.CarouselLayoutManager" parent="View.WarpMatch">
+        <item name="layoutManager">com.google.android.material.carousel.CarouselLayoutManager</item>
+    </style>
+
+    <style name="RecyclerView.MatchWeight.LinearLayoutManager" parent="View.MatchWeight">
+        <item name="layoutManager">androidx.recyclerview.widget.LinearLayoutManager</item>
+    </style>
+    <style name="RecyclerView.MatchWeight.GridLayoutManager" parent="View.MatchWeight">
+        <item name="layoutManager">androidx.recyclerview.widget.GridLayoutManager</item>
+    </style>
+    <style name="RecyclerView.MatchWeight.StaggeredGridLayoutManager" parent="View.MatchWeight">
+        <item name="layoutManager">androidx.recyclerview.widget.StaggeredGridLayoutManager</item>
+    </style>
+    <style name="RecyclerView.MatchWeight.CarouselLayoutManager" parent="View.MatchWeight">
+        <item name="layoutManager">com.google.android.material.carousel.CarouselLayoutManager</item>
+    </style>
+
+    <style name="RecyclerView.WeightMatch.LinearLayoutManager" parent="View.WeightMatch">
+        <item name="layoutManager">androidx.recyclerview.widget.LinearLayoutManager</item>
+    </style>
+    <style name="RecyclerView.WeightMatch.GridLayoutManager" parent="View.WeightMatch">
+        <item name="layoutManager">androidx.recyclerview.widget.GridLayoutManager</item>
+    </style>
+    <style name="RecyclerView.WeightMatch.StaggeredGridLayoutManager" parent="View.WeightMatch">
+        <item name="layoutManager">androidx.recyclerview.widget.StaggeredGridLayoutManager</item>
+    </style>
+    <style name="RecyclerView.WeightMatch.CarouselLayoutManager" parent="View.WeightMatch">
+        <item name="layoutManager">com.google.android.material.carousel.CarouselLayoutManager</item>
+    </style>
+
+    <style name="RecyclerView.WeightWarp.LinearLayoutManager" parent="View.WeightWarp">
+        <item name="layoutManager">androidx.recyclerview.widget.LinearLayoutManager</item>
+    </style>
+    <style name="RecyclerView.WeightWarp.GridLayoutManager" parent="View.WeightWarp">
+        <item name="layoutManager">androidx.recyclerview.widget.GridLayoutManager</item>
+    </style>
+    <style name="RecyclerView.WeightWarp.StaggeredGridLayoutManager" parent="View.WeightWarp">
+        <item name="layoutManager">androidx.recyclerview.widget.StaggeredGridLayoutManager</item>
+    </style>
+    <style name="RecyclerView.WeightWarp.CarouselLayoutManager" parent="View.WeightWarp">
+        <item name="layoutManager">com.google.android.material.carousel.CarouselLayoutManager</item>
+    </style>
+
+    <style name="RecyclerView.WarpWeight.LinearLayoutManager" parent="View.WarpWeight">
+        <item name="layoutManager">androidx.recyclerview.widget.LinearLayoutManager</item>
+    </style>
+    <style name="RecyclerView.WarpWeight.GridLayoutManager" parent="View.WarpWeight">
+        <item name="layoutManager">androidx.recyclerview.widget.GridLayoutManager</item>
+    </style>
+    <style name="RecyclerView.WarpWeight.StaggeredGridLayoutManager" parent="View.WarpWeight">
+        <item name="layoutManager">androidx.recyclerview.widget.StaggeredGridLayoutManager</item>
+    </style>
+    <style name="RecyclerView.WarpWeight.CarouselLayoutManager" parent="View.WarpWeight">
+        <item name="layoutManager">com.google.android.material.carousel.CarouselLayoutManager</item>
+    </style>
 </resources>
