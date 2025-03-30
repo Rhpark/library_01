@@ -55,16 +55,16 @@ public open class DisplayInfo(context: Context)
      * @return The screen size (width, height).
      * @return 화면 크기 (너비, 높이).
      */
-    public fun getScreen(): Pair<Int,Int> = checkSdkVersion(Build.VERSION_CODES.R,
+    public fun getScreen(): Point = checkSdkVersion(Build.VERSION_CODES.R,
         positiveWork = {
             val windowMetrics = getCurrentWindowMetrics()
             val insets = windowMetrics.windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.systemBars())
 
             val width = windowMetrics.bounds.width() - (insets.left + insets.right)
             val height = windowMetrics.bounds.height() - (insets.bottom + insets.top)
-            Pair(width, height)
+            Point(width, height)
         }, negativeWork = {
-            getScreenWithStatusBar().let { (w, h) -> Pair(w, h - getStatusBarHeight()) }
+            getScreenWithStatusBar().let { Point(it.x, it.y - getStatusBarHeight()) }
         }
     )
 
@@ -75,17 +75,17 @@ public open class DisplayInfo(context: Context)
      * @return The screen size (width, height).
      * @return 화면 크기 (너비, 높이)
      */
-    public fun getScreenWithStatusBar(): Pair<Int, Int> = checkSdkVersion(Build.VERSION_CODES.R,
+    public fun getScreenWithStatusBar(): Point = checkSdkVersion(Build.VERSION_CODES.R,
         positiveWork = {
             val windowMetrics = getCurrentWindowMetrics()
             val insets = windowMetrics.windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.systemBars())
 
             val width = windowMetrics.bounds.width()
             val height = windowMetrics.bounds.height() - (insets.bottom)
-            Pair(width, height)
+            Point(width, height)
         },
         negativeWork = {
-            with(context.resources.displayMetrics) { Pair(widthPixels, heightPixels) }
+            with(context.resources.displayMetrics) { Point(widthPixels, heightPixels) }
         }
     )
 

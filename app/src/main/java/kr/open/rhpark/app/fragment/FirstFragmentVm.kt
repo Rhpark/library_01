@@ -35,4 +35,8 @@ class FirstFragmentVm : BaseViewModelEvent<FirstFragmentVmEvent>() {
     fun onClickToast() {
         sendEventVm(FirstFragmentVmEvent.OnShowToast("Hello Toast"))
     }
+
+    fun onClickShowDialog() {
+        sendEventVm(FirstFragmentVmEvent.OnShowDialog("Dialog Title Test"))
+    }
 }

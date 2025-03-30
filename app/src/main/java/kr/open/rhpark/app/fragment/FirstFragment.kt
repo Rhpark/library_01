@@ -6,6 +6,7 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import kr.open.rhpark.app.R
 import kr.open.rhpark.app.databinding.FragmentFirstBinding
+import kr.open.rhpark.app.fragment.dialog.FragmentDialogType
 import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.ui.view.fragment.BaseBindingFragment
 import kr.open.rhpark.library.util.extensions.ui.view.snackBarShowShort
@@ -34,8 +35,17 @@ class FirstFragment: BaseBindingFragment<FragmentFirstBinding>(R.layout.fragment
                     is FirstFragmentVmEvent.OnShowToast -> {
                         toastShowShort(it.msg)
                     }
+
+                    is FirstFragmentVmEvent.OnShowDialog -> {
+                        showDialog(it.title)
+                    }
                 }
             }
         }
+    }
+
+    private fun showDialog(title:String) {
+        val dlg = FragmentDialogType(title)
+        dlg.safeShow(childFragmentManager,"FragmentDialogType")
     }
 }

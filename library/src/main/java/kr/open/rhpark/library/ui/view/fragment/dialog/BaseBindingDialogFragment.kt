@@ -1,4 +1,4 @@
-package kr.open.rhpark.library.ui.view.fragment
+package kr.open.rhpark.library.ui.view.fragment.dialog
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,31 +7,12 @@ import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 
-/**
- * A base fragmentclass that uses View Binding and provides common functionality for fragments with data binding.
- * 바인딩을 사용하는 프래그먼트에 대한 공통 기능을 제공하는 BaseBindingFragment.
- *
- * This class handles thefollowing tasks:
- * - Inflates the layout and sets up View Binding.
- * - Sets the lifecycle owner for the binding.
- * - Provides a convenient method to obtain a ViewModel.
- *
- * 이 클래스는 다음과 같은 작업을 처리.
- * - 레이아웃을 확장하고 뷰 바인딩을 설정.
- * - 바인딩에 대한 수명 주기 소유자를 설정.
- * - ViewModel을 얻는 편리한 방법을 제공.
- *
- * @param BINDING The type of the View Binding class.
- * @param layoutRes The layout resource ID for the fragment.
- *
- * @param BINDING 뷰 바인딩 클래스의 유형.
- * @param layoutRes 프래그먼트의 레이아웃 리소스 ID.
- */
-public abstract class BaseBindingFragment<BINDING : ViewDataBinding>(@LayoutRes private val layoutRes: Int) : RootFragment() {
+public abstract class BaseBindingDialogFragment<BINDING : ViewDataBinding>(@LayoutRes private val layoutRes: Int) :
+    RootDialogFragment() {
 
     /**
      * The View Binding object for the fragment.
@@ -79,7 +60,7 @@ public abstract class BaseBindingFragment<BINDING : ViewDataBinding>(@LayoutRes 
      * @param T 가져올 ViewModel의 유형.
      * @return 지정된 유형의 ViewModel.
      */
-    protected inline fun <reified T : ViewModel> Fragment.getViewModel(): T {
+    protected inline fun <reified T : ViewModel> DialogFragment.getViewModel(): T {
         return ViewModelProvider(this)[T::class.java]
     }
 }
