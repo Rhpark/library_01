@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.domain.common.systemmanager.info.battery.power.PowerProfile
 import kr.open.rhpark.library.domain.common.systemmanager.info.battery.power.PowerProfileVO
 import kr.open.rhpark.library.domain.common.systemmanager.base.BaseSystemService
@@ -43,10 +44,8 @@ import kr.open.rhpark.library.util.extensions.conditional.sdk_version.checkSdkVe
  * @param context The application context
  * @param context 애플리케이션 컨텍스트.
  */
-public open class BatteryStateInfo(
-    context: Context,
-    private val coroutineScope: CoroutineScope,
-) : BaseSystemService(context, listOf(android.Manifest.permission.BATTERY_STATS)) {
+public open class BatteryStateInfo(context: Context) :
+    BaseSystemService(context, listOf(android.Manifest.permission.BATTERY_STATS)) {
 
     public val batteryManager: BatteryManager by lazy { context.getSystemBatteryManager() }
 
@@ -93,7 +92,11 @@ public open class BatteryStateInfo(
 
     private var batteryStatus: Intent? = null
 
-    private fun sendFlow(event: BatteryStateEvent) = coroutineScope.launch { msfUpdate.emit(event) }
+    public var updateJob: Job? = null
+
+    private var coroutineScope: CoroutineScope? = null
+
+    private fun sendFlow(event: BatteryStateEvent) = coroutineScope?.launch { msfUpdate.emit(event) }?: Logx.e("Error, can not send event, coroutineScope is  null!")
 
     public fun registerBatteryReceiver() {
         unRegisterReceiver()
@@ -106,19 +109,20 @@ public open class BatteryStateInfo(
         )
     }
 
-    public var updateJob: Job? = null
+    /**
+     * before must call registerBatteryReceiver()
+     */
+    public fun updateStart(coroutine: CoroutineScope, updateCycleTime: Long = 1000L) {
 
-    public fun registerBatteryUpdate(
-        coroutine: CoroutineScope = coroutineScope,
-        updateCycleTime: Long = 1000
-    ) {
-        registerBatteryReceiver()
+        updateStop()
+
+        coroutineScope = coroutine
         updateJob = coroutine.launch {
             while(isActive) {
                 sendBroadcast()
                 delay(updateCycleTime)
             }
-            stopUpdateScope()
+            updateStop()
         }
     }
 
@@ -126,7 +130,8 @@ public open class BatteryStateInfo(
         sendBroadcast()
     }
 
-    public fun stopUpdateScope() {
+    public fun updateStop() {
+        if(updateJob == null) return
         updateJob?.cancel()
         updateJob = null
     }
@@ -156,7 +161,7 @@ public open class BatteryStateInfo(
         }
     }
 
-    private fun unRegisterReceiver() {
+    public fun unRegisterReceiver() {
 
         try {
             batteryStatus?.let { context.unregisterReceiver(batteryBroadcastReceiver) }
@@ -369,7 +374,7 @@ public open class BatteryStateInfo(
 
     public override fun onDestroy() {
         super.onDestroy()
-        stopUpdateScope()
+        updateStop()
         unRegisterReceiver()
     }
 }

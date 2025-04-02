@@ -13,7 +13,7 @@ import kr.open.rhpark.library.util.extensions.context.getBatteryStateInfo
 
 class BatteryActivity : BaseBindingActivity<ActivityBatteryBinding>(R.layout.activity_battery) {
 
-    private val batteryStateInfo: BatteryStateInfo by lazy { applicationContext.getBatteryStateInfo(lifecycleScope) }
+    private val batteryStateInfo: BatteryStateInfo by lazy { applicationContext.getBatteryStateInfo() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,13 +21,30 @@ class BatteryActivity : BaseBindingActivity<ActivityBatteryBinding>(R.layout.act
             requestCode, deniedPermissions ->
             Logx.d("requestCode $requestCode, deniedPermissions $deniedPermissions ")
             initListener()
+            batteryStateInfo.registerBatteryReceiver()
         }
     }
 
     private fun initListener() {
         binding.btnBatteryStatusStart.setOnClickListener {
-            batteryStateInfo.registerBatteryUpdate(updateCycleTime = 1000)
+            batteryStateInfo.updateStart(lifecycleScope)
             collectBatteryInfo()
+        }
+
+        binding.btnBatteryStatusStop.setOnClickListener {
+            batteryStateInfo.updateStop()
+        }
+
+        binding.btnBatteryStatusRes.setOnClickListener {
+            binding.tvTest.text = "Capacity = ${batteryStateInfo.getCapacity()}" +
+            "\nTotalCapacity = ${batteryStateInfo.getTotalCapacity()}" +
+            "\nPresent = ${batteryStateInfo.getPresent()}"+
+            "\nVoltage = ${batteryStateInfo.getVoltage()}"+
+            "\nTechnology = ${batteryStateInfo.getTechnology()}"+
+            "\nChargePlugStr = ${batteryStateInfo.getChargePlugStr()}"+
+            "\nCurrentAmpere = ${batteryStateInfo.getCurrentAmpere()}"+
+            "\nTemperature = ${batteryStateInfo.getTemperature()}"+
+            "\nHealth = ${batteryStateInfo.getHealth()}"
         }
     }
 

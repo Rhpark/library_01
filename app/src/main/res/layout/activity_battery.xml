@@ -88,10 +88,16 @@
             android:text="Battery status start" />
 
         <Button
-            android:id="@+id/btnBatteryStatusTest"
+            android:id="@+id/btnBatteryStatusStop"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Battery status stop" />
+
+        <Button
+            android:id="@+id/btnBatteryStatusRes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Battery status Res" />
 
         <TextView
             android:id="@+id/tvTest"

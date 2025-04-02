@@ -45,7 +45,7 @@ public abstract class BaseBindingActivity<BINDING : ViewDataBinding>(@LayoutRes 
         binding.lifecycleOwner = this
     }
 
-    protected fun onCreateView(rootView: View, savedInstanceState: Bundle?) {
+    protected open fun onCreateView(rootView: View, savedInstanceState: Bundle?) {
 
     }
     /**

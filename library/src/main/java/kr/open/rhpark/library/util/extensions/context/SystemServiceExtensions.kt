@@ -94,8 +94,8 @@ public fun Context.getVibratorController(): VibratorController = VibratorControl
 public fun Context.getNetworkStateInfo(): NetworkStateInfo =
     NetworkStateInfo(this)
 
-public fun Context.getBatteryStateInfo(coroutineScope: CoroutineScope): BatteryStateInfo =
-    BatteryStateInfo(this, coroutineScope)
+public fun Context.getBatteryStateInfo(): BatteryStateInfo =
+    BatteryStateInfo(this)
 
 public fun Context.getLocationStateInfo(coroutineScope: CoroutineScope): LocationStateInfo =
     LocationStateInfo(this, coroutineScope)

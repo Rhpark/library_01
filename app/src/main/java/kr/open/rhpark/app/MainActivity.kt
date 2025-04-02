@@ -14,7 +14,7 @@ import kr.open.rhpark.library.util.extensions.debug.logxP
 import kr.open.rhpark.library.util.extensions.conditional.ifEquals
 import kr.open.rhpark.library.util.extensions.conditional.ifGreaterThan
 import kr.open.rhpark.library.util.extensions.conditional.ifGreaterThanOrEqual
-import kr.open.rhpark.library.util.extensions.conditional.ifNotEquals
+import kr.open.rhpark.library.util.extensions.conditional.ifTrue
 
 class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_main) {
 
@@ -60,34 +60,21 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
         "{{{}}}".logxJ("Hello")
 
 
-        ifGreaterThan(2,1){
+        2.ifGreaterThan(1){
             Logx.d("is positive")
         }
-        ifGreaterThan(2,2,
+        2.ifGreaterThan(2,
             positiveWork = {
                 Logx.d("is positive")
-            },
-            negativeWork = {
-                Logx.d("is negative")
-            }
-        )
-        ifGreaterThanOrEqual(2L,2L){
-            Logx.d("is positive")
-        }
-        ifGreaterThanOrEqual(2L,2L,
-            positiveWork = {
-                Logx.d("is positive")
-            },
-            negativeWork = {
+            }, negativeWork = {
                 Logx.d("is negative")
             }
         )
 
-        ifEquals(1.1,1.1){
+        2L.ifGreaterThanOrEqual(2L){
             Logx.d("is positive")
         }
-
-        ifEquals(0.1, 1.1,
+        2L.ifGreaterThanOrEqual(2L,
             positiveWork = {
                 Logx.d("is positive")
             },
@@ -96,7 +83,20 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
             }
         )
 
-        ifNotEquals(1,1) {
+        1.1.ifEquals(.1){
+            Logx.d("is positive")
+        }
+
+        0.1.ifEquals(1.1,
+            positiveWork = {
+                Logx.d("is positive")
+            },
+            negativeWork = {
+                Logx.d("is negative")
+            }
+        )
+
+        true.ifTrue {
             Logx.d("is positive")
         }
     }
