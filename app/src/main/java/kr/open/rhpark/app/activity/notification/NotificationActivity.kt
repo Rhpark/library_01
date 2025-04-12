@@ -33,8 +33,8 @@ class NotificationActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestPermissions(listOf(POST_NOTIFICATIONS)) { requestCode, deniedPermissions ->
-            Logx.d("requestCode $requestCode, deniedPermissions $deniedPermissions")
+        requestPermissions(listOf(POST_NOTIFICATIONS)) { deniedPermissions ->
+            Logx.d("deniedPermissions $deniedPermissions")
             if (deniedPermissions.isEmpty()) {
                 initListener()
             }

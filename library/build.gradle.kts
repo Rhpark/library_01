@@ -10,7 +10,7 @@ publishing {
         register<MavenPublication>("release") {
             groupId = "com.github.Rhpark"
             artifactId = "library_01"
-            version = "1.5.3"
+            version = libs.versions.library.get()
 
             afterEvaluate {
                 from(components["release"])
@@ -20,7 +20,7 @@ publishing {
         register<MavenPublication>("debug") {
             groupId = "com.github.Rhpark"
             artifactId = "library_01"
-            version = "1.5.3"
+            version = libs.versions.library.get()
 
             afterEvaluate {
                 from(components["debug"])
@@ -83,22 +83,16 @@ android {
 
 dependencies {
 
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
+    api(libs.androidx.core.ktx)
+    api(libs.androidx.appcompat)
+
     implementation(libs.material)
 
 
     /**
      * Using for LifeCycle(ViewModelScope, CoroutineScope..)
      */
-    val lifecycle_version = "2.8.7"
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version")
+    implementation(libs.androidx.lifecycle.viewmodel)
+    implementation(libs.androidx.lifecycle.runtime)
 
-
-//    implementation(libs.androidx.activity)
-//    implementation(libs.androidx.constraintlayout)
-//    testImplementation(libs.junit)
-//    androidTestImplementation(libs.androidx.junit)
-//    androidTestImplementation(libs.androidx.espresso.core)
 }

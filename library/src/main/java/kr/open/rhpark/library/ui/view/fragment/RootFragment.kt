@@ -1,11 +1,15 @@
 package kr.open.rhpark.library.ui.view.fragment
 
+import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity.RESULT_OK
 import androidx.fragment.app.Fragment
 import kr.open.rhpark.library.debug.logcat.Logx
-import kr.open.rhpark.library.ui.permission.PermissionManagerBase
-import kr.open.rhpark.library.ui.permission.PermissionManagerForFragment
+import kr.open.rhpark.library.ui.permission.PermissionManager
 import kr.open.rhpark.library.util.extensions.context.hasPermission
 import kr.open.rhpark.library.util.extensions.context.hasPermissions
 import kr.open.rhpark.library.util.extensions.context.remainPermissions
@@ -25,15 +29,32 @@ import kr.open.rhpark.library.util.extensions.context.remainPermissions
  */
 public abstract class RootFragment : Fragment() {
 
+    /************************
+     *   Permission Check   *
+     ************************/
+    private val permission = PermissionManager()
+
     /**
-     * The PermissionCheck for handling permission request results.
-     * 권한 요청 결과를 처리하기 위한 PermissionCheck.
+     * SystemAlertPermission 처리를 위함.
      */
-    private lateinit var permissionManager: PermissionManagerForFragment
+    private val requestPermissionAlertWindowLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            Logx.d("requestPermissionAlertWindowLauncher ${Settings.canDrawOverlays(this.requireContext())}")
+            if (result.resultCode == RESULT_OK) { }
+        }
+
+    /**
+     * SystemAlertPermission 제외한 권한 처리를 위함.
+     */
+    private val requestPermissionLauncher: ActivityResultLauncher<Array<String>> =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            Logx.d("requestPermissionLauncher ${permissions}")
+            permission.result(this.requireContext(), permissions)
+        }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        permissionManager = PermissionManagerForFragment(this)
     }
 
     /**
@@ -48,24 +69,23 @@ public abstract class RootFragment : Fragment() {
      */
     protected fun requestPermissions(
         permissions: List<String>,
-        onResult: ((requestCode:Int, deniedPermissions: List<String>) -> Unit),
+        onResult: ((deniedPermissions: List<String>) -> Unit)
     ) {
-        Logx.d("permissions $permissions")
-        permissionManager.requestPermissions(PermissionManagerBase.PERMISSION_REQUEST_CODE, permissions, onResult)
-    }
-
-    protected fun requestPermissions(
-        requestCode: Int,
-        permissions: List<String>,
-        onResult: ((requestCode: Int, deniedPermissions: List<String>) -> Unit)
-    ) {
-        permissionManager.requestPermissions(requestCode, permissions, onResult)
+        permission.request(
+            this.requireContext(),
+            requestPermissionLauncher,
+            requestPermissionAlertWindowLauncher,
+            permissions,
+            onResult)
     }
 
 
-    public fun hasPermission(permission: String): Boolean = requireContext().hasPermission(permission)
+    public fun hasPermission(permission: String): Boolean =
+        requireContext().hasPermission(permission)
 
-    public fun hasPermissions(vararg permissions: String): Boolean = requireContext().hasPermissions(*permissions)
+    public fun hasPermissions(vararg permissions: String): Boolean =
+        requireContext().hasPermissions(*permissions)
 
-    public fun remainPermissions(permissions: List<String>): List<String> = requireContext().remainPermissions(permissions)
+    public fun remainPermissions(permissions: List<String>): List<String> =
+        requireContext().remainPermissions(permissions)
 }

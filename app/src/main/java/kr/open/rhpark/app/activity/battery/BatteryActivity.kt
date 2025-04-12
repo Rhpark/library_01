@@ -17,9 +17,8 @@ class BatteryActivity : BaseBindingActivity<ActivityBatteryBinding>(R.layout.act
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestPermissions(1234,listOf(android.Manifest.permission.BATTERY_STATS)) {
-            requestCode, deniedPermissions ->
-            Logx.d("requestCode $requestCode, deniedPermissions $deniedPermissions ")
+        requestPermissions(listOf(android.Manifest.permission.BATTERY_STATS)) { deniedPermissions ->
+            Logx.d("deniedPermissions $deniedPermissions ")
             initListener()
             batteryStateInfo.registerBatteryReceiver()
         }

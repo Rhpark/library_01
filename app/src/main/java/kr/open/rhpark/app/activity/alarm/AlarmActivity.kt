@@ -27,8 +27,8 @@ class AlarmActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestPermissions(getPermissionList()) { requestCode, deniedPermissions ->
-            Logx.d("requestCode $requestCode, deniedPermissions $deniedPermissions")
+        requestPermissions(getPermissionList()) { deniedPermissions ->
+            Logx.d("deniedPermissions $deniedPermissions")
             if (deniedPermissions.isEmpty()) {
 
             }

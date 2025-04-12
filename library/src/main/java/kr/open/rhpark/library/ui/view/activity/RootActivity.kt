@@ -1,18 +1,20 @@
 package kr.open.rhpark.library.ui.view.activity
 
 import android.R
+import android.content.Intent
 import android.graphics.Rect
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
-import kr.open.rhpark.library.ui.permission.PermissionManagerForActivity
-import kr.open.rhpark.library.util.extensions.context.hasPermission
-import kr.open.rhpark.library.util.extensions.context.hasPermissions
-import kr.open.rhpark.library.util.extensions.context.remainPermissions
+import kr.open.rhpark.library.debug.logcat.Logx
+import kr.open.rhpark.library.ui.permission.PermissionManager
 import kr.open.rhpark.library.util.extensions.conditional.sdk_version.checkSdkVersion
 
 /**
@@ -33,11 +35,48 @@ import kr.open.rhpark.library.util.extensions.conditional.sdk_version.checkSdkVe
  */
 public abstract class RootActivity : AppCompatActivity() {
 
+    /************************
+     *   Permission Check   *
+     ************************/
+    private val permission = PermissionManager()
+
     /**
-     * The permission listener for handling permission request results.
-     * 권한 요청과 결과를 처리하기 위한 permissionCheck
+     * SystemAlertPermission 처리를 위함.
      */
-    private lateinit var permissionManager: PermissionManagerForActivity
+    private val requestPermissionAlertWindowLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            Logx.d("requestPermissionAlertWindowLauncher ${Settings.canDrawOverlays(this)}")
+            if (result.resultCode == RESULT_OK) { }
+        }
+
+    /**
+     * SystemAlertPermission 제외한 권한 처리를 위함.
+     */
+    private val requestPermissionLauncher: ActivityResultLauncher<Array<String>> =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            Logx.d("requestPermissionLauncher ${permissions}")
+            permission.result(this, permissions)
+        }
+
+    /**
+     * 권한 요청 & 결과 확인 메서드
+     */
+    protected fun requestPermissions(
+        permissions: List<String>,
+        onResult: ((deniedPermissions: List<String>) -> Unit)
+    ) {
+        permission.request(
+            this,
+            requestPermissionLauncher,
+            requestPermissionAlertWindowLauncher,
+            permissions,
+            onResult
+        )
+    }
+
+    /************************
+     *  화면의 특정 부분 높이  *
+     ************************/
 
     public val statusBarHeight: Int
         get() = checkSdkVersion(Build.VERSION_CODES.R,
@@ -60,29 +99,10 @@ public abstract class RootActivity : AppCompatActivity() {
             }
         )
 
-    
-//    /**
-//     * Handles the results of a permission request.
-//     * 권한 요청 결과를 처리.
-//     *
-//     * @param requestCode The request code passed to [ActivityCompat.requestPermissions].
-//     * @param permissions The requested permissions.
-//     * @param grantResults The grant results for the corresponding permissions.
-//     *
-//     * @param requestCode [ActivityCompat.requestPermissions]에 전달된 요청 코드.
-//     * @param permissions 요청된 권한.
-//     * @param grantResults 해당 권한에 대한 부여 결과.
-//     */
-////    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-//        permissionManager.onRequestPermissionsResult(requestCode, permissions, grantResults)
-//    }
-
-    protected open fun beforeOnCreated(savedInstanceState: Bundle?){}
+    protected open fun beforeOnCreated(savedInstanceState: Bundle?) {}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        permissionManager = PermissionManagerForActivity(this)
         beforeOnCreated(savedInstanceState)
     }
 
@@ -102,31 +122,4 @@ public abstract class RootActivity : AppCompatActivity() {
             }
         }
     }
-
-    protected fun requestPermissions(
-        requestCode: Int,
-        permissions: List<String>,
-        onResult: ((requestCode: Int, deniedPermissions: List<String>) -> Unit)
-    ) {
-        permissionManager.requestPermissions(requestCode, permissions, onResult)
-    }
-
-    protected fun requestPermissions(
-        permissions: List<String>,
-        onResult: ((requestCode: Int, deniedPermissions: List<String>) -> Unit)
-    ) {
-        permissionManager.requestPermissions(permissions = permissions, onResult = onResult)
-    }
-
-
-
-    /********************
-     * Permission Check *
-     ********************/
-
-    public fun hasPermission(permission: String): Boolean = applicationContext.hasPermission(permission)
-
-    public fun hasPermissions(vararg permissions: String): Boolean = applicationContext.hasPermissions(*permissions)
-
-    public fun remainPermissions(permissions: List<String>): List<String> = applicationContext.remainPermissions(permissions)
 }

@@ -36,8 +36,8 @@ class NetworkActivity : BaseBindingActivity<ActivityNetworkBinding>(R.layout.act
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestPermissions(getPermissions()) { requestCode, deniedPermissions ->
-            Logx.d("requestCode $requestCode, deniedPermissions $deniedPermissions")
+        requestPermissions(getPermissions()) { deniedPermissions ->
+            Logx.d("deniedPermissions $deniedPermissions")
             if(deniedPermissions.isEmpty()) {
                 initNetworkStateInfo()
             } else {

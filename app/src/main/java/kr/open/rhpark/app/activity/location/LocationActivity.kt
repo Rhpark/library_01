@@ -23,8 +23,8 @@ class LocationActivity : BaseBindingActivity<ActivityLocationBinding>(R.layout.a
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestPermissions(1024, listOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION)) { requestCode, deniedPermissions ->
-            Logx.d("requestCode $requestCode , deniedPermissions $deniedPermissions")
+        requestPermissions(listOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION)) { deniedPermissions ->
+            Logx.d("deniedPermissions $deniedPermissions")
             initListener()
         }
     }

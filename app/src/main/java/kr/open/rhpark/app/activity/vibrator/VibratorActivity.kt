@@ -18,9 +18,8 @@ class VibratorActivity : BaseBindingActivity<ActivityVibratorBinding>(R.layout.a
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        requestPermissions(listOf(android.Manifest.permission.VIBRATE)){
-            requestCode, deniedPermissions->
-            Logx.d("requestCode $requestCode, deniedPermissions $deniedPermissions")
+        requestPermissions(listOf(android.Manifest.permission.VIBRATE)){ deniedPermissions->
+            Logx.d("deniedPermissions $deniedPermissions")
             initListener()
         }
     }
