@@ -21,7 +21,7 @@ import kr.open.rhpark.library.domain.common.systemmanager.info.battery.power.Pow
 import kr.open.rhpark.library.domain.common.systemmanager.info.battery.power.PowerProfileVO
 import kr.open.rhpark.library.domain.common.systemmanager.base.BaseSystemService
 import kr.open.rhpark.library.domain.common.systemmanager.base.DataUpdate
-import kr.open.rhpark.library.util.extensions.context.getSystemBatteryManager
+import kr.open.rhpark.library.util.extensions.context.getBatteryManager
 import kr.open.rhpark.library.util.extensions.conditional.sdk_version.checkSdkVersion
 
 /**
@@ -47,7 +47,7 @@ import kr.open.rhpark.library.util.extensions.conditional.sdk_version.checkSdkVe
 public open class BatteryStateInfo(context: Context) :
     BaseSystemService(context, listOf(android.Manifest.permission.BATTERY_STATS)) {
 
-    public val batteryManager: BatteryManager by lazy { context.getSystemBatteryManager() }
+    public val batteryManager: BatteryManager by lazy { context.getBatteryManager() }
 
     private val UPDATE_BATTERY = "RHPARK_BATTERY_STATE_UPDATE"
 

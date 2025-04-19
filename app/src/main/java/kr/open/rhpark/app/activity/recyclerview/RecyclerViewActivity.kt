@@ -14,7 +14,7 @@ import kr.open.rhpark.app.databinding.ActivityRecyclerviewBinding
 import kr.open.rhpark.app.databinding.ItemRecyclerviewBinding
 import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.ui.view.activity.BaseBindingActivity
-import kr.open.rhpark.library.ui.view.adapter.list_adapter.RcvListDifUtilCallBack
+import kr.open.rhpark.library.ui.view.adapter.list_adapter.RcvListDiffUtilCallBack
 import kr.open.rhpark.library.ui.view.adapter.list_adapter.SimpleRcvListAdapter
 import kr.open.rhpark.library.util.extensions.ui.view.showSoftKeyBoard
 import kr.open.rhpark.library.util.extensions.ui.view.toastShowShort
@@ -46,7 +46,7 @@ class RecyclerViewActivity : BaseBindingActivity<ActivityRecyclerviewBinding>(R.
     }
 
     private val rcvListSimpleAdapter = SimpleRcvListAdapter<RcvItem, ItemRecyclerviewBinding>(R.layout.item_recyclerview,
-        RcvListDifUtilCallBack<RcvItem>(
+        RcvListDiffUtilCallBack<RcvItem>(
             { oldItem, newItem -> oldItem.key === newItem.key },
             { oldItem, newItem -> oldItem.key == newItem.key }
         )

@@ -13,7 +13,7 @@ import kr.open.rhpark.library.domain.common.systemmanager.controller.windowmanag
 import kr.open.rhpark.library.domain.common.systemmanager.controller.windowmanager.floating.fixed.FloatingFixedView
 import kr.open.rhpark.library.domain.common.systemmanager.controller.windowmanager.floating.vo.FloatingViewCollisionsType
 import kr.open.rhpark.library.domain.common.systemmanager.controller.windowmanager.floating.vo.FloatingViewTouchType
-import kr.open.rhpark.library.util.extensions.context.getSystemWindowManager
+import kr.open.rhpark.library.util.extensions.context.getWindowManager
 
 /**
  * Several functions require Android.Manifest.permission.SYSTEM_ALERT_WINDOW permission.
@@ -24,7 +24,7 @@ import kr.open.rhpark.library.util.extensions.context.getSystemWindowManager
 public open class FloatingViewController(context: Context, ) :
     BaseSystemService(context, listOf(android.Manifest.permission.SYSTEM_ALERT_WINDOW)) {
 
-    public val windowManager: WindowManager by lazy { context.getSystemWindowManager() }
+    public val windowManager: WindowManager by lazy { context.getWindowManager() }
 
     private var floatingDragViewInfoList: MutableList<FloatingDragViewConfig> = mutableListOf()
     private var floatingFixedView: FloatingFixedView? = null

@@ -5,7 +5,7 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.ViewDataBinding
 import kr.open.rhpark.library.ui.view.adapter.viewholder.BaseRcvViewHolder
 
-public open class SimpleRcvAdapter<ITEM, BINDING : ViewDataBinding>(
+public open class SimpleRcvAdapter<ITEM : Any, BINDING : ViewDataBinding>(
     @LayoutRes private val layoutRes: Int,
     private val onBind: (BaseRcvViewHolder<BINDING>, ITEM, position: Int) -> Unit
 ) : BaseRcvAdapter<ITEM, BaseRcvViewHolder<BINDING>>() {

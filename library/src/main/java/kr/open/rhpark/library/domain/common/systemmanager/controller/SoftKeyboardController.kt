@@ -12,7 +12,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.domain.common.systemmanager.base.BaseSystemService
-import kr.open.rhpark.library.util.extensions.context.getSystemInputMethodManager
+import kr.open.rhpark.library.util.extensions.context.getInputMethodManager
 
 /**
  * Using InputMethodManager
@@ -21,7 +21,7 @@ import kr.open.rhpark.library.util.extensions.context.getSystemInputMethodManage
  */
 public open class SoftKeyboardController(context: Context) : BaseSystemService(context,null) {
 
-    public val imm: InputMethodManager by lazy { context.getSystemInputMethodManager() }
+    public val imm: InputMethodManager by lazy { context.getInputMethodManager() }
 
     /**
      * can config in manifest

@@ -6,10 +6,10 @@ import kr.open.rhpark.app.activity.recyclerview.adapter.item.RcvItem
 import kr.open.rhpark.app.databinding.ItemRecyclerviewBinding
 import kr.open.rhpark.library.ui.view.adapter.viewholder.BaseRcvViewHolder
 import kr.open.rhpark.library.ui.view.adapter.list_adapter.BaseRcvListAdapter
-import kr.open.rhpark.library.ui.view.adapter.list_adapter.RcvListDifUtilCallBack
+import kr.open.rhpark.library.ui.view.adapter.list_adapter.RcvListDiffUtilCallBack
 
 class RcvListAdapter : BaseRcvListAdapter<RcvItem, BaseRcvViewHolder<ItemRecyclerviewBinding>>(
-        RcvListDifUtilCallBack<RcvItem>(
+        RcvListDiffUtilCallBack<RcvItem>(
             itemsTheSame = { oldItem, newItem -> oldItem.key == newItem.key },
             contentsTheSame = { oldItem, newItem -> oldItem.key === newItem.key }
         )

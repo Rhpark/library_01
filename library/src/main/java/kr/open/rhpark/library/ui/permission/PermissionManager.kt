@@ -53,16 +53,18 @@ public open class PermissionManager() {
         onResult: ((deniedPermissions: List<String>) -> Unit)
     ) {
         val remainingPermissions = context.remainPermissions(permissions)
-        if (remainingPermissions.isNotEmpty()) {
-            if (isRequestPermissionSystemAlertWindow(context, remainingPermissions)) {
-                requestPermissionAlertWindowLauncher.launch(
-                    getIntentForSystemAlertWindow(context)
-                )
-            }
-            requestPermissionLauncher.launch(remainingPermissions.toTypedArray())
-            this.onResult = onResult
-        } else {
+        if (remainingPermissions.isEmpty()) {
             onResult(emptyList())
+            return
         }
+
+        if (isRequestPermissionSystemAlertWindow(context, remainingPermissions)) {
+            requestPermissionAlertWindowLauncher.launch(
+                getIntentForSystemAlertWindow(context)
+            )
+        }
+
+        requestPermissionLauncher.launch(remainingPermissions.toTypedArray())
+        this.onResult = onResult
     }
 }

@@ -58,10 +58,6 @@ public abstract class BaseSharedPreference(context: Context, groupKey: String, s
     protected suspend inline fun commitDoWork(crossinline doWork: SharedPreferences.Editor.() -> Unit): Boolean =
         withContext(Dispatchers.IO) { commitMutex.withLock { sp.edit().apply { doWork() }.commit() } }
 
-    protected suspend fun saveCommit():Boolean = commitDoWork{  }
-
-    protected suspend fun saveCommit(key: String, value: Any?) :Boolean = commitDoWork{ putValue(key, value) }
-
     protected fun removeAtApply(key: String) { sp.edit().remove(key).apply() }
 
     protected suspend fun removeAtCommit(key: String):Boolean = commitDoWork{ remove(key) }

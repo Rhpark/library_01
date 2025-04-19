@@ -9,7 +9,7 @@ import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.annotation.RequiresApi
 import kr.open.rhpark.library.domain.common.systemmanager.base.BaseSystemService
-import kr.open.rhpark.library.util.extensions.context.getSystemWindowManager
+import kr.open.rhpark.library.util.extensions.context.getWindowManager
 import kr.open.rhpark.library.util.extensions.conditional.sdk_version.checkSdkVersion
 
 /**
@@ -23,7 +23,7 @@ public open class DisplayInfo(context: Context)
     : BaseSystemService(context, null) {
 
 
-    public val windowManager: WindowManager by lazy { context.getSystemWindowManager() }
+    public val windowManager: WindowManager by lazy { context.getWindowManager() }
 
     /**
      * Returns the full screen size.

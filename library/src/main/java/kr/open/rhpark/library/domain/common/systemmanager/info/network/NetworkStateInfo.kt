@@ -34,11 +34,11 @@ import kr.open.rhpark.library.domain.common.systemmanager.info.network.telephony
 import kr.open.rhpark.library.domain.common.systemmanager.info.network.telephony.data.current.CurrentSignalStrength
 import kr.open.rhpark.library.domain.common.systemmanager.info.network.telephony.data.state.TelephonyNetworkState
 import kr.open.rhpark.library.domain.common.systemmanager.base.BaseSystemService
-import kr.open.rhpark.library.util.extensions.context.getSystemConnectivityManager
-import kr.open.rhpark.library.util.extensions.context.getSystemEuiccManager
-import kr.open.rhpark.library.util.extensions.context.getSystemSubscriptionManager
-import kr.open.rhpark.library.util.extensions.context.getSystemTelephonyManager
-import kr.open.rhpark.library.util.extensions.context.getSystemWifiManager
+import kr.open.rhpark.library.util.extensions.context.getConnectivityManager
+import kr.open.rhpark.library.util.extensions.context.getEuiccManager
+import kr.open.rhpark.library.util.extensions.context.getSubscriptionManager
+import kr.open.rhpark.library.util.extensions.context.getTelephonyManager
+import kr.open.rhpark.library.util.extensions.context.getWifiManager
 import kr.open.rhpark.library.util.extensions.context.hasPermissions
 import kr.open.rhpark.library.util.extensions.conditional.sdk_version.checkSdkVersion
 import java.util.concurrent.Executor
@@ -54,11 +54,11 @@ public open class NetworkStateInfo(
     context,
     listOf(READ_PHONE_STATE, READ_PHONE_NUMBERS, ACCESS_FINE_LOCATION, ACCESS_FINE_LOCATION)
 ) {
-    public val telephonyManager: TelephonyManager by lazy { context.getSystemTelephonyManager() }
-    public val subscriptionManager: SubscriptionManager by lazy {   context.getSystemSubscriptionManager() }
-    public val connectivityManager: ConnectivityManager by lazy {   context.getSystemConnectivityManager() }
-    public val wifiManager: WifiManager by lazy {   context.getSystemWifiManager() }
-    public val euiccManager: EuiccManager by lazy { context.getSystemEuiccManager() }
+    public val telephonyManager: TelephonyManager by lazy { context.getTelephonyManager() }
+    public val subscriptionManager: SubscriptionManager by lazy {   context.getSubscriptionManager() }
+    public val connectivityManager: ConnectivityManager by lazy {   context.getConnectivityManager() }
+    public val wifiManager: WifiManager by lazy {   context.getWifiManager() }
+    public val euiccManager: EuiccManager by lazy { context.getEuiccManager() }
 
     private val uSimTelepnohyManagerList = SparseArray<TelephonyManager>()
     private val uSimTelephonyCallbackList =  SparseArray<CommonTelephonyCallback>()

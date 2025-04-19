@@ -32,25 +32,25 @@ import kr.open.rhpark.library.domain.common.systemmanager.info.network.NetworkSt
  * SystemService *
  *****************/
 
-public fun Context.getSystemWindowManager(): WindowManager = getSystemService(WindowManager::class.java)
+public fun Context.getWindowManager(): WindowManager = getSystemService(WindowManager::class.java)
 
-public fun Context.getSystemBatteryManager(): BatteryManager = getSystemService(BatteryManager::class.java)
+public fun Context.getBatteryManager(): BatteryManager = getSystemService(BatteryManager::class.java)
 
-public fun Context.getSystemInputMethodManager(): InputMethodManager = getSystemService(InputMethodManager::class.java)
+public fun Context.getInputMethodManager(): InputMethodManager = getSystemService(InputMethodManager::class.java)
 
-public fun Context.getSystemTelephonyManager(): TelephonyManager = getSystemService(TelephonyManager::class.java)
+public fun Context.getTelephonyManager(): TelephonyManager = getSystemService(TelephonyManager::class.java)
 
 public fun Context.getSystemNotificationManager(): NotificationManager = getSystemService(NotificationManager::class.java)
 
-public fun Context.getSystemSubscriptionManager(): SubscriptionManager = getSystemService(SubscriptionManager::class.java)
+public fun Context.getSubscriptionManager(): SubscriptionManager = getSystemService(SubscriptionManager::class.java)
 
-public fun Context.getSystemEuiccManager(): EuiccManager = getSystemService(EuiccManager::class.java)
+public fun Context.getEuiccManager(): EuiccManager = getSystemService(EuiccManager::class.java)
 
-public fun Context.getSystemConnectivityManager(): ConnectivityManager = getSystemService(ConnectivityManager::class.java)
+public fun Context.getConnectivityManager(): ConnectivityManager = getSystemService(ConnectivityManager::class.java)
 
-public fun Context.getSystemWifiManager(): WifiManager = getSystemService(WifiManager::class.java)
+public fun Context.getWifiManager(): WifiManager = getSystemService(WifiManager::class.java)
 
-public fun Context.getSystemLocationManager(): LocationManager = getSystemService(LocationManager::class.java)
+public fun Context.getLocationManager(): LocationManager = getSystemService(LocationManager::class.java)
 
 public fun Context.getAlarmManager(): AlarmManager = getSystemService(AlarmManager::class.java)
 

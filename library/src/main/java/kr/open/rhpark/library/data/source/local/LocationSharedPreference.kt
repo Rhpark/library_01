@@ -73,12 +73,12 @@ public open class LocationSharedPreference(context: Context) :
                         getDouble(key + elapsedRealtimeUncertaintyNanosKey, 0.0)
                 }
                 checkSdkVersion(Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                    mslAltitudeMeters = getFloat(key + mslAltitudeMetersKey, 0.0f).toDouble()
+                    mslAltitudeMeters = getDouble(key + mslAltitudeMetersKey, 0.0)
                     mslAltitudeAccuracyMeters = getFloat(key + mslAltitudeAccuracyMetersKey, 0.0f)
 
                 }
-                latitude = getFloat(key + latitudeKey, 0.0f).toDouble()
-                longitude = getFloat(key + longitudeKey, 0.0f).toDouble()
+                latitude = getDouble(key + latitudeKey, 0.0)
+                longitude = getDouble(key + longitudeKey, 0.0)
 
                 speed = getFloat(key + speedKey, 0.0f)
                 time = getLong(key + timeKey, 0)

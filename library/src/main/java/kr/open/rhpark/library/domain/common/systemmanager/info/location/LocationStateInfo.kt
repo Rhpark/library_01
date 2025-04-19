@@ -23,7 +23,7 @@ import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.data.source.local.LocationSharedPreference
 import kr.open.rhpark.library.domain.common.systemmanager.base.BaseSystemService
 import kr.open.rhpark.library.domain.common.systemmanager.base.DataUpdate
-import kr.open.rhpark.library.util.extensions.context.getSystemLocationManager
+import kr.open.rhpark.library.util.extensions.context.getLocationManager
 import kr.open.rhpark.library.util.extensions.context.hasPermissions
 import kr.open.rhpark.library.util.extensions.conditional.sdk_version.checkSdkVersion
 
@@ -33,7 +33,7 @@ public open class LocationStateInfo(
 ) :
     BaseSystemService(context, listOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION)) {
 
-    public val locationManager: LocationManager by lazy { context.getSystemLocationManager() }
+    public val locationManager: LocationManager by lazy { context.getLocationManager() }
 
     private val msfUpdate: MutableStateFlow<LocationStateEvent> = MutableStateFlow(LocationStateEvent.OnGpsEnabled(isGpsEnabled()))
     public val sfUpdate: StateFlow<LocationStateEvent> = msfUpdate.asStateFlow()
