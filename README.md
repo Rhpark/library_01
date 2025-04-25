@@ -1,4 +1,4 @@
-# Android Easy Development Library (v1.5.4)
+# Android Easy Development Library (v1.5.5)
 
 ![image](https://jitpack.io/v/rhpark/library_01.svg)
 <br>
@@ -8,7 +8,7 @@ This library helps you make easy and more simple code for Android developers
 </br>
 <br>
 </br>
-Android 개발자를 위해
+안드로이드 개발자를 위해
 <br>
 </br>
 좀 더 간단히 확인 할 수 있거나.
@@ -20,6 +20,230 @@ Android 개발자를 위해
 
 <br>
 </br>
+
+## 목적 (Purpose)
+ 안드로이드 개발을 보다 쉽게 만들어주는 유틸리티 라이브러리입니다. 이 라이브러리는 권한 처리, 로그 관리, 시스템 기능 제어, UI 보일러플레이트 감소 등 반복적인 작업을 간소화하는 것을 목적으로 합니다.개발자는 자주 쓰이는 기능들을 손쉽게 구현할 수 있어 생산성을 높일 수 있습니다.
+<br>
+</br>
+ This library is designed to simplify common tasks in Android development, such as handling permissions, managing logs, controlling system features, and reducing UI boilerplate code. By using Library_01, Developers can increase productivity by leveraging ready-to-use components for frequent tasks instead of writing them from scratch.
+
+<br>
+</br>
+
+## 주요 구성 요소 (Key Components)
+ 라이브러리는 여러 패키지로 구성되어 있으며, 각 패키지는 특화된 기능을 제공합니다. 아래는 핵심 컴포넌트와 클래스의 개요입니다.
+ <br>
+</br>
+The library is organized into several packages, each providing specialized functionality. Key components and classes include
+<br>
+</br>
+<br>
+</br>
+
+### Shared Preferences - BaseSharedPreference: SharedPreferences
+
+ 사용을 간편화하기 위한 추상 클래스입니다. 키-값 쌍 저장/로드, 일괄 apply 및 commit 지원, 그리고 Double타입이나 Set<String>타입까지 한번에 처리할 수 있습니다​. 이를 상속하여 애플리케이션별 설정 저장 클래스를 만들 수 있습니다.
+<br>
+</br>
+An abstract class to simplify SharedPreferences operations. It provides easy get/set for key-value pairs (including support for Double and Set<String> types) and utility methods for batch apply and coroutine-safe commit operations​. You can extend this class to create your own app-specific preferences manager.
+<br>
+</br>
+<br>
+</br>
+
+### Logging Utility - Logx (with LogxFileManager, LogxWriter)
+
+ 앱 로그 출력을 개선해주는 커스텀 Logcat 유틸리티입니다. Logx 객체를 통해 편리하게 로그를 출력하고, JSON 포매팅(LogxType.JSON), 호출부 표시(PARENT 타입), 현재 쓰레드 ID 출력(T_ID 타입) 등 확장된 로그 타입을 지원합니다​. 또한 로그를 파일로 저장하거나(LogxFileManager, LogxWriter) 태그별로 관리할 수 있어 디버깅에 유용합니다.
+<br>
+</br>
+
+A custom logcat utility for enhanced logging. Using the Logx object, you can easily print logs with extended types such as JSON formatting (LogxType.JSON), parent method context (PARENT type), and current thread ID (T_ID type)​. It also supports writing logs to a file (via LogxFileManager/LogxWriter) and tag management, making debugging easier. 
+<br>
+</br>
+<br>
+</br>
+
+### System Manager – BaseSystemService 
+ 안드로이드 시스템 기능을 쉽게 제어하기 위한 베이스 클래스와 컨트롤러 클래스 모음입니다. BaseSystemService는 시스템 서비스 관련 클래스의 기본이 되는 추상 클래스이며, 필요 시 권한 체크 기능도 내장하고 있습니다​. 이를 바탕으로 다음과 같은 컨트롤러들을 제공합니다:
+ <br>
+</br>
+A base class and set of controller classes to easily control Android system features. BaseSystemService is an abstract base for system service controllers with built-in permission requirement checks​. On top of this, the library provides controllers such as:
+<br>
+</br>
+<br>
+</br>
+
+### AlarmController: AlarmManager
+
+ 래핑하여 손쉽게 알람 스케줄 및 취소 기능 제공 (예약 작업 간소화).
+provide easy scheduling and cancellation of alarms (simplifies scheduling background tasks).
+<br>
+</br>
+<br>
+</br>
+
+### SimpleNotificationController: 
+
+ 간단한 안드로이드 알림(Notification)을 생성하고 표시하는 컨트롤러.
+<br>
+</br>
+build and display simple Android notifications with minimal code.
+<br>
+</br>
+<br>
+</br>
+
+### SoftKeyboardController
+
+ 화면의 소프트 키보드 표시/숨김을 손쉽게 제어하는 유틸.
+<br>
+</br>
+Utility to easily show or hide the soft keyboard in the UI.
+<br>
+</br>
+<br>
+</br>
+
+### VibratorController: 
+
+ 진동기능을 쉽게 사용하도록 도와주는 진동 컨트롤러 (예: vibratorController.vibrate(500)는 0.5초 진동).
+<br>
+</br>
+A vibration controller to use the device vibrator with simple calls (e.g., vibratorController.vibrate(500) vibrates for 0.5 sec).
+<br>
+</br>
+<br>
+</br>
+
+### Device/System Info – BatteryInfo, DisplayInfo, NetworkStateInfo 등:
+
+ domain.common.systemmanager.info 패키지에는 배터리 상태, 디스플레이 정보, 위치 및 네트워크 상태 등을 손쉽게 얻을 수 있는 유틸리티 클래스들이 포함되어 있습니다.
+<br>
+</br>
+ The domain.common.systemmanager.info package provides utility classes to easily retrieve information such as battery status, display metrics, location, and network connectivity.
+<br>
+</br>
+<br>
+</br>
+
+### Permission Handling – PermissionManager:
+
+ 런타임 권한 요청을 간소화하는 매니저 클래스입니다. ActivityResult API와 연동하여, 요청해야 할 권한 목록을 전달하면 남은 권한만 선별(remainPermissions)하여 한 번에 요청하고 그 결과를 콜백으로 받아 처리합니다​. 특별 권한인 SYSTEM_ALERT_WINDOW(오버레이 권한)도 감지하여 별도 인텐트를 통해 요청을 지원합니다​. 이 클래스를 사용하면 사용자 권한 요청 로직을 깔끔하게 관리할 수 있습니다.
+<br>
+</br>
+A manager class to simplify runtime permission requests. Working with the Activity Result API, you provide a list of permissions to request; it filters out already granted ones (remainPermissions) and requests the rest in one go, then delivers the result via a callback​. It even detects special permission SYSTEM_ALERT_WINDOW (draw over other apps) and launches the appropriate intent for it​. This helps keep your permission request logic clean and straightforward.
+<br>
+</br>
+<br>
+</br>
+
+### UI Base Classes – BaseActivity, BaseFragment, BaseDialogFragment (및 Binding 버전): 
+ 
+ 공통적으로 사용하는 Activity/Fragment의 상속 베이스를 제공합니다. BaseActivity와 BaseFragment는 기본적인 초기화 코드를 캡슐화하고, BaseBindingActivity<Binding> / BaseBindingFragment<Binding>은 View Binding 또는 Data Binding을 손쉽게 활용할 수 있도록 합니다. 예를 들어, BaseBindingActivity<ActivityMainBinding>(R.layout.activity_main)를 상속하면 세팅된 레이아웃에 대해 binding 객체를 바로 사용할 수 있어 findViewById를 생략할 수 있습니다.
+<br>
+</br>
+ These provide base classes for common Activities/Fragments. BaseActivity and BaseFragment encapsulate routine setup code, and BaseBindingActivity<Binding> / BaseBindingFragment<Binding> make it easy to use View Binding or Data Binding. For example, by extending BaseBindingActivity<ActivityMainBinding>(R.layout.activity_main), you can directly use the binding object for that layout, eliminating the need for manual findViewById calls.
+<br>
+</br>
+<br>
+</br>
+	 
+ ### Adapter Utilities – BaseRcvAdapter, BaseRcvListAdapter, BaseRcvViewHolder: RecyclerView 
+
+ 어댑터 작성을 단순화하기 위한 베이스 클래스들입니다. 제네릭으로 데이터 타입과 ViewBinding 타입을 받아들이며, ViewHolder와 Adapter boilerplate 코드를 크게 줄여줍니다. BaseRcvListAdapter는 DiffUtil을 통한 ListAdapter 구현을 쉽게 할 수 있게 도와주며, BaseRcvViewHolder는 뷰 홀더에서 바인딩 객체에 바로 접근할 수 있도록 합니다. 이를 통해 RecyclerView를 위한 반복 코드를 최소화합니다.
+<br>
+</br>
+Base classes to simplify writing RecyclerView adapters. They take generics for your data type and ViewBinding type, reducing boilerplate in ViewHolder and Adapter code. BaseRcvListAdapter helps you implement a ListAdapter with DiffUtil easily, and BaseRcvViewHolder provides direct access to the binding in view holders. This minimizes the repetitive code needed for setting up RecyclerView adapters.
+<br>
+</br>
+<br>
+</br>
+
+### Custom RecyclerView Features – RecyclerScrollStateView: 
+
+이 커스텀 뷰는 RecyclerView의 스크롤 상태와 연계된 UI 컴포넌트로, 예를 들어 목록이 비었을 때 공백 뷰를 보여주거나, 스크롤 진행 상태를 표시하는 등의 기능을 지원합니다. RecyclerViewScrollStateImp와 RecyclerViewScrollStateSead와 함께 사용되어 RecyclerView의 스크롤 상태 UI를 손쉽게 구현하도록 도와줍니다.
+<br>
+</br>
+ A custom view tied to a RecyclerView's scroll state, useful for showing UI feedback like an empty view when the list is empty or indicating scroll position/status. Used in conjunction with RecyclerViewScrollStateImp and RecyclerViewScrollStateSead, it helps implement scroll state UI for RecyclerViews with minimal effort.
+<br>
+</br>
+<br>
+</br>
+
+### Etc Utilities – 
+그 외에도 Snackbar/Toast 헬퍼, Fragment 간 네비게이션 함수, Context.remainPermissions()와 Context.getAlarmManager()같은 컨텍스트 확장 함수 등 다양한 유틸리티 함수들이 포함되어 있습니다. 이러한 작은 유틸 기능들이 모여 개발 편의성을 높여줍니다.
+<br>
+</br>
+ Additionally, the library includes various helper functions and classes such as Snackbar/Toast helpers, convenient Fragment navigation functions, extension functions like Context.remainPermissions() and Context.getAlarmManager(), and more. These utilities collectively improve development convenience for everyday tasks.
+<br>
+</br>
+<br>
+</br>
+
+## 설치 방법 (Installation)
+ 본 라이브러리는 Gradle을 통해 손쉽게 프로젝트에 추가할 수 있습니다. (만약 중앙 저장소에 아직 배포되지 않았다면 JitPack 등을 활용 가능합니다.)
+ <br>
+</br>
+You can easily add this library to your project via Gradle. (If it’s not published on a central repository, you can use JitPack or include the library module directly.) 
+<br>
+</br>
+
+### Gradle 의존성 추가 - Using Gradle (via JitPack):
+프로젝트의 settings.gradle 또는 프로젝트 Gradle 설정에 JitPack 저장소를 추가합니다:
+<br>
+</br>
+Add the JitPack repository in your root settings.gradle or project-level Gradle config:
+<br>
+</br>
+```
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+```
+<br>
+</br>
+
+모듈의 build.gradle에 라이브러리 의존성을 추가합니다 (최신 버전: 1.5.5):
+<br>
+</br>
+Add the library dependency in your app module build.gradle (latest version: 1.5.5):
+<br>
+</br>
+```
+plugins {
+    id ("kotlin-kapt")
+}
+
+...
+
+android {
+...
+    buildFeatures {
+        dataBinding = true
+    }
+...
+}
+
+...
+
+dependencies {
+	...
+	implementation("com.github.rhpark:library_01:1.5.5")
+	...
+}
+```
+<br>
+</br>
+위와 같이 추가하면 Gradle이 GitHub의 라이브러리_01 저장소에서 라이브러리 모듈을 가져와 빌드합니다. 버전 번호는 릴리즈 태그에 따라 변경될 수 있습니다. 참고: 라이브러리가 중앙 Maven 저장소나 JCenter에 배포된 경우, 해당 저장소와 그룹 아이디를 사용하면 됩니다. 위 예시는 JitPack을 이용한 방법입니다.
+<br>
+</br>
+This will fetch the library_01 library from the GitHub repository via JitPack. Adjust the version number as needed if newer releases are available. Note: If the library is published on a central repository (e.g., Maven Central or JCenter), use the provided group ID and repository instead. The above example uses JitPack as an alternative.
+
+
+
+
+
+
 
 ## How to use
 
@@ -1408,52 +1632,4 @@ class ToastSnackBarActivity :
 }
 
 ```
-
-<br>
-</br>
-
-## Setting
-
-#### 1. Build.Gradle (Module :App)
-
-```
-plugins {
-    id ("kotlin-kapt")
-}
-
-...
-
-android {
-...
-    buildFeatures {
-        dataBinding = true
-    }
-...
-}
-
-...
-
-dependencies {
-	...
-	implementation("com.github.rhpark:library_01:1.5.4")
-	...
-}
-```
-<br>
-</br>
-
-#### 2. Setting.Gradle
-
-```
-repositories {
-	...
-	maven { url = uri("https://jitpack.io") }
-	...
-}
-```
-
-<br>
-</br>
-
-
 
