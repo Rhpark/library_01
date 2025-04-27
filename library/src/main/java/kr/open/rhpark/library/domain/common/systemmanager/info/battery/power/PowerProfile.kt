@@ -6,58 +6,87 @@ import java.lang.reflect.Method
 
 /**
  * PowerProfile
- * Using Battery Total Capacity ( rated capacity )
- * https://cs.android.com/android/platform/superproject/+/master:frameworks/base/core/java/com/android/internal/os/PowerProfile.java;l=33;drc=master;bpv=1;bpt=1
+ *
+ * This class provides access to device power consumption information through the internal
+ * Android PowerProfile class using reflection.
+ *
+ * The primary use case is to retrieve the battery's total capacity (rated capacity),
+ * but it can also be used to get other power consumption metrics defined in [PowerProfileVO].
+ *
+ * Note: Because this uses reflection to access internal Android APIs, it may not work
+ * on all devices or future Android versions.
+ *
+ * @see PowerProfileVO for available power metrics
  */
 public class PowerProfile(context: Context) {
 
     private val classNamePowerProfile: String = "com.android.internal.os.PowerProfile"
     private val averagePower: String = "getAveragePower"
 
-    private val powerProfileClass: Class<*> = Class.forName(classNamePowerProfile)
+    private val powerProfileClass: Class<*>
+    private val getAveragePowerMethod: Method
+    private val getAveragePowerMethodWithInt: Method
+    private val powerProfileInstance: Any
 
-    private val getAveragePowerMethod: Method =
-        powerProfileClass.getMethod(averagePower, String::class.java)
+    init {
+        try {
+            powerProfileClass = Class.forName(classNamePowerProfile)
 
-    private val getAveragePowerMethodWithInt: Method = powerProfileClass.getMethod(
-        averagePower, String::class.java, Int::class.javaPrimitiveType
-    )
+            // Get method for retrieving average power by string key
+            getAveragePowerMethod = powerProfileClass.getMethod(averagePower, String::class.java)
 
-    private val powerProfileInstance: Any =
-        powerProfileClass.getConstructor(Context::class.java).newInstance(context)
+            // Get method for retrieving average power by string key and index
+            getAveragePowerMethodWithInt = powerProfileClass.getMethod(
+                averagePower, String::class.java, Int::class.javaPrimitiveType
+            )
+
+            // Create an instance of PowerProfile
+            powerProfileInstance =
+                powerProfileClass.getConstructor(Context::class.java).newInstance(context)
+        } catch (e: Exception) {
+            Logx.e("Failed to initialize PowerProfile: ${e.message}")
+            throw RuntimeException("Failed to initialize PowerProfile", e)
+        }
+    }
 
     /**
-     * CPU_CLUSTER_POWER_COUNT
-     *
      * Retrieves the average power consumption for the specified power profile type.
-     * 지정된 전력 프로필 유형에 대한 평균 전력 소비량을 검색.
      *
-     * @param type The power profile type to retrieve.
-     * @return The average power consumption, or null if an error occurred.
-     *
-     * @param type 검색할 전력 프로필 유형.
-     * @return 평균 전력 소비량 오류가 발생하면 null.
+     * @param type The power profile type to retrieve from [PowerProfileVO]
+     * @return The average power consumption as a Double, or 0.0 if an error occurred
      */
-    public fun getAveragePower(type: PowerProfileVO): Any? =
-        runCatching { getAveragePowerMethod.invoke(powerProfileInstance, type.res) }
-            .onFailure { Logx.e(it) }
-            .getOrNull()
+    public fun getAveragePower(type: PowerProfileVO): Any? {
+        return try {
+            getAveragePowerMethod.invoke(powerProfileInstance, type.res)
+        } catch (e: Exception) {
+            Logx.e("Error getting average power for ${type.res}: ${e.message}")
+            null
+        }
+    }
 
     /**
      * Retrieves the average power consumption for the specified power profile type and index.
-     * 지정된 전력 프로필 유형 및 인덱스에 대한 평균 전력 소비량을 검색.
+     * This is used for metrics that have multiple values (like CPU clusters).
      *
-     * @param type The power profile type to retrieve.
-     * @param i The index of the power profile value.
-     *
-     * @param type 검색할 전력 프로필 유형.
-     * @param i 전력 프로필 값의 인덱스.
-     *
-     * @return The average power consumption, or null if an error occurred.
-     * @return 평균 전력 소비량. 오류가 발생하면 null.
+     * @param type The power profile type to retrieve from [PowerProfileVO]
+     * @param index The index of the power profile value
+     * @return The average power consumption as a Double, or 0.0 if an error occurred
      */
-    public fun getAveragePower(type: PowerProfileVO, index: Int): Any? =
-        runCatching { getAveragePowerMethodWithInt.invoke(powerProfileInstance, type.res, index) }
-            .onFailure { Logx.e(it) }
-            .getOrNull()
+    public fun getAveragePower(type: PowerProfileVO, index: Int): Any? {
+        return try {
+            getAveragePowerMethodWithInt.invoke(powerProfileInstance, type.res, index)
+        } catch (e: Exception) {
+            Logx.e("Error getting average power for ${type.res}[$index]: ${e.message}")
+            null
+        }
+    }
+
+    /**
+     * Gets the total battery capacity in milliampere-hours (mAh).
+     *
+     * @return The battery capacity in mAh, or 0.0 if unable to retrieve
+     */
+    public fun getBatteryCapacity(): Double {
+        return getAveragePower(PowerProfileVO.POWER_BATTERY_CAPACITY) as? Double ?: 0.0
+    }
 }

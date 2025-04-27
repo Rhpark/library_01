@@ -50,12 +50,17 @@ public open class BatteryStateInfo(context: Context) :
     public val batteryManager: BatteryManager by lazy { context.getBatteryManager() }
 
     private val UPDATE_BATTERY = "RHPARK_BATTERY_STATE_UPDATE"
+    private val DEFAULT_UPDATE_CYCLE_MS = 1000L
 
     public val ERROR_VALUE: Int = Integer.MIN_VALUE
 
     private val powerProfile: PowerProfile by lazy { PowerProfile(context) }
 
     private val msfUpdate: MutableStateFlow<BatteryStateEvent> = MutableStateFlow(BatteryStateEvent.OnCapacity(getCapacity()))
+
+    /**
+     * StateFlow that emits battery state events whenever battery information changes
+     */
     public val sfUpdate: StateFlow<BatteryStateEvent> = msfUpdate.asStateFlow()
 
     private val capacity = DataUpdate(getCapacity()) { sendFlow(BatteryStateEvent.OnCapacity(it)) }
@@ -72,7 +77,6 @@ public open class BatteryStateInfo(context: Context) :
     private val voltage = DataUpdate(getVoltage()) { sendFlow(BatteryStateEvent.OnVoltage(it)) }
 
     private val batteryBroadcastReceiver = object : BroadcastReceiver() {
-
         override fun onReceive(context: Context, intent: Intent) {
             batteryStatus = intent
             updateBatteryInfo()
@@ -89,36 +93,55 @@ public open class BatteryStateInfo(context: Context) :
         addAction(UPDATE_BATTERY)
     }
 
-
     private var batteryStatus: Intent? = null
-
-    public var updateJob: Job? = null
-
+    private var updateJob: Job? = null
     private var coroutineScope: CoroutineScope? = null
+    private var isReceiverRegistered = false
 
-    private fun sendFlow(event: BatteryStateEvent) = coroutineScope?.launch { msfUpdate.emit(event) }?: Logx.e("Error, can not send event, coroutineScope is  null!")
+    /**
+     * Safely sends a battery state event to the flow
+     * @param event The event to send
+     */
+    private fun sendFlow(event: BatteryStateEvent) {
+        coroutineScope?.launch { msfUpdate.emit(event) } ?: run {
+            Logx.e("Error: Cannot send event - coroutineScope is null. Call updateStart() first.")
+        }
+    }
 
+    /**
+     * Registers a broadcast receiver for battery-related events.
+     * Call this method before starting updates.
+     */
     public fun registerBatteryReceiver() {
         unRegisterReceiver()
-        checkSdkVersion(Build.VERSION_CODES.TIRAMISU,
-            positiveWork = {
-                batteryStatus = context.registerReceiver(batteryBroadcastReceiver, intentFilter, RECEIVER_EXPORTED)
-            }, negativeWork = {
-                batteryStatus = context.registerReceiver(batteryBroadcastReceiver, intentFilter)
-            }
-        )
+        try {
+            checkSdkVersion(Build.VERSION_CODES.TIRAMISU,
+                positiveWork = {
+                    batteryStatus = context.registerReceiver(batteryBroadcastReceiver, intentFilter, RECEIVER_EXPORTED)
+                }, negativeWork = {
+                    batteryStatus = context.registerReceiver(batteryBroadcastReceiver, intentFilter)
+                }
+            )
+            isReceiverRegistered = true
+        } catch (e: Exception) {
+            Logx.e("Failed to register battery receiver: ${e.message}")
+        }
     }
 
     /**
      * before must call registerBatteryReceiver()
      */
-    public fun updateStart(coroutine: CoroutineScope, updateCycleTime: Long = 1000L) {
+    public fun updateStart(coroutine: CoroutineScope, updateCycleTime: Long = DEFAULT_UPDATE_CYCLE_MS) {
+        if (!isReceiverRegistered) {
+            Logx.w("BatteryStateInfo: Receiver not registered, calling registerBatteryReceiver().")
+            registerBatteryReceiver()
+        }
 
         updateStop()
 
         coroutineScope = coroutine
         updateJob = coroutine.launch {
-            while(isActive) {
+            while (isActive) {
                 sendBroadcast()
                 delay(updateCycleTime)
             }
@@ -126,10 +149,16 @@ public open class BatteryStateInfo(context: Context) :
         }
     }
 
+    /**
+     * Triggers a one-time update of battery state information
+     */
     public fun updateBatteryState() {
         sendBroadcast()
     }
 
+    /**
+     * Stops periodic battery updates
+     */
     public fun updateStop() {
         if(updateJob == null) return
         updateJob?.cancel()
@@ -161,21 +190,25 @@ public open class BatteryStateInfo(context: Context) :
         }
     }
 
+    /**
+     * Unregisters the battery broadcast receiver
+     */
     public fun unRegisterReceiver() {
+        if (!isReceiverRegistered) return
 
         try {
-            batteryStatus?.let { context.unregisterReceiver(batteryBroadcastReceiver) }
-        } catch (e:Exception) {
-//            e.printStackTrace()
+            context.unregisterReceiver(batteryBroadcastReceiver)
+            isReceiverRegistered = false
+        } catch (e: Exception) {
+            Logx.e("Error unregistering battery receiver: ${e.message}")
         } finally {
             batteryStatus = null
         }
     }
 
     /**
-     * Instantaneous battery current in microamperes, as an integer.
-     * Positive values indicate net current entering the battery from a charge source,
-     * negative values indicate net current discharging from the battery.
+     * Gets the instantaneous battery current in microamperes.
+     * Positive values indicate charging, negative values indicate discharging.
      *
      * 순간 배터리 전류를 마이크로암페어 단위로 반환.
      * 양수 값은 충전 소스에서 배터리로 들어오는 순 전류, 음수 값은 배터리에서 방전되는 순 전류.
@@ -198,6 +231,7 @@ public open class BatteryStateInfo(context: Context) :
      * Integer + is Charging
      * Integer - is Discharging
      * Unit microAmpere
+     *  @return The average battery current in microamperes (µA)
      */
     public fun getCurrentAverageAmpere(): Int = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CURRENT_AVERAGE)
 
@@ -223,19 +257,34 @@ public open class BatteryStateInfo(context: Context) :
     }
 
     public fun isCharging(): Boolean = getChargeStatus() == BatteryManager.BATTERY_STATUS_CHARGING
+
+    /**
+     * Checks if the battery is currently discharging
+     */
     public fun isDischarging(): Boolean = getChargeStatus() == BatteryManager.BATTERY_STATUS_DISCHARGING
+
+    /**
+     * Checks if the battery is not charging
+     */
     public fun isNotCharging(): Boolean = getChargeStatus() == BatteryManager.BATTERY_STATUS_NOT_CHARGING
+
+    /**
+     * Checks if the battery is fully charged
+     */
     public fun isFull(): Boolean = getChargeStatus() == BatteryManager.BATTERY_STATUS_FULL
 
     /**
      * @see BatteryManager.BATTERY_PROPERTY_
      */
     private fun getIntProperty(batteryType:Int) = batteryManager.getIntProperty(batteryType)
-    private fun getLongProperty(batteryType:Int) = batteryManager.getLongProperty(batteryType)
 
     /**
-     * Remaining battery capacity as an integer percentage of total capacity (with no fractional part).
-     * 남은 배터리 용량을 총 용량의 백분율로 반환.
+     * Helper function to get long battery properties
+     */
+    private fun getLongProperty(batteryType: Int) = batteryManager.getLongProperty(batteryType)
+
+    /**
+     * Gets the remaining battery capacity as a percentage (0-100)
      *
      * @return The remaining battery capacity as a percentage.
      * @return 남은 배터리 용량 (백분율)
@@ -265,8 +314,7 @@ public open class BatteryStateInfo(context: Context) :
      * @return 배터리 잔여 에너지 (나노와트시).
      */
     public fun getEnergyCounter(): Long = getLongProperty(BatteryManager.BATTERY_PROPERTY_ENERGY_COUNTER)
-
-
+    
 
     public val STR_CHARGE_PLUG_USB: String = "USB"
     public val STR_CHARGE_PLUG_AC: String = "AC"
@@ -287,11 +335,19 @@ public open class BatteryStateInfo(context: Context) :
     public fun getChargePlug(): Int  =  batteryStatus?.getIntExtra(BatteryManager.EXTRA_PLUGGED, ERROR_VALUE) ?: ERROR_VALUE
 
     public fun isChargingUsb(): Boolean = getChargePlug() == BatteryManager.BATTERY_PLUGGED_USB
+
+    /**
+     * Checks if the device is charging via AC
+     */
     public fun isChargingAc(): Boolean = getChargePlug() == BatteryManager.BATTERY_PLUGGED_AC
+
+    /**
+     * Checks if the device is charging wirelessly
+     */
+    public fun isChargingWireless(): Boolean = getChargePlug() == BatteryManager.BATTERY_PLUGGED_WIRELESS
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     public fun isChargingDock(): Boolean = getChargePlug() == BatteryManager.BATTERY_PLUGGED_DOCK
-    public fun isChargingWireless(): Boolean = getChargePlug() == BatteryManager.BATTERY_PLUGGED_WIRELESS
 
     public fun getChargePlugStr(): String = when (getChargePlug()) {
         BatteryManager.BATTERY_PLUGGED_USB -> STR_CHARGE_PLUG_USB
@@ -307,8 +363,8 @@ public open class BatteryStateInfo(context: Context) :
      * error return errorValue(Integer.MIN_VALUE)
      */
     public fun getTemperature(): Double =
-        (batteryStatus?.let { it.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, ERROR_VALUE).toDouble() }
-            ?: ERROR_VALUE.toDouble())/10.0
+        (batteryStatus?.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, ERROR_VALUE)?.toDouble()
+            ?: ERROR_VALUE.toDouble()) / 10.0
 
     /**
      * boolean indicating whether a battery is present.
@@ -334,8 +390,20 @@ public open class BatteryStateInfo(context: Context) :
      */
     public fun getHealth(): Int = batteryStatus?.getIntExtra(BatteryManager.EXTRA_HEALTH, ERROR_VALUE) ?: ERROR_VALUE
     public fun isHealthGood(): Boolean = getHealth() == BatteryManager.BATTERY_HEALTH_GOOD
-    public fun isHealthCool(): Boolean = getHealth() == BatteryManager.BATTERY_HEALTH_COLD
+
+    /**
+     * Checks if battery health is cold
+     */
+    public fun isHealthCold(): Boolean = getHealth() == BatteryManager.BATTERY_HEALTH_COLD
+
+    /**
+     * Checks if battery health is dead
+     */
     public fun isHealthDead(): Boolean = getHealth() == BatteryManager.BATTERY_HEALTH_DEAD
+
+    /**
+     * Checks if battery has over voltage
+     */
     public fun isHealthOverVoltage(): Boolean = getHealth() == BatteryManager.BATTERY_HEALTH_OVER_VOLTAGE
     public fun getHealthStr(healthType: Int): String = when (healthType) {
         BatteryManager.BATTERY_HEALTH_GOOD -> STR_BATTERY_HELTH_GOOD
@@ -347,20 +415,17 @@ public open class BatteryStateInfo(context: Context) :
 
     public fun getCurrentHealthStr():String = getHealthStr(getHealth())
 
-
     /**
      * return volt (ex 3.5)
      * error is errorValue(-999.0)
      */
     public fun getVoltage(): Double = (batteryStatus?.getIntExtra(BatteryManager.EXTRA_VOLTAGE, ERROR_VALUE * 1000) ?: ERROR_VALUE * 1000).toDouble() / 1000
 
-
     /**
      * return (ex Li-ion)
      * error is null
      */
     public fun getTechnology(): String? = batteryStatus?.getStringExtra(BatteryManager.EXTRA_TECHNOLOGY)
-
 
     /**
      * battery total capacity (rated capacity)
@@ -372,9 +437,14 @@ public open class BatteryStateInfo(context: Context) :
     public fun getTotalCapacity(): Double =
         powerProfile.getAveragePower(PowerProfileVO.POWER_BATTERY_CAPACITY) as Double
 
+    /**
+     * Releases all resources used by this instance.
+     * Call this method when you're done using BatteryStateInfo.
+     */
     public override fun onDestroy() {
         super.onDestroy()
         updateStop()
         unRegisterReceiver()
+        coroutineScope = null
     }
 }

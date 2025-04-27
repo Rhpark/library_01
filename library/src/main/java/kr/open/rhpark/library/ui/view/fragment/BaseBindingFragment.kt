@@ -12,10 +12,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 
 /**
- * A base fragmentclass that uses View Binding and provides common functionality for fragments with data binding.
+ * A base fragment class that uses View Binding and provides common functionality for fragments with data binding.
  * 바인딩을 사용하는 프래그먼트에 대한 공통 기능을 제공하는 BaseBindingFragment.
  *
- * This class handles thefollowing tasks:
+ * This class handles the following tasks:
  * - Inflates the layout and sets up View Binding.
  * - Sets the lifecycle owner for the binding.
  * - Provides a convenient method to obtain a ViewModel.

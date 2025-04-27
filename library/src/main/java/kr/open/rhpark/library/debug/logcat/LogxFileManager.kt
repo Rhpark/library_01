@@ -20,8 +20,8 @@ import java.util.Locale
  */
 internal class LogxFileManager(path:String) {
 
-    private val fm : FileManager by lazy { FileManager(path) }
-    private val logFileTitle = currentTimeFormatted() + "_Log.txt"
+    private val fm: FileManager by lazy { FileManager(path) }
+    private val logFileTitle by lazy { "${currentTimeFormatted()}_Log.txt" }
 
     fun addWriteLog(logType: LogxType, tag: String, msg: String) {
         fm.appendWriteFile(logFileTitle, "${currentTimeFormatted()}/${logType.logTypeString}/$tag : $msg")
@@ -47,10 +47,14 @@ internal class LogxFileManager(path:String) {
         private fun existsCheckAndMkdir() {
             if (file.exists()) {    return  }
 
-            if (file.mkdirs()) {
-                Log.d(Logx.appName, "Logx Directory created! " + file.path)
-            } else {
-                Log.e(Logx.appName, "[Error] Failed to create Logx Directory! " + file.path)
+            try {
+                if (file.mkdirs()) {
+                    Log.d(Logx.appName, "Logx Directory created! ${file.path}")
+                } else {
+                    Log.e(Logx.appName, "[Error] Failed to create Logx Directory! ${file.path}")
+                }
+            } catch (e: Exception) {
+                Log.e(Logx.appName, "[Error] Exception while creating directory: ${e.message}", e)
             }
         }
 
@@ -62,7 +66,7 @@ internal class LogxFileManager(path:String) {
                 } else {
                     Log.e(Logx.appName , "[Error] Failed to created Logx File! " + file.getPath())
                 }
-            } catch (e:IOException) {
+            } catch (e: IOException) {
                 Log.e(Logx.appName, "[Exception] Failed to create file: ${file.path}", e)
             }
         }
@@ -70,13 +74,16 @@ internal class LogxFileManager(path:String) {
         fun appendWriteFile(title: String, msg: String) = writeFile(File("${file.path}/$title"),msg)
 
         private fun writeFile(file: File, msg: String) {
-
             logWriterScope.launch {
-                mkFile(file)
-                BufferedWriter(FileWriter(file, true)).use {
-                    it.write(msg)
-                    it.newLine()
-                    it.flush()
+                try {
+                    mkFile(file)
+                    BufferedWriter(FileWriter(file, true)).use { writer ->
+                        writer.write(msg)
+                        writer.newLine()
+                        writer.flush()
+                    }
+                } catch (e: Exception) {
+                    Log.e(Logx.appName, "[Error] Failed to write log: ${e.message}", e)
                 }
             }
         }
@@ -94,7 +101,11 @@ internal class LogxFileManager(path:String) {
         }
 
         private fun shutdownLogger() {
-            logWriterScope.cancel()
+            try {
+                logWriterScope.cancel() // 모든 코루틴 작업 취소
+            } catch (e: Exception) {
+                Log.e(Logx.appName, "[Error] Error during logger shutdown: ${e.message}", e)
+            }
         }
     }
 }

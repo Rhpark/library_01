@@ -15,17 +15,20 @@ import kr.open.rhpark.library.util.extensions.context.hasPermissions
 import kr.open.rhpark.library.util.extensions.context.remainPermissions
 
 /**
- * A base fragment classthat provides common functionality for fragments.
+ * A base fragment class that provides common functionality for fragments.
  * 프래그먼트에 대한 공통 기능을 제공하는 기본 프래그먼트 클래스.
  *
  * This class handles tasks such as:
- * - Managing system service information.* - Requesting permissions.
+ * - Managing system service information.
+ * - Requesting permissions.
  * - Starting activities.
+ * - Lifecycle logging.
  *
  * 이 클래스는 다음과 같은 작업을 처리한다.
  * - 시스템 서비스 정보 관리.
  * - 권한 요청.
  * - 액티비티 시작.
+ * - 생명주기 로깅.
  */
 public abstract class RootFragment : Fragment() {
 
@@ -78,8 +81,7 @@ public abstract class RootFragment : Fragment() {
             permissions,
             onResult)
     }
-
-
+    
     public fun hasPermission(permission: String): Boolean =
         requireContext().hasPermission(permission)
 

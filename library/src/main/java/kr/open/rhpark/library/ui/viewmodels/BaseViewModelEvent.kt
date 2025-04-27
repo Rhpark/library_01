@@ -6,6 +6,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
+/**
+ * Base ViewModel class with event handling capability.
+ * This class provides a communication channel from ViewModel to View
+ * using Kotlin Flows.
+ *
+ * @param EVENT_TYPE The type of events this ViewModel can emit
+ */
 public abstract class BaseViewModelEvent<EVENT_TYPE> : BaseViewModel() {
 
     /****************************************************************
@@ -20,4 +27,9 @@ public abstract class BaseViewModelEvent<EVENT_TYPE> : BaseViewModel() {
     protected fun sendEventVm(event: EVENT_TYPE) { viewModelScope.launch { eventVm.send(event) } }
 
 
+    override fun onCleared() {
+        super.onCleared()
+        // Close the event channel to prevent memory leaks
+        eventVm.close()
+    }
 }

@@ -5,6 +5,8 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
+import android.view.Gravity
+import androidx.annotation.StyleRes
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import kr.open.rhpark.library.debug.logcat.Logx
@@ -16,6 +18,11 @@ public abstract class RootDialogFragment() : DialogFragment() {
     private var onNegativeClickListener: ((View) -> Unit)? = null
     private var onOtherClickListener: ((View) -> Unit)? = null
 
+    @StyleRes
+    private var animationStyle: Int? = null
+    private var dialogGravity: Int = Gravity.CENTER
+    private var dialogCancelable: Boolean = true
+
     public interface OnItemClick {
         public fun onItemClickListener(v: View)
     }
@@ -23,6 +30,17 @@ public abstract class RootDialogFragment() : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return super.onCreateDialog(savedInstanceState).apply {
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            setCancelable(dialogCancelable)
+
+            // Apply animation if set
+            animationStyle?.let { style ->
+                window?.attributes?.windowAnimations = style
+            }
+
+            // Apply gravity if not center
+            if (dialogGravity != Gravity.CENTER) {
+                window?.setGravity(dialogGravity)
+            }
         }
     }
 
@@ -34,6 +52,31 @@ public abstract class RootDialogFragment() : DialogFragment() {
             val y = (screenSize.y * heightRatio).toInt()
             it.setLayout(x, y)
         }?: Logx.e("Error dialog window is null!")
+    }
+
+    /**
+     * Sets the custom animation style for dialog appearance/disappearance
+     */
+    public fun setAnimationStyle(@StyleRes style: Int) {
+        this.animationStyle = style
+        dialog?.window?.attributes?.windowAnimations = style
+    }
+
+    /**
+     * Sets the position of the dialog on screen
+     * @param gravity Gravity value (e.g., Gravity.BOTTOM)
+     */
+    public fun setDialogGravity(gravity: Int) {
+        this.dialogGravity = gravity
+        dialog?.window?.setGravity(gravity)
+    }
+
+    /**
+     * Sets whether the dialog can be canceled by pressing back or touching outside
+     */
+    public fun setCancelableDialog(cancelable: Boolean) {
+        this.dialogCancelable = cancelable
+        dialog?.setCancelable(cancelable)
     }
 
     public fun setOnPositiveClickListener(listener: (View) -> Unit) {

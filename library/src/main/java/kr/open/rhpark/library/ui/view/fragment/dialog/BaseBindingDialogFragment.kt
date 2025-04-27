@@ -24,7 +24,7 @@ public abstract class BaseBindingDialogFragment<BINDING : ViewDataBinding>(@Layo
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = DataBindingUtil.inflate(inflater, layoutRes, container, false)
-        afterOnCrateView(binding.root, savedInstanceState)
+        afterOnCreateView(binding.root, savedInstanceState)
         return binding.root
     }
 
@@ -38,13 +38,20 @@ public abstract class BaseBindingDialogFragment<BINDING : ViewDataBinding>(@Layo
      * @param rootView 프래그먼트 레이아웃의 루트 뷰.
      * @param savedInstanceState null이 아닌 경우 이 프래그먼트는 여기에 지정된 이전에 저장된 상태에서 다시 생성.
      */
-    protected open fun afterOnCrateView(rootView: View, savedInstanceState: Bundle?) {
+    protected open fun afterOnCreateView(rootView: View, savedInstanceState: Bundle?) {
 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = this
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        if (::binding.isInitialized) {
+            binding.lifecycleOwner = null
+        }
     }
 
     /**

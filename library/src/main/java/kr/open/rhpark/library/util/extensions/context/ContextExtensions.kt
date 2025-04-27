@@ -12,7 +12,6 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 
-
 public fun Context.getColorCompat(@ColorRes colorRes: Int): Int {
     return ContextCompat.getColor(this, colorRes)
 }
@@ -53,11 +52,9 @@ public inline fun Context.hasPermissions(vararg permissions: String): Boolean =
 public inline fun Context.remainPermissions(permissions: List<String>): List<String> =
     permissions.filterNot { hasPermission(it) }
 
-
 public inline fun Context.getPermissionProtectionLevel(permission: String): Int = try {
     packageManager.getPermissionInfo(permission, 0).protection
 } catch (e: PackageManager.NameNotFoundException) {
 //    e.printStackTrace()
     PermissionInfo.PROTECTION_DANGEROUS
 }
-
