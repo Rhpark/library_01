@@ -1,4 +1,4 @@
-# Android Easy Development Library (v1.5.5)
+# Android Easy Development Library (v1.5.6)
 
 ![image](https://jitpack.io/v/rhpark/library_01.svg)
 <br>
@@ -203,10 +203,10 @@ repositories {
 <br>
 </br>
 
-모듈의 build.gradle에 라이브러리 의존성을 추가합니다 (최신 버전: 1.5.5):
+모듈의 build.gradle에 라이브러리 의존성을 추가합니다 (최신 버전: 1.5.6):
 <br>
 </br>
-Add the library dependency in your app module build.gradle (latest version: 1.5.5):
+Add the library dependency in your app module build.gradle (latest version: 1.5.6):
 <br>
 </br>
 ```
@@ -228,7 +228,7 @@ android {
 
 dependencies {
 	...
-	implementation("com.github.rhpark:library_01:1.5.5")
+	implementation("com.github.rhpark:library_01:1.5.6")
 	...
 }
 ```
