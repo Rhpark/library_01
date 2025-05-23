@@ -1,7 +1,6 @@
 package kr.open.rhpark.app
 
 import android.Manifest
-import kr.open.rhpark.app.activity.alarm.AlarmActivity
 import kr.open.rhpark.app.activity.battery.BatteryActivity
 import kr.open.rhpark.app.activity.display.DisplayActivity
 import kr.open.rhpark.app.activity.location.LocationActivity
@@ -11,6 +10,7 @@ import kr.open.rhpark.app.activity.recyclerview.RecyclerViewActivity
 import kr.open.rhpark.app.activity.second.FragmentShowActivity
 import kr.open.rhpark.app.activity.toast_snackbar.ToastSnackBarActivity
 import kr.open.rhpark.app.activity.vibrator.VibratorActivity
+import kr.open.rhpark.app.activity.wifi.WifiActivity
 import kr.open.rhpark.app.activity.window.WindowActivity
 import kr.open.rhpark.library.ui.viewmodels.BaseViewModelEvent
 
@@ -73,7 +73,12 @@ class MainActivityVm : BaseViewModelEvent<MainActivityVmEvent>() {
         showActivity(NotificationActivity::class.java)
     }
 
+    fun onClickShowWifiActivity() {
+        showActivity(WifiActivity::class.java)
+    }
+
     fun onClickShowAlarmActivity() {
-        showActivity(AlarmActivity::class.java)
+//        showActivity(AlarmActivity::class.java)
+//        showActivity(LocationPermissionSampleActivity::class.java)
     }
 }

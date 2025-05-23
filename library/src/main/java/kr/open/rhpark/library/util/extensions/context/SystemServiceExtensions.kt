@@ -2,6 +2,7 @@ package kr.open.rhpark.library.util.extensions.context
 
 import android.app.AlarmManager
 import android.app.NotificationManager
+import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.location.LocationManager
 import android.net.ConnectivityManager
@@ -22,6 +23,7 @@ import kr.open.rhpark.library.domain.common.systemmanager.controller.SimpleNotif
 import kr.open.rhpark.library.domain.common.systemmanager.controller.alarm.AlarmController
 import kr.open.rhpark.library.domain.common.systemmanager.controller.SoftKeyboardController
 import kr.open.rhpark.library.domain.common.systemmanager.controller.VibratorController
+import kr.open.rhpark.library.domain.common.systemmanager.controller.WifiController
 import kr.open.rhpark.library.domain.common.systemmanager.controller.windowmanager.FloatingViewController
 import kr.open.rhpark.library.domain.common.systemmanager.info.battery.BatteryStateInfo
 import kr.open.rhpark.library.domain.common.systemmanager.info.display.DisplayInfo
@@ -58,6 +60,8 @@ public fun Context.getNotificationManager(): NotificationManager = getSystemServ
 
 public fun Context.getPowerManager(): PowerManager = getSystemService(PowerManager::class.java)
 
+public fun Context.getBluetoothManager(): BluetoothManager = getSystemService(BluetoothManager::class.java)
+
 /**
  * be used Build.VERSION.SDK_INT < Build.VERSION_CODES.S(31)
  */
@@ -86,6 +90,8 @@ public fun Context.getNotificationController(): SimpleNotificationController = S
 public fun Context.getDisplayInfo(): DisplayInfo = DisplayInfo(this)
 
 public fun Context.getVibratorController(): VibratorController = VibratorController(this)
+
+public fun Context.getWifiController(): WifiController = WifiController(this)
 
 /*****************************
  * SystemService Access Info *

@@ -11,6 +11,8 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <uses-permission android:name="android.permission.BATTERY_STATS" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -55,6 +57,7 @@
         <activity android:name=".activity.location.LocationActivity" />
         <activity android:name=".activity.notification.NotificationActivity" />
         <activity android:name=".activity.alarm.AlarmActivity" />
+        <activity android:name=".activity.wifi.WifiActivity" />
 
         <receiver android:name=".activity.alarm.receiver.AlarmReceiver"
             android:enabled="true"

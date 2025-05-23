@@ -90,6 +90,10 @@
                     android:onClick="@{()->vm.onClickToastSnackBar()}"
                     android:text="Toast and SnackBar" />
 
+                <Button
+                    style="@style/MainActivity.Button"
+                    android:onClick="@{()->vm.onClickShowWifiActivity()}"
+                    android:text="Wifi Activity" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
         </ScrollView>

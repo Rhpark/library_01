@@ -12,126 +12,53 @@ import kr.open.rhpark.library.debug.logcat.Logx
 /*********************
  *      SnackBar     *
  *********************/
-private fun Snackbar.snackBarOption(
-    @BaseTransientBottomBar.AnimationMode animMode: Int? = null,
-    bgTint: Int? = null,
-    bgTintStateList: ColorStateList? = null,
-    textColor: Int? = null,
-    textColorStateList: ColorStateList? = null,
-    isGestureInsetBottomIgnored: Boolean? = null,
-    actionTextColor: Int? = null,
-    actionTextColorStateList: ColorStateList? = null,
-    actionText: CharSequence? = null,
-    action: ((View) -> Unit)? = null
-) = apply{
-    bgTint?.let { setBackgroundTint(it) }
-    bgTintStateList?.let { setBackgroundTintList(it) }
-    textColor?.let { setTextColor(it) }
-    textColorStateList?.let { setTextColor(it) }
-    isGestureInsetBottomIgnored?.let { setGestureInsetBottomIgnored(it) }
-    animMode?.let { animationMode = it }
-    actionTextColor?.let { setActionTextColor(it) }
-    actionTextColorStateList?.let { setActionTextColor(it) }
-    actionText?.let { setAction(it, action) }
+public data class SnackBarOption(
+    @BaseTransientBottomBar.AnimationMode public val animMode: Int? = null,
+    public val bgTint: Int? = null,
+    public val bgTintStateList: ColorStateList? = null,
+    public val textColor: Int? = null,
+    public val textColorStateList: ColorStateList? = null,
+    public val isGestureInsetBottomIgnored: Boolean? = null,
+    public val actionTextColor: Int? = null,
+    public val actionTextColorStateList: ColorStateList? = null,
+    public val actionText: CharSequence? = null,
+    public val action: ((View) -> Unit)? = null
+)
+
+private fun Snackbar.snackBarOption(snackBarOption:SnackBarOption) = apply{
+    snackBarOption.bgTint?.let { setBackgroundTint(it) }
+    snackBarOption.bgTintStateList?.let { setBackgroundTintList(it) }
+    snackBarOption.textColor?.let { setTextColor(it) }
+    snackBarOption.textColorStateList?.let { setTextColor(it) }
+    snackBarOption.isGestureInsetBottomIgnored?.let { setGestureInsetBottomIgnored(it) }
+    snackBarOption.animMode?.let { animationMode = it }
+    snackBarOption.actionTextColor?.let { setActionTextColor(it) }
+    snackBarOption.actionTextColorStateList?.let { setActionTextColor(it) }
+    snackBarOption.actionText?.let { setAction(it, snackBarOption.action) }
 }
 
-public fun View.snackBarMakeShort(
-    msg:CharSequence,
-    @BaseTransientBottomBar.AnimationMode animMode: Int? = null,
-    bgTint: Int? = null,
-    bgTintStateList: ColorStateList? = null,
-    textColor: Int? = null,
-    textColorStateList: ColorStateList? = null,
-    isGestureInsetBottomIgnored: Boolean? = null,
-    actionTextColor: Int? = null,
-    actionTextColorStateList: ColorStateList? = null,
-    actionText: CharSequence? = null,
-    action: ((View) -> Unit)? = null
-): Snackbar = Snackbar.make(this, msg, Snackbar.LENGTH_SHORT).apply {
-    snackBarOption(
-        animMode, bgTint, bgTintStateList, textColor, textColorStateList, isGestureInsetBottomIgnored,
-        actionTextColor, actionTextColorStateList, actionText, action
-    )
+public fun View.snackBarMakeShort(msg: CharSequence, snackBarOption: SnackBarOption? = null): Snackbar =
+    Snackbar.make(this, msg, Snackbar.LENGTH_SHORT).apply {
+        snackBarOption?.let { snackBarOption(it) }
+    }
+
+public fun View.snackBarMakeLong(msg: CharSequence, snackBarOption: SnackBarOption? = null): Snackbar =
+    Snackbar.make(this, msg, Snackbar.LENGTH_LONG).apply {
+        snackBarOption?.let { snackBarOption(it) }
 }
 
-public fun View.snackBarMakeLong(
-    msg:CharSequence,
-    @BaseTransientBottomBar.AnimationMode animMode: Int? = null,
-    bgTint: Int? = null,
-    bgTintStateList: ColorStateList? = null,
-    textColor: Int? = null,
-    textColorStateList: ColorStateList? = null,
-    isGestureInsetBottomIgnored: Boolean? = null,
-    actionTextColor: Int? = null,
-    actionTextColorStateList: ColorStateList? = null,
-    actionText: CharSequence? = null,
-    action: ((View) -> Unit)? = null
-): Snackbar = Snackbar.make(this, msg, Snackbar.LENGTH_LONG).apply {
-    snackBarOption(
-        animMode, bgTint, bgTintStateList, textColor, textColorStateList, isGestureInsetBottomIgnored,
-        actionTextColor, actionTextColorStateList, actionText, action
-    )
+public fun View.snackBarMakeIndefinite(msg: CharSequence, snackBarOption: SnackBarOption? = null): Snackbar =
+    Snackbar.make(this, msg, Snackbar.LENGTH_INDEFINITE).apply {
+        snackBarOption?.let { snackBarOption(it) }
 }
 
-public fun View.snackBarMakeIndefinite(
-    msg: CharSequence,
-    @BaseTransientBottomBar.AnimationMode animMode: Int? = null,
-    bgTint: Int? = null,
-    bgTintStateList: ColorStateList? = null,
-    textColor: Int? = null,
-    textColorStateList: ColorStateList? = null,
-    isGestureInsetBottomIgnored: Boolean? = null,
-    actionTextColor: Int? = null,
-    actionTextColorStateList: ColorStateList? = null,
-    actionText: CharSequence? = null,
-    action: ((View) -> Unit)? = null
-): Snackbar = Snackbar.make(this, msg, Snackbar.LENGTH_INDEFINITE).apply {
-    snackBarOption(
-        animMode, bgTint, bgTintStateList, textColor, textColorStateList, isGestureInsetBottomIgnored,
-        actionTextColor, actionTextColorStateList, actionText, action
-    )
+public fun View.snackBarShowShort(msg: CharSequence, snackBarOption: SnackBarOption? = null) {
+    snackBarMakeShort(msg, snackBarOption).show()
 }
 
-
-public fun View.snackBarShowShort(
-    msg: CharSequence,
-    @BaseTransientBottomBar.AnimationMode animationMode: Int? = null,
-    bgTint: Int? = null,
-    bgTintStateList: ColorStateList? = null,
-    textColor: Int? = null,
-    textColorStateList: ColorStateList? = null,
-    isGestureInsetBottomIgnored: Boolean? = null,
-    actionTextColor: Int? = null,
-    actionTextColorStateList: ColorStateList? = null,
-    actionText: String? = null,
-    action: ((View) -> Unit)? = null
-) {
-    snackBarMakeShort(
-        msg, animationMode, bgTint, bgTintStateList, textColor, textColorStateList,
-        isGestureInsetBottomIgnored, actionTextColor, actionTextColorStateList,
-        actionText, action
-    ).show()
-}
-
-public fun Fragment.snackBarShowShort(
-    msg: CharSequence,
-    @BaseTransientBottomBar.AnimationMode animationMode: Int? = null,
-    bgTint: Int? = null,
-    bgTintStateList: ColorStateList? = null,
-    textColor: Int? = null,
-    textColorStateList: ColorStateList? = null,
-    isGestureInsetBottomIgnored: Boolean? = null,
-    actionTextColor: Int? = null,
-    actionTextColorStateList: ColorStateList? = null,
-    actionText: String? = null,
-    action: ((View) -> Unit)? = null
-) {
+public fun Fragment.snackBarShowShort(msg: CharSequence, snackBarOption: SnackBarOption? = null) {
     this.view?.let {
-        it.snackBarMakeShort(
-            msg, animationMode, bgTint, bgTintStateList, textColor, textColorStateList,
-            isGestureInsetBottomIgnored, actionTextColor, actionTextColorStateList,
-            actionText, action
-        ).show()
+        it.snackBarMakeShort(msg, snackBarOption).show()
     }?: Logx.e("Fragment view is null, can not show SnackBar!!!")
 }
 
@@ -155,47 +82,14 @@ public fun View.snackBarShowShort(msg: CharSequence,
 }
 
 
-public fun View.snackBarShowLong(
-    msg: CharSequence,
-    @BaseTransientBottomBar.AnimationMode animationMode: Int? = null,
-    bgTint: Int? = null,
-    bgTintStateList: ColorStateList? = null,
-    textColor: Int? = null,
-    textColorStateList: ColorStateList? = null,
-    isGestureInsetBottomIgnored: Boolean? = null,
-    actionTextColor: Int? = null,
-    actionTextColorStateList: ColorStateList? = null,
-    actionText: String? = null,
-    action: ((View) -> Unit)? = null
-) {
-    snackBarMakeLong(
-        msg, animationMode, bgTint, bgTintStateList, textColor, textColorStateList,
-        isGestureInsetBottomIgnored, actionTextColor, actionTextColorStateList,
-        actionText, action
-    ).show()
+public fun View.snackBarShowLong(msg: CharSequence, snackBarOption: SnackBarOption?) {
+    snackBarMakeLong(msg, snackBarOption).show()
 }
 
-public fun Fragment.snackBarShowLong(
-    msg: CharSequence,
-    @BaseTransientBottomBar.AnimationMode animationMode: Int? = null,
-    bgTint: Int? = null,
-    bgTintStateList: ColorStateList? = null,
-    textColor: Int? = null,
-    textColorStateList: ColorStateList? = null,
-    isGestureInsetBottomIgnored: Boolean? = null,
-    actionTextColor: Int? = null,
-    actionTextColorStateList: ColorStateList? = null,
-    actionText: String? = null,
-    action: ((View) -> Unit)? = null
-) {
+public fun Fragment.snackBarShowLong(msg: CharSequence, snackBarOption: SnackBarOption?) {
     this.view?.let {
-        it.snackBarMakeLong(
-            msg, animationMode, bgTint, bgTintStateList, textColor, textColorStateList,
-            isGestureInsetBottomIgnored, actionTextColor, actionTextColorStateList,
-            actionText, action
-        ).show()
+        it.snackBarMakeLong(msg, snackBarOption).show()
     }?:Logx.e("Fragment view is null, can not show SnackBar!!!")
-
 }
 
 @SuppressLint("RestrictedApi")
@@ -219,48 +113,15 @@ public fun View.snackBarShowLong(
     }.show()
 }
 
-public fun View.snackBarShowIndefinite(
-    msg: CharSequence,
-    @BaseTransientBottomBar.AnimationMode animationMode: Int? = null,
-    bgTint: Int? = null,
-    bgTintStateList: ColorStateList? = null,
-    textColor: Int? = null,
-    textColorStateList: ColorStateList? = null,
-    isGestureInsetBottomIgnored: Boolean? = null,
-    actionTextColor: Int? = null,
-    actionTextColorStateList: ColorStateList? = null,
-    actionText: String? = null,
-    action: ((View) -> Unit)? = null
-) {
-    snackBarMakeIndefinite(
-        msg, animationMode, bgTint, bgTintStateList, textColor, textColorStateList,
-        isGestureInsetBottomIgnored, actionTextColor, actionTextColorStateList,
-        actionText, action
-    ).show()
+public fun View.snackBarShowIndefinite(msg: CharSequence, snackBarOption: SnackBarOption?) {
+    snackBarMakeIndefinite(msg, snackBarOption).show()
 }
 
-public fun Fragment.snackBarShowIndefinite(
-    msg: CharSequence,
-    @BaseTransientBottomBar.AnimationMode animationMode: Int? = null,
-    bgTint: Int? = null,
-    bgTintStateList: ColorStateList? = null,
-    textColor: Int? = null,
-    textColorStateList: ColorStateList? = null,
-    isGestureInsetBottomIgnored: Boolean? = null,
-    actionTextColor: Int? = null,
-    actionTextColorStateList: ColorStateList? = null,
-    actionText: String? = null,
-    action: ((View) -> Unit)? = null
-) {
+public fun Fragment.snackBarShowIndefinite(msg: CharSequence, snackBarOption: SnackBarOption?) {
     this.view?.let {
-        it.snackBarMakeIndefinite(
-            msg, animationMode, bgTint, bgTintStateList, textColor, textColorStateList,
-            isGestureInsetBottomIgnored, actionTextColor, actionTextColorStateList,
-            actionText, action
-        ).show()
+        it.snackBarMakeIndefinite(msg, snackBarOption).show()
     }?:Logx.e("Fragment view is null, can not show SnackBar!!!")
 }
-
 
 @SuppressLint("RestrictedApi")
 public fun View.snackBarShowIndefinite(

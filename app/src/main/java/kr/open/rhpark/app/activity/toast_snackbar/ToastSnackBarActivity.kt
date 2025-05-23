@@ -16,6 +16,7 @@ import kr.open.rhpark.library.util.extensions.ui.view.snackBarShowShort
 import kr.open.rhpark.library.util.extensions.ui.view.toastShort
 import kr.open.rhpark.library.util.extensions.ui.view.toastShowShort
 import kr.open.rhpark.library.util.extensions.conditional.sdk_version.checkSdkVersion
+import kr.open.rhpark.library.util.extensions.ui.view.SnackBarOption
 
 class ToastSnackBarActivity :
     BaseBindingActivity<ActivityToastSnackbarBinding>(R.layout.activity_toast_snackbar) {
@@ -46,18 +47,27 @@ class ToastSnackBarActivity :
             btnDefaultSnackBar.setOnClickListener { v -> v.snackBarShowShort("Default SnackBar") }
 
             btnActionSnackBar.setOnClickListener { v ->
-                v.snackBarShowShort("TestMsg", actionText = "Actino_1") { toastShowShort("Click Action_1") }
+                v.snackBarShowShort(
+                    "TestMsg",
+                    SnackBarOption(
+                        actionText = "Actino_1",
+                        action = { toastShowShort("Click Action_1") }
+                    )
+                )
             }
 
             btnOptionSnackBar.setOnClickListener { v->
                 v.snackBarShowIndefinite(
                     "Option_Test",
-                    animationMode = BaseTransientBottomBar.ANIMATION_MODE_SLIDE,
-                    bgTint = Color.WHITE,
-                    textColor = Color.RED,
-                    actionTextColor = Color.BLUE,
-                    actionText = "Action_01",
-                    ) { toastShowShort("OnCLick Action_01") }
+                    SnackBarOption(
+                        animMode = BaseTransientBottomBar.ANIMATION_MODE_SLIDE,
+                        bgTint = Color.WHITE,
+                        textColor = Color.RED,
+                        actionTextColor = Color.BLUE,
+                        actionText = "Action_01",
+                        action = { toastShowShort("Click Action_01") }
+                    )
+                )
             }
         }
     }

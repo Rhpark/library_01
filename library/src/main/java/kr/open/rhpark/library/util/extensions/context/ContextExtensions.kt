@@ -49,6 +49,15 @@ public inline fun Context.hasPermission(permission: String): Boolean =
 public inline fun Context.hasPermissions(vararg permissions: String): Boolean =
     permissions.all { permission -> hasPermission(permission) }
 
+public inline fun Context.hasPermissions(vararg permissions: String, doWork: () -> Unit): Boolean =
+    if (permissions.all { permission -> hasPermission(permission) }) {
+        doWork()
+        true
+    } else {
+        false
+    }
+
+
 public inline fun Context.remainPermissions(permissions: List<String>): List<String> =
     permissions.filterNot { hasPermission(it) }
 

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        style="@style/Layout.AllMatch.Vertical"
+        android:paddingLeft="13dp"
+        android:paddingRight="13dp">
+
+        <Button
+            android:id="@+id/btnWifiScan"
+            style="@style/View.MatchWarp"
+            android:text="ScanWifi" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="100dp">
+            <TextView
+                android:id="@+id/tvWifiScanRes"
+                style="@style/TextView.MatchWarp.Bold" />
+
+        </ScrollView>
+
+
+        <Button
+            android:id="@+id/btnWifiEnable"
+            style="@style/View.MatchWarp"
+            android:text="Wifi Enable" />
+
+        <Button
+            android:id="@+id/btnWifiDisable"
+            style="@style/View.MatchWarp"
+            android:text="Wifi Disable" />
+
+        <Button
+            android:id="@+id/btnWifiOpen"
+            style="@style/View.MatchWarp"
+            android:text="Wifi Open" />
+
+        <Button
+            android:id="@+id/btnWifiSsid"
+            style="@style/View.MatchWarp"
+            android:text="Wifi Current SSID" />
+
+        <TextView
+            android:id="@+id/tvWifiSsid"
+            style="@style/TextView.MatchWarp.Bold" />
+
+    </LinearLayout>
+</layout>
