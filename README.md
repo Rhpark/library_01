@@ -1,4 +1,4 @@
-# Android Easy Development Library (v1.5.6)
+# Android Easy Development Library (v1.5.7)
 
 ![image](https://jitpack.io/v/rhpark/library_01.svg)
 <br>
@@ -228,7 +228,7 @@ android {
 
 dependencies {
 	...
-	implementation("com.github.rhpark:library_01:1.5.6")
+	implementation("com.github.rhpark:library_01:1.5.7")
 	...
 }
 ```
