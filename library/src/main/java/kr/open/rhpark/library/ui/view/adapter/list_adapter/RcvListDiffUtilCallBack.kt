@@ -10,12 +10,8 @@ import androidx.recyclerview.widget.DiffUtil
  * @param contentsTheSame 두 아이템의 내용이 같은지 비교하는 람다 (내용 비교)
  */
 public class RcvListDiffUtilCallBack<ITEM>(
-    private val itemsTheSame: ((oldItem: ITEM, newItem: ITEM) -> Boolean) = { oldItem, newItem ->
-        oldItem == newItem
-    },
-    private val contentsTheSame: ((oldItem: ITEM, newItem: ITEM) -> Boolean) = { oldItem, newItem ->
-        oldItem === newItem
-    }
+    private val itemsTheSame: ((oldItem: ITEM, newItem: ITEM) -> Boolean),
+    private val contentsTheSame: ((oldItem: ITEM, newItem: ITEM) -> Boolean)
 ) : DiffUtil.ItemCallback<ITEM>() {
 
     public override fun areItemsTheSame(oldItem: ITEM & Any, newItem: ITEM & Any): Boolean = itemsTheSame(oldItem, newItem)
