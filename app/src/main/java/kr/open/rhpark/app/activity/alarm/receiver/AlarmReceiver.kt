@@ -11,6 +11,8 @@ import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.domain.common.systemmanager.controller.alarm.dto.AlarmDTO
 import kr.open.rhpark.library.domain.common.systemmanager.controller.alarm.receiver.BaseAlarmReceiver
 import kr.open.rhpark.library.domain.common.systemmanager.controller.alarm.vo.AlarmVO
+import kr.open.rhpark.library.domain.common.systemmanager.controller.notification.dto.SimpleNotificationOption
+import kr.open.rhpark.library.domain.common.systemmanager.controller.notification.vo.SimpleNotificationType
 import kr.open.rhpark.library.util.extensions.context.getNotificationController
 
 /**
@@ -51,7 +53,7 @@ public class AlarmReceiver() : BaseAlarmReceiver() {
 
     override fun createNotificationChannel(context: Context, alarmDto: AlarmDTO) {
         Logx.d()
-        notificationController = context.getNotificationController().apply {
+        notificationController = context.getNotificationController(SimpleNotificationType.BROADCAST).apply {
             createChannel(
                 NotificationChannel("Alarm_ID", "Alarm_Name", NotificationManager.IMPORTANCE_HIGH).apply {
 //            setShowBadge(true)
@@ -73,16 +75,14 @@ public class AlarmReceiver() : BaseAlarmReceiver() {
     }
     override fun showNotification(context: Context, alarmDto: AlarmDTO) {
         Logx.d()
-
-        notificationController.showNotificationForBroadcast(
-            alarmDto.key,
-            alarmDto.title,
-            alarmDto.msg,
-            false,
-            R.drawable.ic_floating_fixed_close,
-            null,
-            null,
-            null
+        notificationController.showNotification(
+            SimpleNotificationOption(
+                alarmDto.key,
+                alarmDto.title,
+                alarmDto.msg,
+                false,
+                R.drawable.ic_floating_fixed_close,
+            )
         )
     }
 }

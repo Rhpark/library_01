@@ -6,7 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.PowerManager
 import kr.open.rhpark.library.debug.logcat.Logx
-import kr.open.rhpark.library.domain.common.systemmanager.controller.SimpleNotificationController
+import kr.open.rhpark.library.domain.common.systemmanager.controller.notification.SimpleNotificationController
 import kr.open.rhpark.library.domain.common.systemmanager.controller.alarm.AlarmController
 import kr.open.rhpark.library.domain.common.systemmanager.controller.alarm.vo.AlarmVO.ALARM_KEY
 import kr.open.rhpark.library.domain.common.systemmanager.controller.alarm.dto.AlarmDTO

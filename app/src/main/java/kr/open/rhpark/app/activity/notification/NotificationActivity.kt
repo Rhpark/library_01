@@ -14,6 +14,10 @@ import androidx.core.app.NotificationCompat
 import kr.open.rhpark.app.R
 import kr.open.rhpark.app.databinding.ActivityNotificationBinding
 import kr.open.rhpark.library.debug.logcat.Logx
+import kr.open.rhpark.library.domain.common.systemmanager.controller.notification.dto.SimpleNotificationOption
+import kr.open.rhpark.library.domain.common.systemmanager.controller.notification.dto.SimplePendingIntentOption
+import kr.open.rhpark.library.domain.common.systemmanager.controller.notification.dto.SimpleProgressNotificationOption
+import kr.open.rhpark.library.domain.common.systemmanager.controller.notification.vo.SimpleNotificationType
 import kr.open.rhpark.library.ui.view.activity.BaseBindingActivity
 import kr.open.rhpark.library.util.extensions.context.getNotificationController
 import java.lang.Thread.sleep
@@ -28,7 +32,7 @@ class NotificationActivity :
     private val dataAction01 = "PutData_Action_01"
     private val dataAction02 = "PutData_Action_02"
 
-    private val notificationController by lazy { getNotificationController() }
+    private val notificationController by lazy { getNotificationController(SimpleNotificationType.ACTIVITY) }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,16 +64,18 @@ class NotificationActivity :
                 val getNotificationIntent2 = getNotificationIntent(4, dataAction02, 12313, "Action02",16)
 
 
-                notificationController.showNotificationBigTextForActivity(
-                    notificationId,
-                    "BigTextNotification",
-                    "BigText",
-                    true,
-                    R.drawable.ic_floating_fixed_close,
-                    snippet = "Fesafasdfasefdsfasefesadf asef sadf asdf asefas fdsf seaf safawef aa feasf sadfasefasdf asdf asf aesf asdf asfe saedf asef sadf asef asdf asefseaf",
-                    clickIntent = clickIntent,
-                    largeIcon = BitmapFactory.decodeResource(applicationContext.resources, R.drawable.bg_notifi),
-                    actions = listOf(getNotificationIntent1, getNotificationIntent2)
+                notificationController.showNotificationBigText(
+                    SimpleNotificationOption(
+                        notificationId,
+                        "BigTextNotification",
+                        "BigText",
+                        true,
+                        R.drawable.ic_floating_fixed_close,
+                        snippet = "Fesafasdfasefdsfasefesadf asef sadf asdf asefas fdsf seaf safawef aa feasf sadfasefasdf asdf asf aesf asdf asfe saedf asef sadf asef asdf asefseaf",
+                        clickIntent = clickIntent,
+                        largeIcon = BitmapFactory.decodeResource(applicationContext.resources, R.drawable.bg_notifi),
+                        actions = listOf(getNotificationIntent1, getNotificationIntent2)
+                    )
                 )
             }
 
@@ -81,46 +87,43 @@ class NotificationActivity :
                 val getNotificationIntent2 = getNotificationIntent(4, dataAction02, 12313, "Action02",6)
 
 
-                notificationController.showNotificationBigImageForActivity(
-                    notificationId,
-                    "BigImageNotification",
-                    "BigImage",
-                    true,
-                    R.drawable.ic_floating_fixed_close,
-                    clickIntent = clickIntent,
-                    largeIcon = BitmapFactory.decodeResource(applicationContext.resources, R.drawable.bg_notifi),
-                    actions = listOf(getNotificationIntent1, getNotificationIntent2)
+                notificationController.showNotificationBigImage(
+                    SimpleNotificationOption(
+                        notificationId,
+                        "BigImageNotification",
+                        "BigImage",
+                        true,
+                        R.drawable.ic_floating_fixed_close,
+                        clickIntent = clickIntent,
+                        largeIcon = BitmapFactory.decodeResource(applicationContext.resources, R.drawable.bg_notifi),
+                        actions = listOf(getNotificationIntent1, getNotificationIntent2)
+                    )
                 )
             }
 
             btnShowProgressNotification.setOnClickListener {
                 val clickIntent = Intent(applicationContext, NotificationActivity::class.java)
                 val notificationId = 16
-                val actionID = 26
 
-                val actionIntent = Intent(applicationContext, NotificationActivity::class.java).apply {
-                        putExtra(data01, "Pending01")
-                        putExtra(dataAction01, 123)
-                }
-
-                val builder = notificationController.showProgressNotificationForActivity(
-                    notificationId,
-                    "TitleProgress01",
-                    "ContentsProgress01",
-                    false,
-                    R.drawable.ic_floating_fixed_close,
-                    clickIntent = clickIntent,
-                    progressPercent = 0,
+                notificationController.createProgressNotification(
+                    SimpleProgressNotificationOption(
+                        notificationId,
+                        "TitleProgress01",
+                        "ContentsProgress01",
+                        false,
+                        R.drawable.ic_floating_fixed_close,
+                        clickIntent = clickIntent,
+                        progressPercent = 0,
+                    )
                 )
 
                 thread {
                     for (i in 0..10) {
-                        builder.setProgress(100, i * 10, false)
-                        notificationController.notify(notificationId, builder.build())
+                        notificationController.updateProgress(notificationId, i * 10)
                         sleep(1000)
                     }
-                    builder.addAction(getNotificationIntent(notificationId, dataAction01, "action01 Click", "Action01",actionID))
-                    notificationController.notify(notificationId, builder.build())
+
+                    notificationController.completeProgress(notificationId)
                 }
             }
 
@@ -167,7 +170,9 @@ class NotificationActivity :
         val actionPendingIntent1 = NotificationCompat.Action(
             notificationId,
             title,
-            notificationController.getClickShowActivityPendingIntent(actionId, actionIntent1)
+            notificationController.getClickShowActivityPendingIntent(
+                SimplePendingIntentOption(actionId, actionIntent1)
+            )
         )
         return actionPendingIntent1
     }

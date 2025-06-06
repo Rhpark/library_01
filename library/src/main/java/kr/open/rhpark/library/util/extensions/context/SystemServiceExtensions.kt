@@ -19,11 +19,12 @@ import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.RequiresApi
 import kotlinx.coroutines.CoroutineScope
-import kr.open.rhpark.library.domain.common.systemmanager.controller.SimpleNotificationController
+import kr.open.rhpark.library.domain.common.systemmanager.controller.notification.SimpleNotificationController
 import kr.open.rhpark.library.domain.common.systemmanager.controller.alarm.AlarmController
 import kr.open.rhpark.library.domain.common.systemmanager.controller.SoftKeyboardController
 import kr.open.rhpark.library.domain.common.systemmanager.controller.VibratorController
 import kr.open.rhpark.library.domain.common.systemmanager.controller.WifiController
+import kr.open.rhpark.library.domain.common.systemmanager.controller.notification.vo.SimpleNotificationType
 import kr.open.rhpark.library.domain.common.systemmanager.controller.windowmanager.FloatingViewController
 import kr.open.rhpark.library.domain.common.systemmanager.info.battery.BatteryStateInfo
 import kr.open.rhpark.library.domain.common.systemmanager.info.display.DisplayInfo
@@ -85,7 +86,8 @@ public fun Context.getFloatingViewController(): FloatingViewController = Floatin
 
 public fun Context.getAlarmController(): AlarmController = AlarmController(this)
 
-public fun Context.getNotificationController(): SimpleNotificationController = SimpleNotificationController(this)
+public fun Context.getNotificationController(showType: SimpleNotificationType): SimpleNotificationController =
+    SimpleNotificationController(this, showType)
 
 public fun Context.getDisplayInfo(): DisplayInfo = DisplayInfo(this)
 
