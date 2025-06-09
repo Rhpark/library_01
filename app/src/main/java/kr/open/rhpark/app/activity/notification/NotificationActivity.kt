@@ -105,7 +105,7 @@ class NotificationActivity :
                 val clickIntent = Intent(applicationContext, NotificationActivity::class.java)
                 val notificationId = 16
 
-                notificationController.createProgressNotification(
+                notificationController.showProgressNotification(
                     SimpleProgressNotificationOption(
                         notificationId,
                         "TitleProgress01",

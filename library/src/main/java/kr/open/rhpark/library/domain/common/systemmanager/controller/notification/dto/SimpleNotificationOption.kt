@@ -15,6 +15,7 @@ public data class SimpleNotificationOption(
     public val clickIntent: Intent? = null,
     public val snippet: String? = null,
     public val actions: List<Action>? = null,
+    public val onGoing: Boolean = false
 )
 
 public data class SimpleProgressNotificationOption(
@@ -25,7 +26,8 @@ public data class SimpleProgressNotificationOption(
     public val smallIcon: Int? = null,
     public val clickIntent: Intent? = null,
     public val actions: List<Action>? = null,
-    public val progressPercent: Int
+    public val progressPercent: Int,
+    public val onGoing: Boolean = false
 )
 
 public data class SimplePendingIntentOption(

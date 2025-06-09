@@ -61,16 +61,22 @@
                 android:text="Base" />
 
             <RadioButton
-                android:id="@+id/rbRcvSimpleAdapter"
+                android:id="@+id/rbRcvSimpleBindingAdapter"
                 style="@style/RecyclerViewActivity.RadioButton"
-                android:onCheckedChanged="@{(_,checked)->vm.onCheckRcvSimpleAdapter(checked)}"
-                android:text="Simple" />
+                android:onCheckedChanged="@{(_,checked)->vm.onCheckRcvSimpleBindingAdapter(checked)}"
+                android:text="SimpleBind" />
 
             <RadioButton
                 android:id="@+id/rbRcvListAdapter"
                 android:onCheckedChanged="@{(_,checked)->vm.onCheckRcvListAdapter(checked)}"
                 style="@style/RecyclerViewActivity.RadioButton"
                 android:text="List" />
+
+            <RadioButton
+                android:id="@+id/rbRcvSimpleBindingListAdapter"
+                android:onCheckedChanged="@{(_,checked)->vm.onCheckRcvListSimpleBindingAdapter(checked)}"
+                style="@style/RecyclerViewActivity.RadioButton"
+                android:text="SimpleListBind" />
 
             <RadioButton
                 android:id="@+id/rbRcvSimpleListAdapter"

@@ -5,9 +5,9 @@ import kr.open.rhpark.app.R
 import kr.open.rhpark.app.activity.recyclerview.adapter.item.RcvItem
 import kr.open.rhpark.app.databinding.ItemRecyclerviewBinding
 import kr.open.rhpark.library.ui.view.adapter.recyclerView_adapter.BaseRcvAdapter
-import kr.open.rhpark.library.ui.view.adapter.viewholder.BaseRcvViewHolder
+import kr.open.rhpark.library.ui.view.adapter.viewholder.BaseBindingRcvViewHolder
 
-class RcvAdapter : BaseRcvAdapter<RcvItem, BaseRcvViewHolder<ItemRecyclerviewBinding>>() {
+class RcvAdapter : BaseRcvAdapter<RcvItem, BaseBindingRcvViewHolder<ItemRecyclerviewBinding>>() {
 
     override fun diffUtilAreItemsTheSame(oldItem: RcvItem, newItem: RcvItem): Boolean {
         return oldItem.key === newItem.key
@@ -19,10 +19,10 @@ class RcvAdapter : BaseRcvAdapter<RcvItem, BaseRcvViewHolder<ItemRecyclerviewBin
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int)
-            : BaseRcvViewHolder<ItemRecyclerviewBinding> = BaseRcvViewHolder(R.layout.item_recyclerview, parent)
+            : BaseBindingRcvViewHolder<ItemRecyclerviewBinding> = BaseBindingRcvViewHolder(R.layout.item_recyclerview, parent)
 
     override fun onBindViewHolder(
-        holder: BaseRcvViewHolder<ItemRecyclerviewBinding>,
+        holder: BaseBindingRcvViewHolder<ItemRecyclerviewBinding>,
         position: Int,
         item: RcvItem
     ) {

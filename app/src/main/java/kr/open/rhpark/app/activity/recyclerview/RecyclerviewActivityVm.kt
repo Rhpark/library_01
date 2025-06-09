@@ -11,8 +11,9 @@ class RecyclerviewActivityVm : BaseViewModelEvent<RecyclerviewActivityVmEvent>()
 
     enum class AdapterType {
         ADAPTER,
-        SIMPLE_ADAPTER,
+        SIMPLE_BINDING_ADAPTER,
         LIST_ADAPTER,
+        LIST_SIMPLE_BINDING_ADAPTER,
         LIST_SIMPLE_ADAPTER,
     }
     private var adapterType = AdapterType.ADAPTER
@@ -38,15 +39,19 @@ class RecyclerviewActivityVm : BaseViewModelEvent<RecyclerviewActivityVmEvent>()
                     sendEventVm(RecyclerviewActivityVmEvent.OnSetAdapter(AdapterType.ADAPTER, dataList))
                 }
 
-                AdapterType.SIMPLE_ADAPTER -> {
-                    sendEventVm(RecyclerviewActivityVmEvent.OnSetAdapter(AdapterType.SIMPLE_ADAPTER, dataList))
+                AdapterType.SIMPLE_BINDING_ADAPTER -> {
+                    sendEventVm(RecyclerviewActivityVmEvent.OnSetAdapter(AdapterType.SIMPLE_BINDING_ADAPTER, dataList))
                 }
 
                 AdapterType.LIST_ADAPTER -> {
                     sendEventVm(RecyclerviewActivityVmEvent.OnSetAdapter(AdapterType.LIST_ADAPTER, dataList))
                 }
 
-                AdapterType.LIST_SIMPLE_ADAPTER -> {
+                AdapterType.LIST_SIMPLE_BINDING_ADAPTER -> {
+                    sendEventVm(RecyclerviewActivityVmEvent.OnSetAdapter(AdapterType.LIST_SIMPLE_BINDING_ADAPTER, dataList))
+                }
+
+                AdapterType.LIST_SIMPLE_ADAPTER ->  {
                     sendEventVm(RecyclerviewActivityVmEvent.OnSetAdapter(AdapterType.LIST_SIMPLE_ADAPTER, dataList))
                 }
             }
@@ -71,11 +76,15 @@ class RecyclerviewActivityVm : BaseViewModelEvent<RecyclerviewActivityVmEvent>()
                     sendEventVm(RecyclerviewActivityVmEvent.OnRemoveItem(AdapterType.ADAPTER, key.toInt()))
                 }
 
-                AdapterType.SIMPLE_ADAPTER -> {
-                    sendEventVm(RecyclerviewActivityVmEvent.OnRemoveItem(AdapterType.SIMPLE_ADAPTER, key.toInt()))
+                AdapterType.SIMPLE_BINDING_ADAPTER -> {
+                    sendEventVm(RecyclerviewActivityVmEvent.OnRemoveItem(AdapterType.SIMPLE_BINDING_ADAPTER, key.toInt()))
                 }
                 AdapterType.LIST_ADAPTER -> {
                     sendEventVm(RecyclerviewActivityVmEvent.OnRemoveItem(AdapterType.LIST_ADAPTER, key.toInt()))
+                }
+
+                AdapterType.LIST_SIMPLE_BINDING_ADAPTER -> {
+                    sendEventVm(RecyclerviewActivityVmEvent.OnRemoveItem(AdapterType.LIST_SIMPLE_BINDING_ADAPTER, key.toInt()))
                 }
 
                 AdapterType.LIST_SIMPLE_ADAPTER -> {
@@ -97,10 +106,10 @@ class RecyclerviewActivityVm : BaseViewModelEvent<RecyclerviewActivityVmEvent>()
         }
     }
 
-    fun onCheckRcvSimpleAdapter(isCheck:Boolean) {
+    fun onCheckRcvSimpleBindingAdapter(isCheck:Boolean) {
         if(isCheck) {
-            adapterType = AdapterType.SIMPLE_ADAPTER
-            sendEventVm(RecyclerviewActivityVmEvent.OnUpdateAdapter(AdapterType.SIMPLE_ADAPTER))
+            adapterType = AdapterType.SIMPLE_BINDING_ADAPTER
+            sendEventVm(RecyclerviewActivityVmEvent.OnUpdateAdapter(AdapterType.SIMPLE_BINDING_ADAPTER))
         }
     }
 
@@ -111,10 +120,18 @@ class RecyclerviewActivityVm : BaseViewModelEvent<RecyclerviewActivityVmEvent>()
         }
     }
 
+    fun onCheckRcvListSimpleBindingAdapter(isCheck:Boolean) {
+        if(isCheck) {
+            adapterType = AdapterType.LIST_SIMPLE_BINDING_ADAPTER
+            sendEventVm(RecyclerviewActivityVmEvent.OnUpdateAdapter(AdapterType.LIST_SIMPLE_BINDING_ADAPTER))
+        }
+    }
+
     fun onCheckRcvListSimpleAdapter(isCheck:Boolean) {
         if(isCheck) {
             adapterType = AdapterType.LIST_SIMPLE_ADAPTER
             sendEventVm(RecyclerviewActivityVmEvent.OnUpdateAdapter(AdapterType.LIST_SIMPLE_ADAPTER))
         }
     }
+
 }

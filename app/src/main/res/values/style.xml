@@ -29,7 +29,7 @@
     </style>
 
     <style name="RecyclerViewActivity.RadioButton" parent="View.AllWarp">
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">10sp</item>
     </style>
 
 

@@ -1,6 +1,7 @@
 package kr.open.rhpark.app.activity.recyclerview
 
 import android.os.Bundle
+import android.widget.TextView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -8,13 +9,14 @@ import kotlinx.coroutines.launch
 import kr.open.rhpark.app.R
 import kr.open.rhpark.app.activity.recyclerview.adapter.RcvAdapter
 import kr.open.rhpark.app.activity.recyclerview.adapter.RcvListAdapter
-import kr.open.rhpark.library.ui.view.adapter.recyclerView_adapter.SimpleRcvAdapter
+import kr.open.rhpark.library.ui.view.adapter.recyclerView_adapter.SimpleBindingRcvAdapter
 import kr.open.rhpark.app.activity.recyclerview.adapter.item.RcvItem
 import kr.open.rhpark.app.databinding.ActivityRecyclerviewBinding
 import kr.open.rhpark.app.databinding.ItemRecyclerviewBinding
 import kr.open.rhpark.library.debug.logcat.Logx
 import kr.open.rhpark.library.ui.view.activity.BaseBindingActivity
 import kr.open.rhpark.library.ui.view.adapter.list_adapter.RcvListDiffUtilCallBack
+import kr.open.rhpark.library.ui.view.adapter.list_adapter.SimpleBindingRcvListAdapter
 import kr.open.rhpark.library.ui.view.adapter.list_adapter.SimpleRcvListAdapter
 import kr.open.rhpark.library.util.extensions.ui.view.showSoftKeyBoard
 import kr.open.rhpark.library.util.extensions.ui.view.toastShowShort
@@ -29,7 +31,7 @@ class RecyclerViewActivity : BaseBindingActivity<ActivityRecyclerviewBinding>(R.
         }
     }
 
-    private val rcvSimpleAdapter = SimpleRcvAdapter<RcvItem, ItemRecyclerviewBinding>(R.layout.item_recyclerview) {
+    private val rcvSimpleBindingAdapter = SimpleBindingRcvAdapter<RcvItem, ItemRecyclerviewBinding>(R.layout.item_recyclerview) {
         holder, item, position -> holder.binding.item = item
     }.apply {
         setDiffUtilItemSame { oldItem, newItem -> oldItem.key === newItem.key }
@@ -45,12 +47,26 @@ class RecyclerViewActivity : BaseBindingActivity<ActivityRecyclerviewBinding>(R.
         }
     }
 
-    private val rcvListSimpleAdapter = SimpleRcvListAdapter<RcvItem, ItemRecyclerviewBinding>(R.layout.item_recyclerview,
+    private val rcvListSimpleBindingAdapter = SimpleBindingRcvListAdapter<RcvItem, ItemRecyclerviewBinding>(R.layout.item_recyclerview,
         RcvListDiffUtilCallBack<RcvItem>(
             { oldItem, newItem -> oldItem.key === newItem.key },
             { oldItem, newItem -> oldItem.key == newItem.key }
         )
     ) { holder, item, position -> holder.binding.item = item }.apply {
+        setOnItemClickListener { i, rcvItem, view ->
+            Logx.d("rcvListSimpleAdapter On Click posision $i, item $rcvItem")
+        }
+    }
+
+    private val rcvListSimpleAdapter = SimpleRcvListAdapter<RcvItem>(R.layout.item_recyclerview,
+        RcvListDiffUtilCallBack<RcvItem>(
+            { oldItem, newItem -> oldItem.key === newItem.key },
+            { oldItem, newItem -> oldItem.key == newItem.key }
+        )
+    ) { holder, item, position ->
+        holder.findViewById<TextView>(R.id.rcvKey).text = item.key
+        holder.findViewById<TextView>(R.id.rcvMsg).text = item.msg
+    }.apply {
         setOnItemClickListener { i, rcvItem, view ->
             Logx.d("rcvListSimpleAdapter On Click posision $i, item $rcvItem")
         }
@@ -119,12 +135,16 @@ class RecyclerViewActivity : BaseBindingActivity<ActivityRecyclerviewBinding>(R.
                 adapter.setItems(datas)
             }
 
-            RecyclerviewActivityVm.AdapterType.SIMPLE_ADAPTER -> {
-                rcvSimpleAdapter.setItems(datas)
+            RecyclerviewActivityVm.AdapterType.SIMPLE_BINDING_ADAPTER -> {
+                rcvSimpleBindingAdapter.setItems(datas)
             }
 
             RecyclerviewActivityVm.AdapterType.LIST_ADAPTER -> {
                 rcvListAdapter.setItems(datas)
+            }
+
+            RecyclerviewActivityVm.AdapterType.LIST_SIMPLE_BINDING_ADAPTER -> {
+                rcvListSimpleBindingAdapter.setItems(datas)
             }
 
             RecyclerviewActivityVm.AdapterType.LIST_SIMPLE_ADAPTER -> {
@@ -139,12 +159,16 @@ class RecyclerViewActivity : BaseBindingActivity<ActivityRecyclerviewBinding>(R.
                 adapter.removeAt(position)
             }
 
-            RecyclerviewActivityVm.AdapterType.SIMPLE_ADAPTER -> {
-                rcvSimpleAdapter.removeAt(position)
+            RecyclerviewActivityVm.AdapterType.SIMPLE_BINDING_ADAPTER -> {
+                rcvSimpleBindingAdapter.removeAt(position)
             }
 
             RecyclerviewActivityVm.AdapterType.LIST_ADAPTER -> {
                 rcvListAdapter.removeAt(position)
+            }
+
+            RecyclerviewActivityVm.AdapterType.LIST_SIMPLE_BINDING_ADAPTER -> {
+                rcvListSimpleBindingAdapter.removeAt(position)
             }
 
             RecyclerviewActivityVm.AdapterType.LIST_SIMPLE_ADAPTER -> {
@@ -156,8 +180,9 @@ class RecyclerViewActivity : BaseBindingActivity<ActivityRecyclerviewBinding>(R.
     private fun setAdapter(adapterType: RecyclerviewActivityVm.AdapterType) {
         when(adapterType) {
             RecyclerviewActivityVm.AdapterType.ADAPTER -> binding.rcvList.adapter = adapter
-            RecyclerviewActivityVm.AdapterType.SIMPLE_ADAPTER -> binding.rcvList.adapter = rcvSimpleAdapter
+            RecyclerviewActivityVm.AdapterType.SIMPLE_BINDING_ADAPTER -> binding.rcvList.adapter = rcvSimpleBindingAdapter
             RecyclerviewActivityVm.AdapterType.LIST_ADAPTER -> binding.rcvList.adapter = rcvListAdapter
+            RecyclerviewActivityVm.AdapterType.LIST_SIMPLE_BINDING_ADAPTER -> binding.rcvList.adapter = rcvListSimpleBindingAdapter
             RecyclerviewActivityVm.AdapterType.LIST_SIMPLE_ADAPTER -> binding.rcvList.adapter = rcvListSimpleAdapter
         }
 
