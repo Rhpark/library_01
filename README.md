@@ -1,4 +1,4 @@
-# Android Easy Development Library (v1.5.9)
+# Android Easy Development Library (v1.5.10)
 
 ![image](https://jitpack.io/v/rhpark/library_01.svg)
 <br>
@@ -228,7 +228,7 @@ android {
 
 dependencies {
 	...
-	implementation("com.github.rhpark:library_01:1.5.7")
+	implementation("com.github.rhpark:library_01:1.5.10")
 	...
 }
 ```
@@ -577,7 +577,7 @@ class RcvAdapter : BaseRcvAdapter<RcvItem, BaseRcvViewHolder<ItemRecyclerviewBin
 ####  3 - 2 List Adapter
 ```
 class RcvListAdapter : BaseRcvListAdapter<RcvItem, BaseRcvViewHolder<ItemRecyclerviewBinding>>(
-        RcvListDifUtilCallBack<RcvItem>(
+        RcvListDiffUtilCallBack<RcvItem>(
             itemsTheSame = { oldItem, newItem -> oldItem.key == newItem.key },
             contentsTheSame = { oldItem, newItem -> oldItem.key === newItem.key }
         )
@@ -635,7 +635,7 @@ class RecyclerViewActivity : BaseBindingActivity<ActivityRecyclerviewBinding>(R.
     private val rcvListSimpleAdapter =
         RcvListSimpleAdapter<RcvItem, ItemRecyclerviewBinding>(R.layout.item_recyclerview,
             onBind = { holder, item, position -> holder.binding.item = item },
-            RcvListDifUtilCallBack<RcvItem>(
+            RcvListDiffUtilCallBack<RcvItem>(
                 { oldItem, newItem -> oldItem.key === newItem.key },
                 { oldItem, newItem -> oldItem.key == newItem.key }
             )
